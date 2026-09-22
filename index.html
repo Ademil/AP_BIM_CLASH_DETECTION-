@@ -135,8 +135,6 @@
         .confirm-box button:active { opacity: 0.8; }
         .confirm-box .btn-cancel { background: #334155; color: #e2e8f0; }
         .confirm-box .btn-danger { background: #dc2626; color: white; }
-
-        /* LICENÇA */
         .license-overlay { position: fixed; inset: 0; background: radial-gradient(ellipse at center, rgba(15,23,42,0.98), rgba(2,6,23,0.99)); z-index: 9999; display: none; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
         .license-overlay.show { display: flex; }
         .license-box { background: linear-gradient(160deg, #0f172a 0%, #1e293b 100%); border: 1px solid #334155; border-radius: 20px; padding: 32px 24px; max-width: 400px; width: 100%; text-align: center; box-shadow: 0 30px 80px rgba(0,0,0,0.8), 0 0 0 1px rgba(59,130,246,0.15); }
@@ -230,7 +228,7 @@
             <div class="header-title-block">
                 <div class="flex items-center space-x-2">
                     <span class="font-extrabold tracking-wider text-base text-white">AP BIM</span>
-                    <span class="text-xs bg-blue-600/30 text-blue-400 px-2 py-0.5 rounded border border-blue-500/30 font-semibold">v5.1</span>
+                    <span class="text-xs bg-blue-600/30 text-blue-400 px-2 py-0.5 rounded border border-blue-500/30 font-semibold">v5.2</span>
                     <span id="trialBadge" class="trial-badge hidden" title="Período de teste">
                         <i class="fa-solid fa-hourglass-half"></i>
                         <span>Trial: <span id="trialDays">15</span>d</span>
@@ -398,50 +396,20 @@
                             <b class="text-blue-300">Dimensões reais:</b> medidas pela geometria (PCA) e organizadas conforme o tipo do elemento (Laje, Parede, Pilar, Viga, etc.).
                         </div>
                         <div class="dim-grid">
-                            <div class="dim-card dim-axis-x">
-                                <div class="dim-label">X · Comprimento</div>
-                                <div><span class="dim-value" id="dimX">0.00</span><span class="dim-unit">m</span></div>
-                            </div>
-                            <div class="dim-card dim-axis-y">
-                                <div class="dim-label">Y · Profundidade</div>
-                                <div><span class="dim-value" id="dimY">0.00</span><span class="dim-unit">m</span></div>
-                            </div>
-                            <div class="dim-card dim-axis-z">
-                                <div class="dim-label">Z · Altura / Espessura</div>
-                                <div><span class="dim-value" id="dimZ">0.00</span><span class="dim-unit">m</span></div>
-                            </div>
-                            <div class="dim-card dim-highlight">
-                                <div class="dim-label">Perímetro base</div>
-                                <div><span class="dim-value" id="dimPerimeter">0.00</span><span class="dim-unit">m</span></div>
-                            </div>
+                            <div class="dim-card dim-axis-x"><div class="dim-label">X · Comprimento</div><div><span class="dim-value" id="dimX">0.00</span><span class="dim-unit">m</span></div></div>
+                            <div class="dim-card dim-axis-y"><div class="dim-label">Y · Profundidade</div><div><span class="dim-value" id="dimY">0.00</span><span class="dim-unit">m</span></div></div>
+                            <div class="dim-card dim-axis-z"><div class="dim-label">Z · Altura / Espessura</div><div><span class="dim-value" id="dimZ">0.00</span><span class="dim-unit">m</span></div></div>
+                            <div class="dim-card dim-highlight"><div class="dim-label">Perímetro base</div><div><span class="dim-value" id="dimPerimeter">0.00</span><span class="dim-unit">m</span></div></div>
                         </div>
                         <div class="dim-grid">
-                            <div class="dim-card dim-green">
-                                <div class="dim-label">Área base (X·Y)</div>
-                                <div><span class="dim-value" id="dimAreaBase">0.00</span><span class="dim-unit">m²</span></div>
-                            </div>
-                            <div class="dim-card dim-green">
-                                <div class="dim-label">Área frente (X·Z)</div>
-                                <div><span class="dim-value" id="dimAreaXZ">0.00</span><span class="dim-unit">m²</span></div>
-                            </div>
-                            <div class="dim-card dim-green">
-                                <div class="dim-label">Área lado (Y·Z)</div>
-                                <div><span class="dim-value" id="dimAreaYZ">0.00</span><span class="dim-unit">m²</span></div>
-                            </div>
-                            <div class="dim-card dim-highlight">
-                                <div class="dim-label">Sup. envolvente</div>
-                                <div><span class="dim-value" id="dimAreaBox">0.00</span><span class="dim-unit">m²</span></div>
-                            </div>
+                            <div class="dim-card dim-green"><div class="dim-label">Área base (X·Y)</div><div><span class="dim-value" id="dimAreaBase">0.00</span><span class="dim-unit">m²</span></div></div>
+                            <div class="dim-card dim-green"><div class="dim-label">Área frente (X·Z)</div><div><span class="dim-value" id="dimAreaXZ">0.00</span><span class="dim-unit">m²</span></div></div>
+                            <div class="dim-card dim-green"><div class="dim-label">Área lado (Y·Z)</div><div><span class="dim-value" id="dimAreaYZ">0.00</span><span class="dim-unit">m²</span></div></div>
+                            <div class="dim-card dim-highlight"><div class="dim-label">Sup. envolvente</div><div><span class="dim-value" id="dimAreaBox">0.00</span><span class="dim-unit">m²</span></div></div>
                         </div>
                         <div class="dim-grid">
-                            <div class="dim-card dim-purple">
-                                <div class="dim-label">Área real (malha)</div>
-                                <div><span class="dim-value" id="dimAreaMesh">0.00</span><span class="dim-unit">m²</span></div>
-                            </div>
-                            <div class="dim-card dim-purple">
-                                <div class="dim-label">Volume real (malha)</div>
-                                <div><span class="dim-value" id="dimVolume">0.00</span><span class="dim-unit">m³</span></div>
-                            </div>
+                            <div class="dim-card dim-purple"><div class="dim-label">Área real (malha)</div><div><span class="dim-value" id="dimAreaMesh">0.00</span><span class="dim-unit">m²</span></div></div>
+                            <div class="dim-card dim-purple"><div class="dim-label">Volume real (malha)</div><div><span class="dim-value" id="dimVolume">0.00</span><span class="dim-unit">m³</span></div></div>
                         </div>
                         <div class="dim-card">
                             <div class="dim-label">Centroide (X, Y, Z)</div>
@@ -455,14 +423,8 @@
                         <button onclick="measureWholeModel()" class="text-[10px] bg-blue-600 hover:bg-blue-500 text-white px-2 py-1 rounded"><i class="fa-solid fa-calculator"></i> Modelo inteiro</button>
                     </div>
                     <div class="grid grid-cols-2 gap-2">
-                        <div class="dim-card dim-green">
-                            <div class="dim-label">Área total</div>
-                            <div><span class="dim-value" id="totalArea">—</span><span class="dim-unit">m²</span></div>
-                        </div>
-                        <div class="dim-card dim-purple">
-                            <div class="dim-label">Volume total</div>
-                            <div><span class="dim-value" id="totalVolume">—</span><span class="dim-unit">m³</span></div>
-                        </div>
+                        <div class="dim-card dim-green"><div class="dim-label">Área total</div><div><span class="dim-value" id="totalArea">—</span><span class="dim-unit">m²</span></div></div>
+                        <div class="dim-card dim-purple"><div class="dim-label">Volume total</div><div><span class="dim-value" id="totalVolume">—</span><span class="dim-unit">m³</span></div></div>
                     </div>
                 </div>
                 <div class="bg-slate-950 border border-slate-800 rounded p-3">
@@ -617,6 +579,72 @@ Insira uma chave de licença APAVAN para continuar.</p>
 
 <script>
 /* ============================================================
+   SAFE STORAGE — contorna Tracking Prevention do Safari/iOS
+   Tenta: localStorage → sessionStorage → cookie → memória
+   ============================================================ */
+const SafeStorage = (() => {
+    let memoryStore = {};
+    let backend = 'memory';
+
+    function _testBackend(fn) {
+        try {
+            const k = '__test_' + Math.random();
+            fn.setItem(k, '1');
+            const v = fn.getItem(k);
+            fn.removeItem(k);
+            return v === '1';
+        } catch (e) { return false; }
+    }
+
+    const CookieStorage = {
+        setItem(k, v) {
+            const exp = new Date();
+            exp.setFullYear(exp.getFullYear() + 5);
+            document.cookie = `${encodeURIComponent(k)}=${encodeURIComponent(v)};expires=${exp.toUTCString()};path=/;SameSite=Lax`;
+        },
+        getItem(k) {
+            const name = encodeURIComponent(k) + '=';
+            const parts = document.cookie.split(';');
+            for (let p of parts) {
+                p = p.trim();
+                if (p.indexOf(name) === 0) return decodeURIComponent(p.substring(name.length));
+            }
+            return null;
+        },
+        removeItem(k) {
+            document.cookie = `${encodeURIComponent(k)}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/`;
+        }
+    };
+
+    if (typeof localStorage !== 'undefined' && _testBackend(localStorage)) {
+        backend = 'localStorage';
+    } else if (typeof sessionStorage !== 'undefined' && _testBackend(sessionStorage)) {
+        backend = 'sessionStorage';
+    } else if (_testBackend(CookieStorage)) {
+        backend = 'cookie';
+    } else {
+        backend = 'memory';
+    }
+    console.log('[STORAGE] Backend em uso:', backend);
+
+    const store = backend === 'localStorage' ? localStorage
+                : backend === 'sessionStorage' ? sessionStorage
+                : backend === 'cookie' ? CookieStorage
+                : {
+                    setItem: (k, v) => { memoryStore[k] = String(v); },
+                    getItem: (k) => memoryStore.hasOwnProperty(k) ? memoryStore[k] : null,
+                    removeItem: (k) => { delete memoryStore[k]; }
+                };
+
+    return {
+        get backend() { return backend; },
+        getItem(k)   { try { return store.getItem(k); } catch (e) { return null; } },
+        setItem(k, v) { try { store.setItem(k, v); } catch (e) {} },
+        removeItem(k) { try { store.removeItem(k); } catch (e) {} }
+    };
+})();
+
+/* ============================================================
    SISTEMA DE LICENÇA — 15 dias de teste grátis
    ============================================================ */
 const LICENSE = {
@@ -625,7 +653,6 @@ const LICENSE = {
     KEY_LICENSE:   'apbim_v1_license',
     _SECRET: 'APAVAN-2024-BIM-AUTH-V1'
 };
-
 function _computeCheck(payload) {
     const str = payload + LICENSE._SECRET;
     let h = 0;
@@ -648,8 +675,8 @@ window.generateLicenseKey = function(payload) {
     return `APAVAN-${clean}-${_computeCheck(clean)}`;
 };
 function _getFirstRun() {
-    let v = localStorage.getItem(LICENSE.KEY_FIRST_RUN);
-    if (!v) { v = Date.now().toString(); localStorage.setItem(LICENSE.KEY_FIRST_RUN, v); }
+    let v = SafeStorage.getItem(LICENSE.KEY_FIRST_RUN);
+    if (!v) { v = Date.now().toString(); SafeStorage.setItem(LICENSE.KEY_FIRST_RUN, v); }
     return parseInt(v, 10);
 }
 function _daysLeft() {
@@ -657,14 +684,14 @@ function _daysLeft() {
     return Math.max(0, LICENSE.TRIAL_DAYS - elapsed);
 }
 function getLicenseState() {
-    const saved = localStorage.getItem(LICENSE.KEY_LICENSE);
+    const saved = SafeStorage.getItem(LICENSE.KEY_LICENSE);
     if (saved && _isValidKey(saved)) return { licensed: true, daysLeft: Infinity, key: saved };
     const daysLeft = _daysLeft();
     return { licensed: false, daysLeft, valid: daysLeft > 0 };
 }
 function activateLicense(key) {
     if (!_isValidKey(key)) return false;
-    localStorage.setItem(LICENSE.KEY_LICENSE, key.toUpperCase().trim());
+    SafeStorage.setItem(LICENSE.KEY_LICENSE, key.toUpperCase().trim());
     return true;
 }
 function submitLicense() {
@@ -683,9 +710,9 @@ function submitLicense() {
     }
 }
 if (location.search.includes('reset-trial')) {
-    localStorage.removeItem(LICENSE.KEY_FIRST_RUN);
-    localStorage.removeItem(LICENSE.KEY_LICENSE);
-    console.log('[LICENSE] Trial resetado.');
+    SafeStorage.removeItem(LICENSE.KEY_FIRST_RUN);
+    SafeStorage.removeItem(LICENSE.KEY_LICENSE);
+    console.log('[LICENSE] Trial resetado. Backend:', SafeStorage.backend);
 }
 function applyLicenseGate() {
     const st = getLicenseState();
@@ -730,7 +757,7 @@ function showLicenseModal() {
 }
 
 /* ============================================================
-   APLICAÇÃO — variáveis e estado
+   APLICAÇÃO
    ============================================================ */
 const AI_CONFIG = { apiKey: "", model: "gemini-2.0-flash", endpoint: "https://generativelanguage.googleapis.com/v1beta/models/" };
 const PALETTE = ['#2563eb','#3b82f6','#60a5fa','#93c5fd','#a855f7','#f59e0b','#10b981','#ef4444','#14b8a6','#f472b6'];
@@ -745,7 +772,6 @@ const MATERIAL_PRESETS = {
     brick: { color: 0xb5563c, roughness: 0.9, metalness: 0.0, opacity: 1.0 },
     matte: { color: 0x64748b, roughness: 1.0, metalness: 0.0, opacity: 1.0 }
 };
-
 const state = {
     models: [], elements: [], clashes: [],
     modelGroups: {}, modelBaseTransforms: {},
@@ -759,7 +785,6 @@ const state = {
     selectedElement: null, selectedClash: null,
     wireframe: false, ghostMode: false, exploded: false, compareMode: false
 };
-
 let scene, camera, renderer, controls;
 let modelGroup, clashMarkersGroup, gridHelper;
 let raycaster, mouse;
@@ -963,9 +988,9 @@ function computeElementMetrics(elem) {
             }
         }
     }
-    const s = groupScale;
-    const meshArea = meshAreaLocal * s * s;
-    const meshVolume = Math.abs(meshVolumeLocal) * s * s * s;
+    const sc = groupScale;
+    const meshArea = meshAreaLocal * sc * sc;
+    const meshVolume = Math.abs(meshVolumeLocal) * sc * sc * sc;
     return {
         x: size.x, y: size.y, z: size.z,
         perimeter: 2 * (size.x + size.y),
@@ -1060,8 +1085,6 @@ function exportDimensionsCSV() {
     URL.revokeObjectURL(url);
     showViewportStatus("Dimensionamento exportado.");
 }
-
-/* COR / APARÊNCIA */
 function initColorSwatches() {
     const grid = document.getElementById('colorSwatches'); if (!grid) return;
     grid.innerHTML = '';
@@ -1149,8 +1172,6 @@ function makeAllTransparent() {
     });
     showViewportStatus("Todos translúcidos.");
 }
-
-/* MOBILE */
 function openActionsSheet() { document.getElementById('actionsSheet').classList.add('open'); document.getElementById('actionsBackdrop').classList.add('open'); }
 function closeActionsSheet() { document.getElementById('actionsSheet').classList.remove('open'); document.getElementById('actionsBackdrop').classList.remove('open'); }
 function triggerIfcImport() { setTimeout(() => document.getElementById('ifcFileInput').click(), 250); }
@@ -1158,8 +1179,6 @@ function toggleImmersive() { document.body.classList.toggle('immersive'); }
 function toggleLeftSidebar() { const sb = document.querySelector('.left-sidebar'), o = document.querySelector('.right-sidebar'), bd = document.getElementById('sidebarBackdrop'); o.classList.remove('open'); sb.classList.toggle('open'); bd.classList.toggle('open', sb.classList.contains('open')); }
 function toggleRightSidebar() { const sb = document.querySelector('.right-sidebar'), o = document.querySelector('.left-sidebar'), bd = document.getElementById('sidebarBackdrop'); o.classList.remove('open'); sb.classList.toggle('open'); bd.classList.toggle('open', sb.classList.contains('open')); }
 function closeAllSidebars() { document.querySelectorAll('.left-sidebar, .right-sidebar').forEach(el => el.classList.remove('open')); document.getElementById('sidebarBackdrop').classList.remove('open'); }
-
-/* 3D SCENE */
 function init3DScene() {
     const container = document.getElementById('canvasWrapper');
     scene = new THREE.Scene();
@@ -1227,8 +1246,6 @@ function onWindowResize() {
     renderer.setSize(container.clientWidth, container.clientHeight);
     chartDiscInstance?.resize(); chartFloorInstance?.resize();
 }
-
-/* DEMO */
 function loadDemoProject() {
     closeAllSidebars(); closeActionsSheet();
     showViewportStatus("Carregando demo...");
@@ -1290,12 +1307,10 @@ function loadDemoProject() {
     showViewportStatus("Demo carregada!");
     fitAllModels();
 }
-
-/* IFC */
 async function getIfcApi() {
     if (ifcApiInstance) return ifcApiInstance;
     if (typeof WebIFC === 'undefined' || !WebIFC.IfcAPI) throw new Error("Biblioteca web-ifc não carregada.");
-    if (location.protocol === 'file:') throw new Error("O navegador bloqueia WASM em 'file://'.\n\nRode: python -m http.server 8000\nAcesse: http://localhost:8000");
+    if (location.protocol === 'file:') throw new Error("O navegador bloqueia WASM em 'file://'.\n\nRode: python server.py\nAcesse: http://localhost:8000");
     try {
         ifcApiInstance = new WebIFC.IfcAPI();
         ifcApiInstance.SetWasmPath('./');
@@ -1307,7 +1322,7 @@ async function getIfcApi() {
 function handleIFCUpload(event) {
     closeAllSidebars();
     const files = event.target.files; if (!files || files.length === 0) return;
-    if (location.protocol === 'file:') { alert("⚠️ Você abriu via file://.\n\nRode:\n  python -m http.server 8000\n\nE acesse http://localhost:8000"); event.target.value = ''; return; }
+    if (location.protocol === 'file:') { alert("⚠️ Você abriu via file://.\n\nRode:\n  python server.py\n\nE acesse http://localhost:8000"); event.target.value = ''; return; }
     Array.from(files).forEach(file => {
         const reader = new FileReader();
         reader.onload = async function(e) {
@@ -1437,8 +1452,6 @@ async function parseIFCFile(fileName, arrayBuffer) {
         throw err;
     }
 }
-
-/* TRANSFORMAR */
 function populateTransformModelList() {
     const sel = document.getElementById('transformModelSelect');
     const current = sel.value;
@@ -1521,8 +1534,6 @@ function resetTransform() {
     group.updateMatrixWorld(true); selectTransformModel(id); updateClashPinPositions();
     showViewportStatus("Transformação resetada.");
 }
-
-/* ÁRVORE */
 const IFC_TYPE_PT = {
     'IfcWall': 'Paredes', 'IfcWallStandardCase': 'Paredes', 'IfcCurtainWall': 'Paredes Cortina',
     'IfcBeam': 'Vigas', 'IfcColumn': 'Colunas', 'IfcSlab': 'Lajes', 'IfcRoof': 'Cobertura',
@@ -1683,8 +1694,6 @@ function highlightTreeNodeByGUID(guid) {
         }
     }
 }
-
-/* CLASH DETECTION */
 function runClashDetection() {
     if (!state.elements.length) { alert("⚠️ Carregue um modelo."); return; }
     closeAllSidebars(); closeActionsSheet();
@@ -1800,8 +1809,6 @@ function restoreElementMaterials() {
 function updateClashStatus() { if (state.selectedClash) { state.selectedClash.status = document.getElementById('cdStatusSelect').value; updateClashListUI(); updateDashboardUI(); } }
 function updateClashAssignee() { if (state.selectedClash) state.selectedClash.assignee = document.getElementById('cdAssigneeInput').value; }
 function updateClashNotes() { if (state.selectedClash) state.selectedClash.notes = document.getElementById('cdNotesTextarea').value; }
-
-/* IA */
 async function callGemini(prompt, sys) {
     if (!AI_CONFIG.apiKey) return { ok:false, offline:true, text:null };
     const url = `${AI_CONFIG.endpoint}${AI_CONFIG.model}:generateContent?key=${AI_CONFIG.apiKey}`;
@@ -1845,8 +1852,6 @@ function appendAIMessage(role, text) {
     div.innerHTML = String(text).replace(/\n/g, '<br>');
     chat.appendChild(div); chat.scrollTop = chat.scrollHeight;
 }
-
-/* EXPORTAÇÕES */
 function exportBCF() {
     if (!state.clashes.length) return alert("Nenhum conflito.");
     const bcfData = { version: "2.1", project: "APAVAN BIM", author: "Ademilton Pavan CREA-SC 86959-8", topics: state.clashes.map(c => ({ guid: c.id, title: c.title, description: c.notes, creation_date: c.date, status: c.status, assigned_to: c.assignee, severity: c.severity })) };
@@ -1868,19 +1873,15 @@ function exportPDFReport() {
     w.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Relatório BIM APAVAN</title><style>body{font-family:Arial;padding:20px;}.h{border-bottom:2px solid #1e3a8a;padding-bottom:10px;margin-bottom:20px;}.t{font-size:20px;font-weight:bold;color:#1e3a8a;}.s{font-size:12px;color:#64748b;}.kpi{display:flex;gap:10px;margin-bottom:20px;}.k{background:#f8fafc;border:1px solid #cbd5e1;padding:10px;flex:1;text-align:center;border-radius:4px;}.kv{font-size:18px;font-weight:bold;}table{width:100%;border-collapse:collapse;font-size:11px;}th{background:#0f172a;color:white;padding:8px;text-align:left;}td{padding:6px;border:1px solid #ddd;}</style></head><body><div class="h"><div class="t">APAVAN ENGENHARIA E CONSULTORIA</div><div class="s">RELATÓRIO DE COMPATIBILIZAÇÃO BIM</div><div class="s">Ademilton Pavan CREA-SC 86959-8 • ${new Date().toLocaleDateString('pt-BR')}</div></div><div class="kpi"><div class="k"><div class="s">Total</div><div class="kv">${total}</div></div><div class="k"><div class="s">Críticos</div><div class="kv" style="color:red">${crit}</div></div><div class="k"><div class="s">Altos</div><div class="kv" style="color:orange">${high}</div></div></div><table><thead><tr><th>ID</th><th>Título</th><th>Disciplinas</th><th>Pav.</th><th>Interseção</th><th>Severidade</th><th>Status</th><th>Responsável</th></tr></thead><tbody>${rows || '<tr><td colspan="8">Nenhum conflito.</td></tr>'}</tbody></table><script>window.onload=()=>window.print();<\/script></body></html>`);
     w.document.close();
 }
-
-/* UI */
 function updateModelsListUI() {
     const list = document.getElementById('loadedModelsList');
     list.innerHTML = '';
     document.getElementById('modelCountBadge').innerText = state.models.length;
-
     if (!state.models.length) {
         list.innerHTML = `<div class="text-xs text-slate-500 text-center py-6 border border-dashed border-slate-800 rounded">Nenhum modelo.</div>`;
         populateTransformModelList();
         return;
     }
-
     state.models.forEach(m => {
         const item = document.createElement('div');
         item.className = 'bg-slate-950 p-2 rounded border border-slate-800 flex items-center justify-between text-xs gap-1';

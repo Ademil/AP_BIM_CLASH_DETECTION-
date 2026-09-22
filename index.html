@@ -3,10 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0, user-scalable=no">
+    <title>AP BIM Clash Detection — APAVAN Engenharia</title>
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>APAVAN BIM Clash Detection — Compatibilização de Modelos IFC</title>
-    <link rel="icon" href="data:,">
+    <meta name="apple-mobile-web-app-title" content="AP BIM Clash">
+    <meta name="application-name" content="AP BIM Clash Detection">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#1e3a8a">
+    <link rel="apple-touch-icon" sizes="180x180" href="data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%230f2559'/%3E%3Cstop offset='1' stop-color='%232563eb'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='180' height='180' rx='40' fill='url(%23g)'/%3E%3Ctext x='90' y='112' font-family='Helvetica,Arial,sans-serif' font-size='80' font-weight='900' fill='%23ffffff' text-anchor='middle' letter-spacing='-3'%3EAP%3C/text%3E%3Crect x='52' y='128' width='76' height='7' rx='3.5' fill='%2360a5fa'/%3E%3C/svg%3E">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%230f2559'/%3E%3Cstop offset='1' stop-color='%232563eb'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='180' height='180' rx='40' fill='url(%23g)'/%3E%3Ctext x='90' y='112' font-family='Helvetica,Arial,sans-serif' font-size='80' font-weight='900' fill='%23ffffff' text-anchor='middle' letter-spacing='-3'%3EAP%3C/text%3E%3Crect x='52' y='128' width='76' height='7' rx='3.5' fill='%2360a5fa'/%3E%3C/svg%3E">
+
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -20,6 +26,7 @@
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/utils/BufferGeometryUtils.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="./web-ifc-api-iife.js"></script>
+
     <style>
         body { font-family: 'Inter', system-ui, -apple-system, sans-serif; background-color: #0f172a; color: #f8fafc; -webkit-tap-highlight-color: transparent; overscroll-behavior: none; }
         ::-webkit-scrollbar { width: 6px; height: 6px; }
@@ -38,60 +45,90 @@
         input[type="range"] { -webkit-appearance: none; appearance: none; height: 4px; background: #334155; border-radius: 2px; outline: none; }
         input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 22px; height: 22px; background: #3b82f6; border-radius: 50%; cursor: pointer; }
         input[type="range"]::-moz-range-thumb { width: 22px; height: 22px; background: #3b82f6; border-radius: 50%; cursor: pointer; border: none; }
-        /* Botões flutuantes mobile */
+
+        /* FABs (botões flutuantes) */
         .mobile-only { display: none; }
         .mobile-fab {
-            position: fixed; z-index: 50; width: 44px; height: 44px;
+            position: fixed; z-index: 50; width: 52px; height: 52px;
             border-radius: 50%; display: flex; align-items: center; justify-content: center;
-            background: rgba(15,23,42,0.9); border: 1px solid rgba(255,255,255,0.15);
+            background: rgba(15,23,42,0.92); border: 1px solid rgba(255,255,255,0.18);
             color: #e2e8f0; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+            box-shadow: 0 4px 14px rgba(0,0,0,0.5);
+            font-size: 18px; transition: transform 0.15s;
         }
-        .mobile-fab:active { transform: scale(0.95); }
-        .sidebar-backdrop {
-            position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 55; display: none;
-        }
+        .mobile-fab:active { transform: scale(0.92); }
+        .mobile-fab.primary { background: linear-gradient(135deg, #2563eb, #1d4ed8); border-color: rgba(96,165,250,0.4); }
+
+        .sidebar-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 55; display: none; }
         .sidebar-backdrop.open { display: block; }
 
-        /* ============================================
-           MOBILE: 3D em tela isolada (padrão)
-           ============================================ */
+        /* Bottom sheet de ações */
+        .actions-sheet-backdrop {
+            position: fixed; inset: 0; background: rgba(0,0,0,0.55);
+            z-index: 70; display: none; opacity: 0;
+            transition: opacity 0.2s ease;
+        }
+        .actions-sheet-backdrop.open { display: block; opacity: 1; }
+
+        .actions-sheet {
+            position: fixed; left: 0; right: 0;
+            bottom: 0;
+            background: #0f172a;
+            border-top-left-radius: 20px; border-top-right-radius: 20px;
+            z-index: 75;
+            padding: 8px 12px calc(env(safe-area-inset-bottom) + 16px);
+            transform: translateY(110%);
+            transition: transform 0.28s cubic-bezier(.4,0,.2,1);
+            box-shadow: 0 -10px 40px rgba(0,0,0,0.6);
+            border-top: 1px solid rgba(255,255,255,0.1);
+            max-width: 500px; margin: 0 auto;
+        }
+        .actions-sheet.open { transform: translateY(0); }
+        .actions-sheet-handle {
+            width: 40px; height: 4px; background: #475569;
+            border-radius: 2px; margin: 6px auto 14px;
+        }
+        .actions-sheet h3 {
+            font-size: 12px; color: #94a3b8; text-transform: uppercase;
+            letter-spacing: 1px; font-weight: 700;
+            margin-bottom: 10px; padding: 0 4px;
+        }
+        .actions-grid {
+            display: grid; grid-template-columns: repeat(3, 1fr);
+            gap: 10px; margin-bottom: 8px;
+        }
+        .actions-grid .action-btn {
+            background: #1e293b; border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 14px; padding: 14px 8px;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            gap: 8px; color: #e2e8f0; font-size: 11px; font-weight: 600;
+            text-align: center; cursor: pointer; transition: background 0.15s;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .actions-grid .action-btn:active { background: #334155; transform: scale(0.97); }
+        .actions-grid .action-btn i { font-size: 22px; }
+        .actions-grid .action-btn.primary { background: linear-gradient(135deg, #2563eb, #1d4ed8); border-color: rgba(96,165,250,0.4); }
+        .actions-grid .action-btn.danger { background: linear-gradient(135deg, #dc2626, #b91c1c); border-color: rgba(248,113,113,0.4); }
+
         @media (max-width: 900px) {
             .mobile-only { display: flex !important; }
             .desktop-only { display: none !important; }
-
             header { padding-top: env(safe-area-inset-top); padding-left: 56px; padding-right: 56px; height: auto; min-height: 56px; }
             header .header-title-block { display: none; }
-
-            .left-sidebar, .right-sidebar {
-                position: fixed; top: 0; bottom: 0;
-                width: 88vw; max-width: 340px;
-                z-index: 60;
-                transition: transform 0.28s cubic-bezier(.4,0,.2,1);
-                padding-top: env(safe-area-inset-top);
-                padding-bottom: env(safe-area-inset-bottom);
-            }
+            .left-sidebar, .right-sidebar { position: fixed; top: 0; bottom: 0; width: 88vw; max-width: 340px; z-index: 60; transition: transform 0.28s cubic-bezier(.4,0,.2,1); padding-top: env(safe-area-inset-top); padding-bottom: env(safe-area-inset-bottom); }
             .left-sidebar { left: 0; transform: translateX(-105%); }
             .left-sidebar.open { transform: translateX(0); }
             .right-sidebar { right: 0; transform: translateX(105%); }
             .right-sidebar.open { transform: translateX(0); }
-
             main { position: absolute !important; inset: 0; z-index: 1; }
             .canvas-container { height: 100%; }
             footer { display: none; }
-
             .viewport-toolbar { top: calc(env(safe-area-inset-top) + 60px) !important; left: 8px !important; }
             .viewport-status { top: calc(env(safe-area-inset-top) + 60px) !important; right: 8px !important; }
-
-            /* Botões ficam mais acessíveis no mobile */
             .viewport-toolbar button { padding: 8px 10px !important; font-size: 12px; }
             .selected-element-bar { display: none !important; }
-            .selected-element-bar.mobile-open { display: flex !important; }
         }
 
-        /* ============================================
-           FULLSCREEN REAL (iOS/Android) — esconde TUDO
-           ============================================ */
         body.immersive header,
         body.immersive footer,
         body.immersive .left-sidebar,
@@ -100,34 +137,82 @@
         body.immersive .viewport-status,
         body.immersive .selected-element-bar,
         body.immersive .mobile-fab.auto-hide { display: none !important; }
-
         body.immersive main { position: absolute !important; inset: 0; z-index: 1; }
         body.immersive .mobile-fab { display: flex !important; }
 
-        /* Área segura iOS em fullscreen */
-        body.immersive .mobile-fab.top-left { top: calc(env(safe-area-inset-top) + 12px); left: calc(env(safe-area-inset-left) + 12px); }
-        body.immersive .mobile-fab.top-right { top: calc(env(safe-area-inset-top) + 12px); right: calc(env(safe-area-inset-right) + 12px); }
-        body.immersive .mobile-fab.bottom-left { bottom: calc(env(safe-area-inset-bottom) + 12px); left: calc(env(safe-area-inset-left) + 12px); }
-        body.immersive .mobile-fab.bottom-right { bottom: calc(env(safe-area-inset-bottom) + 12px); right: calc(env(safe-area-inset-right) + 12px); }
+        /* Posição dos FABs (sempre visíveis, respeitando safe-area) */
+        .fab-top-left    { top: calc(env(safe-area-inset-top) + 10px); left: 10px; }
+        .fab-top-right   { top: calc(env(safe-area-inset-top) + 10px); right: 10px; }
+        .fab-bottom-left { bottom: calc(env(safe-area-inset-bottom) + 14px); left: 14px; }
+        .fab-bottom-right{ bottom: calc(env(safe-area-inset-bottom) + 14px); right: 14px; }
+        .fab-bottom-center { bottom: calc(env(safe-area-inset-bottom) + 14px); left: 50%; transform: translateX(-50%); }
+        .fab-bottom-center:active { transform: translateX(-50%) scale(0.92); }
     </style>
 </head>
 <body class="h-screen w-screen flex flex-col overflow-hidden bg-slate-950 text-slate-100">
 
-    <!-- Botões flutuantes MOBILE -->
-    <button class="mobile-fab mobile-only" id="fabLeft" onclick="toggleLeftSidebar()" style="top: calc(env(safe-area-inset-top) + 8px); left: 8px;" title="Painel esquerdo">
+    <!-- ============================================================
+         FABs MOBILE — sempre visíveis
+         ============================================================ -->
+    <button class="mobile-fab mobile-only fab-top-left" onclick="toggleLeftSidebar()" title="Modelos / Transformar">
         <i class="fa-solid fa-bars"></i>
     </button>
-    <button class="mobile-fab mobile-only" id="fabRight" onclick="toggleRightSidebar()" style="top: calc(env(safe-area-inset-top) + 8px); right: 8px;" title="Painel direito">
+    <button class="mobile-fab mobile-only fab-top-right" onclick="toggleRightSidebar()" title="Conflitos / IA / Dashboard">
         <i class="fa-solid fa-list-check"></i>
     </button>
-    <button class="mobile-fab mobile-only auto-hide" id="fabFullscreen" onclick="toggleFullscreen()" style="bottom: calc(env(safe-area-inset-bottom) + 12px); right: 12px;" title="Tela cheia">
-        <i class="fa-solid fa-expand" id="fabFullscreenIcon"></i>
-    </button>
-    <button class="mobile-fab mobile-only auto-hide" id="fabFit" onclick="fitAllModels()" style="bottom: calc(env(safe-area-inset-bottom) + 12px); left: 12px;" title="Enquadrar">
-        <i class="fa-solid fa-crosshairs"></i>
+    <button class="mobile-fab mobile-only primary fab-bottom-center" onclick="openActionsSheet()" title="Menu de ações">
+        <i class="fa-solid fa-plus"></i>
     </button>
 
     <div class="sidebar-backdrop" id="sidebarBackdrop" onclick="closeAllSidebars()"></div>
+
+    <!-- ============================================================
+         BOTTOM SHEET DE AÇÕES
+         ============================================================ -->
+    <div class="actions-sheet-backdrop" id="actionsBackdrop" onclick="closeActionsSheet()"></div>
+    <div class="actions-sheet" id="actionsSheet">
+        <div class="actions-sheet-handle"></div>
+        <h3>Ações</h3>
+        <div class="actions-grid">
+            <button class="action-btn primary" onclick="closeActionsSheet(); loadDemoProject()">
+                <i class="fa-solid fa-wand-magic-sparkles"></i>
+                <span>Demo</span>
+            </button>
+            <button class="action-btn primary" onclick="closeActionsSheet(); triggerIfcImport()">
+                <i class="fa-solid fa-file-import"></i>
+                <span>Importar IFC</span>
+            </button>
+            <button class="action-btn danger" onclick="closeActionsSheet(); runClashDetection()">
+                <i class="fa-solid fa-bolt"></i>
+                <span>Analisar</span>
+            </button>
+        </div>
+        <h3>Exportar</h3>
+        <div class="actions-grid">
+            <button class="action-btn" onclick="closeActionsSheet(); exportPDFReport()">
+                <i class="fa-solid fa-file-pdf" style="color:#f87171"></i>
+                <span>PDF</span>
+            </button>
+            <button class="action-btn" onclick="closeActionsSheet(); exportBCF()">
+                <i class="fa-solid fa-share-nodes" style="color:#fbbf24"></i>
+                <span>BCF</span>
+            </button>
+            <button class="action-btn" onclick="closeActionsSheet(); exportCSV()">
+                <i class="fa-solid fa-file-excel" style="color:#34d399"></i>
+                <span>Excel</span>
+            </button>
+        </div>
+        <div class="actions-grid" style="grid-template-columns: repeat(2, 1fr); margin-top: 6px;">
+            <button class="action-btn" onclick="closeActionsSheet(); fitAllModels()">
+                <i class="fa-solid fa-crosshairs" style="color:#60a5fa"></i>
+                <span>Enquadrar (Fit)</span>
+            </button>
+            <button class="action-btn" onclick="closeActionsSheet(); toggleImmersive()">
+                <i class="fa-solid fa-compress" style="color:#a78bfa"></i>
+                <span>Modo Janela</span>
+            </button>
+        </div>
+    </div>
 
     <header class="h-14 bg-slate-900 border-b border-slate-800 flex items-center justify-between px-4 z-20 shrink-0">
         <div class="flex items-center space-x-3">
@@ -137,30 +222,30 @@
             <div class="header-title-block">
                 <div class="flex items-center space-x-2">
                     <span class="font-extrabold tracking-wider text-base text-white">APAVAN</span>
-                    <span class="text-xs bg-blue-600/30 text-blue-400 px-2 py-0.5 rounded border border-blue-500/30 font-semibold">BIM v3.8</span>
+                    <span class="text-xs bg-blue-600/30 text-blue-400 px-2 py-0.5 rounded border border-blue-500/30 font-semibold">BIM v3.9</span>
                 </div>
                 <p class="text-[10px] text-slate-400 hidden md:block">APAVAN ENGENHARIA E CONSULTORIA • Ademilton Pavan CREA-SC 86959-8</p>
             </div>
         </div>
         <div class="flex items-center space-x-2">
-            <button onclick="loadDemoProject()" class="px-3 py-1.5 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white rounded text-xs font-semibold shadow flex items-center gap-1.5 transition">
+            <button onclick="loadDemoProject()" class="px-3 py-1.5 bg-gradient-to-r from-emerald-600 to-teal-600 text-white rounded text-xs font-semibold shadow flex items-center gap-1.5">
                 <i class="fa-solid fa-wand-magic-sparkles"></i><span class="hidden sm:inline">Demo</span>
             </button>
-            <label class="px-3 py-1.5 bg-blue-600 hover:bg-blue-500 text-white rounded text-xs font-semibold shadow cursor-pointer flex items-center gap-1.5 transition">
+            <label class="px-3 py-1.5 bg-blue-600 hover:bg-blue-500 text-white rounded text-xs font-semibold shadow cursor-pointer flex items-center gap-1.5">
                 <i class="fa-solid fa-file-import"></i><span class="hidden sm:inline">IFC</span>
                 <input type="file" id="ifcFileInput" accept=".ifc" multiple class="hidden" onchange="handleIFCUpload(event)">
             </label>
-            <button onclick="runClashDetection()" class="px-3 py-1.5 bg-red-600 hover:bg-red-500 text-white rounded text-xs font-semibold shadow flex items-center gap-1.5 transition">
+            <button onclick="runClashDetection()" class="px-3 py-1.5 bg-red-600 hover:bg-red-500 text-white rounded text-xs font-semibold shadow flex items-center gap-1.5">
                 <i class="fa-solid fa-bolt"></i><span class="hidden sm:inline">Analisar</span>
             </button>
             <div class="h-6 w-px bg-slate-700 mx-1 desktop-only"></div>
-            <button onclick="exportPDFReport()" class="px-2.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded text-xs font-medium border border-slate-700 flex items-center gap-1 desktop-only">
+            <button onclick="exportPDFReport()" class="px-2.5 py-1.5 bg-slate-800 text-slate-200 rounded text-xs border border-slate-700 desktop-only">
                 <i class="fa-solid fa-file-pdf text-red-400"></i>
             </button>
-            <button onclick="exportBCF()" class="px-2.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded text-xs font-medium border border-slate-700 flex items-center gap-1 desktop-only">
+            <button onclick="exportBCF()" class="px-2.5 py-1.5 bg-slate-800 text-slate-200 rounded text-xs border border-slate-700 desktop-only">
                 <i class="fa-solid fa-share-nodes text-amber-400"></i>
             </button>
-            <button onclick="exportCSV()" class="px-2.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded text-xs font-medium border border-slate-700 flex items-center gap-1 desktop-only">
+            <button onclick="exportCSV()" class="px-2.5 py-1.5 bg-slate-800 text-slate-200 rounded text-xs border border-slate-700 desktop-only">
                 <i class="fa-solid fa-file-excel text-emerald-400"></i>
             </button>
         </div>
@@ -169,10 +254,10 @@
     <div class="flex-1 flex overflow-hidden relative">
         <aside class="w-80 bg-slate-900 border-r border-slate-800 flex flex-col z-10 shrink-0 left-sidebar">
             <div class="flex border-b border-slate-800 text-[10px] font-semibold text-slate-400 bg-slate-950/50">
-                <button onclick="switchLeftTab('models')" id="tab-btn-models" class="tab-btn flex-1 py-2.5 text-center hover:text-slate-200 active"><i class="fa-solid fa-cubes mr-1"></i>Modelos</button>
-                <button onclick="switchLeftTab('transform')" id="tab-btn-transform" class="tab-btn flex-1 py-2.5 text-center hover:text-slate-200"><i class="fa-solid fa-rotate mr-1"></i>Transformar</button>
-                <button onclick="switchLeftTab('tree')" id="tab-btn-tree" class="tab-btn flex-1 py-2.5 text-center hover:text-slate-200"><i class="fa-solid fa-sitemap mr-1"></i>Árvore</button>
-                <button onclick="switchLeftTab('rules')" id="tab-btn-rules" class="tab-btn flex-1 py-2.5 text-center hover:text-slate-200"><i class="fa-solid fa-sliders mr-1"></i>Regras</button>
+                <button onclick="switchLeftTab('models')" id="tab-btn-models" class="tab-btn flex-1 py-2.5 text-center active"><i class="fa-solid fa-cubes mr-1"></i>Modelos</button>
+                <button onclick="switchLeftTab('transform')" id="tab-btn-transform" class="tab-btn flex-1 py-2.5 text-center"><i class="fa-solid fa-rotate mr-1"></i>Transformar</button>
+                <button onclick="switchLeftTab('tree')" id="tab-btn-tree" class="tab-btn flex-1 py-2.5 text-center"><i class="fa-solid fa-sitemap mr-1"></i>Árvore</button>
+                <button onclick="switchLeftTab('rules')" id="tab-btn-rules" class="tab-btn flex-1 py-2.5 text-center"><i class="fa-solid fa-sliders mr-1"></i>Regras</button>
             </div>
 
             <div id="tab-content-models" class="flex-1 overflow-y-auto p-3 space-y-4">
@@ -182,14 +267,12 @@
                         <span class="text-[11px] bg-slate-800 text-slate-400 px-2 py-0.5 rounded" id="modelCountBadge">0</span>
                     </div>
                     <div id="loadedModelsList" class="space-y-2">
-                        <div class="text-xs text-slate-500 text-center py-6 border border-dashed border-slate-800 rounded">
-                            Nenhum modelo IFC importado.
-                        </div>
+                        <div class="text-xs text-slate-500 text-center py-6 border border-dashed border-slate-800 rounded">Nenhum modelo IFC importado.</div>
                     </div>
                 </div>
                 <div class="border-t border-slate-800 pt-3">
                     <span class="text-xs font-bold text-slate-300 uppercase tracking-wider block mb-2">Filtro por Pavimento</span>
-                    <select id="floorFilter" onchange="applyFloorFilter()" class="w-full bg-slate-950 border border-slate-800 text-xs text-slate-200 rounded p-2 focus:border-blue-500 outline-none">
+                    <select id="floorFilter" onchange="applyFloorFilter()" class="w-full bg-slate-950 border border-slate-800 text-xs text-slate-200 rounded p-2 outline-none">
                         <option value="ALL">Todos os Pavimentos</option>
                         <option value="Subsolo">Subsolo (-3.00m)</option>
                         <option value="Térreo">Térreo (0.00m)</option>
@@ -203,109 +286,62 @@
             <div id="tab-content-transform" class="flex-1 overflow-y-auto p-3 hidden space-y-3 text-xs">
                 <div>
                     <span class="text-xs font-bold text-slate-300 uppercase tracking-wider block mb-2">Modelo para Ajustar</span>
-                    <select id="transformModelSelect" onchange="selectTransformModel(this.value)" class="w-full bg-slate-950 border border-slate-800 text-xs text-slate-200 rounded p-2 focus:border-blue-500 outline-none">
+                    <select id="transformModelSelect" onchange="selectTransformModel(this.value)" class="w-full bg-slate-950 border border-slate-800 text-xs text-slate-200 rounded p-2 outline-none">
                         <option value="">— Selecione —</option>
                     </select>
                 </div>
                 <div id="transformControls" class="hidden space-y-3">
                     <div class="bg-slate-950 border border-slate-800 rounded p-2 text-[10px]">
-                        <div class="flex justify-between text-slate-400"><span>Dimensões:</span><span class="font-mono text-slate-200" id="tInfoDims">- × - × -</span></div>
+                        <div class="flex justify-between text-slate-400"><span>Dimensões:</span><span class="font-mono text-slate-200" id="tInfoDims">-</span></div>
                         <div class="flex justify-between text-slate-400 mt-1"><span>Centro:</span><span class="font-mono text-slate-200" id="tInfoCenter">-</span></div>
                     </div>
                     <div class="border-t border-slate-800 pt-3">
                         <div class="flex items-center justify-between mb-2">
-                            <span class="font-bold text-slate-300"><i class="fa-solid fa-rotate text-blue-400 mr-1"></i> Rotação (graus)</span>
-                            <button onclick="resetRotation()" class="text-[10px] text-slate-400 hover:text-white"><i class="fa-solid fa-rotate-left"></i> Zerar</button>
+                            <span class="font-bold text-slate-300"><i class="fa-solid fa-rotate text-blue-400 mr-1"></i> Rotação</span>
+                            <button onclick="resetRotation()" class="text-[10px] text-slate-400"><i class="fa-solid fa-rotate-left"></i> Zerar</button>
                         </div>
                         <div class="space-y-2">
-                            <div>
-                                <div class="flex justify-between text-[10px] text-slate-400 mb-1"><label>Eixo X</label><span id="rotXVal" class="font-mono text-blue-300">0.0°</span></div>
-                                <div class="flex items-center gap-2">
-                                    <input type="range" id="rotX" min="-180" max="180" step="1" value="0" oninput="onRotSlider('X')" class="flex-1">
-                                    <input type="number" id="rotXNum" min="-360" max="360" step="1" value="0" onchange="onRotNum('X')" class="w-16 bg-slate-950 border border-slate-800 rounded p-1 text-[11px] text-center">
-                                </div>
-                            </div>
-                            <div>
-                                <div class="flex justify-between text-[10px] text-slate-400 mb-1"><label>Eixo Y</label><span id="rotYVal" class="font-mono text-blue-300">0.0°</span></div>
-                                <div class="flex items-center gap-2">
-                                    <input type="range" id="rotY" min="-180" max="180" step="1" value="0" oninput="onRotSlider('Y')" class="flex-1">
-                                    <input type="number" id="rotYNum" min="-360" max="360" step="1" value="0" onchange="onRotNum('Y')" class="w-16 bg-slate-950 border border-slate-800 rounded p-1 text-[11px] text-center">
-                                </div>
-                            </div>
-                            <div>
-                                <div class="flex justify-between text-[10px] text-slate-400 mb-1"><label>Eixo Z</label><span id="rotZVal" class="font-mono text-blue-300">0.0°</span></div>
-                                <div class="flex items-center gap-2">
-                                    <input type="range" id="rotZ" min="-180" max="180" step="1" value="0" oninput="onRotSlider('Z')" class="flex-1">
-                                    <input type="number" id="rotZNum" min="-360" max="360" step="1" value="0" onchange="onRotNum('Z')" class="w-16 bg-slate-950 border border-slate-800 rounded p-1 text-[11px] text-center">
-                                </div>
-                            </div>
+                            <div><div class="flex justify-between text-[10px] text-slate-400 mb-1"><label>X</label><span id="rotXVal" class="font-mono text-blue-300">0.0°</span></div>
+                                <div class="flex items-center gap-2"><input type="range" id="rotX" min="-180" max="180" value="0" oninput="onRotSlider('X')" class="flex-1"><input type="number" id="rotXNum" min="-360" max="360" value="0" onchange="onRotNum('X')" class="w-16 bg-slate-950 border border-slate-800 rounded p-1 text-[11px] text-center"></div></div>
+                            <div><div class="flex justify-between text-[10px] text-slate-400 mb-1"><label>Y</label><span id="rotYVal" class="font-mono text-blue-300">0.0°</span></div>
+                                <div class="flex items-center gap-2"><input type="range" id="rotY" min="-180" max="180" value="0" oninput="onRotSlider('Y')" class="flex-1"><input type="number" id="rotYNum" min="-360" max="360" value="0" onchange="onRotNum('Y')" class="w-16 bg-slate-950 border border-slate-800 rounded p-1 text-[11px] text-center"></div></div>
+                            <div><div class="flex justify-between text-[10px] text-slate-400 mb-1"><label>Z</label><span id="rotZVal" class="font-mono text-blue-300">0.0°</span></div>
+                                <div class="flex items-center gap-2"><input type="range" id="rotZ" min="-180" max="180" value="0" oninput="onRotSlider('Z')" class="flex-1"><input type="number" id="rotZNum" min="-360" max="360" value="0" onchange="onRotNum('Z')" class="w-16 bg-slate-950 border border-slate-800 rounded p-1 text-[11px] text-center"></div></div>
                         </div>
                     </div>
                     <div class="border-t border-slate-800 pt-3">
                         <div class="flex items-center justify-between mb-2">
                             <span class="font-bold text-slate-300"><i class="fa-solid fa-arrows-up-down-left-right text-emerald-400 mr-1"></i> Posição (m)</span>
-                            <button onclick="resetPosition()" class="text-[10px] text-slate-400 hover:text-white"><i class="fa-solid fa-rotate-left"></i> Zerar</button>
+                            <button onclick="resetPosition()" class="text-[10px] text-slate-400"><i class="fa-solid fa-rotate-left"></i> Zerar</button>
                         </div>
                         <div class="space-y-2">
-                            <div>
-                                <div class="flex justify-between text-[10px] text-slate-400 mb-1"><label>X</label><span id="posXVal" class="font-mono text-emerald-300">0.00 m</span></div>
-                                <div class="flex items-center gap-2">
-                                    <input type="range" id="posX" min="-50" max="50" step="0.1" value="0" oninput="onPosSlider('X')" class="flex-1">
-                                    <input type="number" id="posXNum" step="0.1" value="0" onchange="onPosNum('X')" class="w-16 bg-slate-950 border border-slate-800 rounded p-1 text-[11px] text-center">
-                                </div>
-                            </div>
-                            <div>
-                                <div class="flex justify-between text-[10px] text-slate-400 mb-1"><label>Y</label><span id="posYVal" class="font-mono text-emerald-300">0.00 m</span></div>
-                                <div class="flex items-center gap-2">
-                                    <input type="range" id="posY" min="-50" max="50" step="0.1" value="0" oninput="onPosSlider('Y')" class="flex-1">
-                                    <input type="number" id="posYNum" step="0.1" value="0" onchange="onPosNum('Y')" class="w-16 bg-slate-950 border border-slate-800 rounded p-1 text-[11px] text-center">
-                                </div>
-                            </div>
-                            <div>
-                                <div class="flex justify-between text-[10px] text-slate-400 mb-1"><label>Z</label><span id="posZVal" class="font-mono text-emerald-300">0.00 m</span></div>
-                                <div class="flex items-center gap-2">
-                                    <input type="range" id="posZ" min="-50" max="50" step="0.1" value="0" oninput="onPosSlider('Z')" class="flex-1">
-                                    <input type="number" id="posZNum" step="0.1" value="0" onchange="onPosNum('Z')" class="w-16 bg-slate-950 border border-slate-800 rounded p-1 text-[11px] text-center">
-                                </div>
-                            </div>
+                            <div><div class="flex justify-between text-[10px] text-slate-400 mb-1"><label>X</label><span id="posXVal" class="font-mono text-emerald-300">0.00 m</span></div>
+                                <div class="flex items-center gap-2"><input type="range" id="posX" min="-50" max="50" step="0.1" value="0" oninput="onPosSlider('X')" class="flex-1"><input type="number" id="posXNum" step="0.1" value="0" onchange="onPosNum('X')" class="w-16 bg-slate-950 border border-slate-800 rounded p-1 text-[11px] text-center"></div></div>
+                            <div><div class="flex justify-between text-[10px] text-slate-400 mb-1"><label>Y</label><span id="posYVal" class="font-mono text-emerald-300">0.00 m</span></div>
+                                <div class="flex items-center gap-2"><input type="range" id="posY" min="-50" max="50" step="0.1" value="0" oninput="onPosSlider('Y')" class="flex-1"><input type="number" id="posYNum" step="0.1" value="0" onchange="onPosNum('Y')" class="w-16 bg-slate-950 border border-slate-800 rounded p-1 text-[11px] text-center"></div></div>
+                            <div><div class="flex justify-between text-[10px] text-slate-400 mb-1"><label>Z</label><span id="posZVal" class="font-mono text-emerald-300">0.00 m</span></div>
+                                <div class="flex items-center gap-2"><input type="range" id="posZ" min="-50" max="50" step="0.1" value="0" oninput="onPosSlider('Z')" class="flex-1"><input type="number" id="posZNum" step="0.1" value="0" onchange="onPosNum('Z')" class="w-16 bg-slate-950 border border-slate-800 rounded p-1 text-[11px] text-center"></div></div>
                         </div>
                     </div>
                     <div class="border-t border-slate-800 pt-3 space-y-1.5">
-                        <span class="font-bold text-slate-300 block mb-2"><i class="fa-solid fa-wand-magic text-amber-400 mr-1"></i> Ações Rápidas</span>
-                        <button onclick="alignBaseToGrid()" class="w-full py-1.5 bg-gradient-to-r from-emerald-600 to-teal-600 text-white rounded text-[11px] font-semibold flex items-center justify-center gap-1">
-                            <i class="fa-solid fa-layer-group"></i> Alinhar Base ao Plano (Y=0)
-                        </button>
-                        <button onclick="centerOnGrid()" class="w-full py-1.5 bg-slate-800 text-slate-200 rounded text-[11px] font-semibold border border-slate-700 flex items-center justify-center gap-1">
-                            <i class="fa-solid fa-crosshairs"></i> Centralizar no Grid
-                        </button>
-                        <button onclick="resetTransform()" class="w-full py-1.5 bg-slate-800 text-amber-400 rounded text-[11px] font-semibold border border-slate-700 flex items-center justify-center gap-1">
-                            <i class="fa-solid fa-rotate-left"></i> Resetar Transformação
-                        </button>
+                        <button onclick="alignBaseToGrid()" class="w-full py-1.5 bg-gradient-to-r from-emerald-600 to-teal-600 text-white rounded text-[11px] font-semibold"><i class="fa-solid fa-layer-group"></i> Alinhar Base ao Plano (Y=0)</button>
+                        <button onclick="centerOnGrid()" class="w-full py-1.5 bg-slate-800 text-slate-200 rounded text-[11px] font-semibold border border-slate-700"><i class="fa-solid fa-crosshairs"></i> Centralizar no Grid</button>
+                        <button onclick="resetTransform()" class="w-full py-1.5 bg-slate-800 text-amber-400 rounded text-[11px] font-semibold border border-slate-700"><i class="fa-solid fa-rotate-left"></i> Resetar Transformação</button>
                     </div>
                 </div>
             </div>
 
             <div id="tab-content-tree" class="flex-1 overflow-y-auto p-3 hidden space-y-2 text-xs">
-                <div class="mb-2">
-                    <input type="text" placeholder="Filtrar..." id="treeSearch" oninput="filterTree()" class="w-full bg-slate-950 border border-slate-800 rounded p-1.5 text-xs text-slate-200 focus:border-blue-500 outline-none">
-                </div>
-                <div id="ifcSpatialTree" class="space-y-1 font-mono text-[11px]">
-                    <div class="text-slate-500 italic">Carregue um projeto...</div>
-                </div>
+                <div class="mb-2"><input type="text" placeholder="Filtrar..." id="treeSearch" oninput="filterTree()" class="w-full bg-slate-950 border border-slate-800 rounded p-1.5 text-xs text-slate-200 outline-none"></div>
+                <div id="ifcSpatialTree" class="space-y-1 font-mono text-[11px]"><div class="text-slate-500 italic">Carregue um projeto...</div></div>
             </div>
 
             <div id="tab-content-rules" class="flex-1 overflow-y-auto p-3 hidden space-y-4 text-xs">
                 <div>
                     <span class="font-bold text-slate-300 block mb-1">Matriz de Tolerâncias (mm)</span>
                     <div class="grid grid-cols-2 gap-2 text-[11px]">
-                        <div class="bg-slate-950 p-2 rounded border border-slate-800">
-                            <label class="text-red-400 block font-semibold">Duro</label>
-                            <input type="number" id="tolHard" value="0" class="w-full bg-slate-900 border border-slate-800 p-1 text-slate-200 rounded mt-1">
-                        </div>
-                        <div class="bg-slate-950 p-2 rounded border border-slate-800">
-                            <label class="text-amber-400 block font-semibold">Crítico</label>
-                            <input type="number" id="tolCritical" value="25" class="w-full bg-slate-900 border border-slate-800 p-1 text-slate-200 rounded mt-1">
-                        </div>
+                        <div class="bg-slate-950 p-2 rounded border border-slate-800"><label class="text-red-400 block font-semibold">Duro</label><input type="number" id="tolHard" value="0" class="w-full bg-slate-900 border border-slate-800 p-1 text-slate-200 rounded mt-1"></div>
+                        <div class="bg-slate-950 p-2 rounded border border-slate-800"><label class="text-amber-400 block font-semibold">Crítico</label><input type="number" id="tolCritical" value="25" class="w-full bg-slate-900 border border-slate-800 p-1 text-slate-200 rounded mt-1"></div>
                     </div>
                 </div>
                 <div class="border-t border-slate-800 pt-3">
@@ -317,13 +353,13 @@
 
         <main class="flex-1 flex flex-col relative bg-slate-950">
             <div class="absolute top-3 left-3 z-10 flex items-center space-x-1 glass-panel p-1.5 rounded-lg shadow-xl text-xs viewport-toolbar">
-                <button onclick="resetCameraView('iso')" class="px-2 py-1 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded"><i class="fa-solid fa-cube"></i> Iso</button>
-                <button onclick="resetCameraView('top')" class="px-2 py-1 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded"><i class="fa-solid fa-arrows-up-to-line"></i> Topo</button>
-                <button onclick="resetCameraView('front')" class="px-2 py-1 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded"><i class="fa-solid fa-square-full"></i> Frente</button>
+                <button onclick="resetCameraView('iso')" class="px-2 py-1 bg-slate-800 text-slate-200 rounded"><i class="fa-solid fa-cube"></i> Iso</button>
+                <button onclick="resetCameraView('top')" class="px-2 py-1 bg-slate-800 text-slate-200 rounded"><i class="fa-solid fa-arrows-up-to-line"></i> Topo</button>
+                <button onclick="resetCameraView('front')" class="px-2 py-1 bg-slate-800 text-slate-200 rounded"><i class="fa-solid fa-square-full"></i> Frente</button>
                 <div class="h-4 w-px bg-slate-700 mx-1"></div>
-                <button onclick="toggleWireframe()" class="px-2 py-1 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded"><i class="fa-solid fa-border-all"></i></button>
-                <button onclick="toggleGhostMode()" class="px-2 py-1 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded"><i class="fa-solid fa-ghost"></i></button>
-                <button onclick="fitAllModels()" class="px-2 py-1 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded"><i class="fa-solid fa-expand"></i> Fit</button>
+                <button onclick="toggleWireframe()" class="px-2 py-1 bg-slate-800 text-slate-200 rounded"><i class="fa-solid fa-border-all"></i></button>
+                <button onclick="toggleGhostMode()" class="px-2 py-1 bg-slate-800 text-slate-200 rounded"><i class="fa-solid fa-ghost"></i></button>
+                <button onclick="fitAllModels()" class="px-2 py-1 bg-slate-800 text-slate-200 rounded"><i class="fa-solid fa-expand"></i> Fit</button>
             </div>
             <div class="absolute top-3 right-3 z-10 glass-panel px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-2 viewport-status">
                 <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
@@ -339,28 +375,13 @@
                     </div>
                 </div>
             </div>
-            <div id="selectedElementBar" class="h-12 bg-slate-900/90 border-t border-slate-800 px-4 flex items-center justify-between text-xs text-slate-300 z-10 hidden selected-element-bar">
-                <div class="flex items-center space-x-4 overflow-hidden">
-                    <span class="font-bold text-blue-400" id="selElemName">-</span>
-                    <span class="text-slate-400" id="selElemGUID">-</span>
-                    <span class="bg-slate-800 px-2 py-0.5 rounded text-[11px]" id="selElemDisc">-</span>
-                    <span class="text-slate-400" id="selElemFloor">-</span>
-                </div>
-                <div class="flex items-center space-x-2">
-                    <button onclick="isolateSelectedElement()" class="px-2.5 py-1 bg-slate-800 rounded text-[11px]">Isolar</button>
-                    <button onclick="hideSelectedElement()" class="px-2.5 py-1 bg-slate-800 rounded text-[11px]">Ocultar</button>
-                    <button onclick="clearSelection()" class="px-2 py-1 text-slate-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
-                </div>
-            </div>
         </main>
 
         <aside class="w-96 bg-slate-900 border-l border-slate-800 flex flex-col z-10 shrink-0 right-sidebar">
             <div class="flex border-b border-slate-800 text-xs font-semibold text-slate-400 bg-slate-950/50">
-                <button onclick="switchRightTab('clashes')" id="tab-btn-clashes" class="tab-btn flex-1 py-2.5 text-center hover:text-slate-200 active">
-                    <i class="fa-solid fa-triangle-exclamation mr-1 text-amber-500"></i> Conflitos (<span id="clashCountBadge">0</span>)
-                </button>
-                <button onclick="switchRightTab('ai')" id="tab-btn-ai" class="tab-btn flex-1 py-2.5 text-center hover:text-slate-200"><i class="fa-solid fa-brain mr-1 text-blue-400"></i> IA</button>
-                <button onclick="switchRightTab('dash')" id="tab-btn-dash" class="tab-btn flex-1 py-2.5 text-center hover:text-slate-200"><i class="fa-solid fa-chart-pie mr-1 text-emerald-400"></i> Dash</button>
+                <button onclick="switchRightTab('clashes')" id="tab-btn-clashes" class="tab-btn flex-1 py-2.5 text-center active"><i class="fa-solid fa-triangle-exclamation mr-1 text-amber-500"></i> Conflitos (<span id="clashCountBadge">0</span>)</button>
+                <button onclick="switchRightTab('ai')" id="tab-btn-ai" class="tab-btn flex-1 py-2.5 text-center"><i class="fa-solid fa-brain mr-1 text-blue-400"></i> IA</button>
+                <button onclick="switchRightTab('dash')" id="tab-btn-dash" class="tab-btn flex-1 py-2.5 text-center"><i class="fa-solid fa-chart-pie mr-1 text-emerald-400"></i> Dash</button>
             </div>
             <div id="tab-content-clashes" class="flex-1 overflow-hidden flex flex-col">
                 <div class="p-2 border-b border-slate-800 bg-slate-950/40 flex items-center gap-1.5 text-xs">
@@ -379,16 +400,11 @@
                     </select>
                 </div>
                 <div id="clashesList" class="flex-1 overflow-y-auto p-2 space-y-2">
-                    <div class="text-xs text-slate-500 text-center py-10 border border-dashed border-slate-800 rounded">
-                        Nenhum teste de clash executado ainda.
-                    </div>
+                    <div class="text-xs text-slate-500 text-center py-10 border border-dashed border-slate-800 rounded">Nenhum teste de clash executado ainda.</div>
                 </div>
                 <div id="clashDetailCard" class="h-64 border-t border-slate-800 bg-slate-950 p-3 flex flex-col overflow-y-auto hidden">
                     <div class="flex justify-between items-start mb-2">
-                        <div>
-                            <span class="text-xs font-bold text-red-400 font-mono" id="cdID">-</span>
-                            <h4 class="text-xs font-semibold text-slate-200" id="cdTitle">-</h4>
-                        </div>
+                        <div><span class="text-xs font-bold text-red-400 font-mono" id="cdID">-</span><h4 class="text-xs font-semibold text-slate-200" id="cdTitle">-</h4></div>
                         <span class="text-[10px] px-2 py-0.5 rounded font-bold uppercase" id="cdSeverityBadge">-</span>
                     </div>
                     <div class="grid grid-cols-2 gap-2 text-[11px] bg-slate-900 p-2 rounded border border-slate-800 mb-2">
@@ -398,24 +414,16 @@
                         <div class="col-span-2 truncate"><span class="text-slate-500">B:</span> <span id="cdElemB" class="text-indigo-400 font-mono">-</span></div>
                     </div>
                     <div class="space-y-2 text-xs flex-1">
-                        <div class="flex items-center gap-2">
-                            <label class="text-[11px] text-slate-400 w-20">Status:</label>
+                        <div class="flex items-center gap-2"><label class="text-[11px] text-slate-400 w-20">Status:</label>
                             <select id="cdStatusSelect" onchange="updateClashStatus()" class="bg-slate-900 border border-slate-800 text-slate-200 rounded p-1 text-xs flex-1">
-                                <option value="Novo">Novo</option>
-                                <option value="Em análise">Em análise</option>
-                                <option value="Confirmado">Confirmado</option>
-                                <option value="Falso positivo">Falso positivo</option>
-                                <option value="Resolvido">Resolvido</option>
+                                <option value="Novo">Novo</option><option value="Em análise">Em análise</option><option value="Confirmado">Confirmado</option><option value="Falso positivo">Falso positivo</option><option value="Resolvido">Resolvido</option>
                             </select>
                         </div>
-                        <div class="flex items-center gap-2">
-                            <label class="text-[11px] text-slate-400 w-20">Responsável:</label>
+                        <div class="flex items-center gap-2"><label class="text-[11px] text-slate-400 w-20">Responsável:</label>
                             <input type="text" id="cdAssigneeInput" onchange="updateClashAssignee()" class="bg-slate-900 border border-slate-800 text-slate-200 rounded p-1 text-xs flex-1">
                         </div>
                         <textarea id="cdNotesTextarea" onchange="updateClashNotes()" rows="2" class="w-full bg-slate-900 border border-slate-800 text-slate-200 rounded p-1.5 text-xs outline-none"></textarea>
-                        <button onclick="askAIForClashDiagnosis()" class="w-full py-1.5 bg-gradient-to-r from-blue-700 to-indigo-700 text-white rounded text-xs font-semibold">
-                            <i class="fa-solid fa-wand-magic-sparkles"></i> Analisar com IA
-                        </button>
+                        <button onclick="askAIForClashDiagnosis()" class="w-full py-1.5 bg-gradient-to-r from-blue-700 to-indigo-700 text-white rounded text-xs font-semibold"><i class="fa-solid fa-wand-magic-sparkles"></i> Analisar com IA</button>
                     </div>
                 </div>
             </div>
@@ -424,9 +432,7 @@
                     <div class="bg-slate-900 p-2.5 rounded border border-slate-800 text-slate-300">👋 Olá! Sou o assistente de IA da APAVAN Engenharia.</div>
                 </div>
                 <div class="mt-2 space-y-1.5">
-                    <button onclick="askAIGlobalSummary()" class="w-full py-1 bg-slate-800 text-slate-300 rounded text-[11px] border border-slate-700">
-                        <i class="fa-solid fa-file-contract text-blue-400"></i> Resumo Executivo
-                    </button>
+                    <button onclick="askAIGlobalSummary()" class="w-full py-1 bg-slate-800 text-slate-300 rounded text-[11px] border border-slate-700"><i class="fa-solid fa-file-contract text-blue-400"></i> Resumo Executivo</button>
                     <div class="flex items-center gap-1">
                         <input type="text" id="aiCustomPrompt" placeholder="Pergunte à IA..." class="flex-1 bg-slate-950 border border-slate-800 rounded p-1.5 text-xs text-slate-200 outline-none" onkeypress="if(event.key==='Enter') sendAIPrompt()">
                         <button onclick="sendAIPrompt()" class="px-3 py-1.5 bg-blue-600 text-white rounded text-xs"><i class="fa-solid fa-paper-plane"></i></button>
@@ -485,14 +491,28 @@ window.onload = function() {
     updateDashboardUI();
     window.addEventListener('resize', onWindowResize);
     window.addEventListener('orientationchange', () => setTimeout(onWindowResize, 200));
-    // Auto-ativa modo imersivo no mobile
     if (isMobile()) document.body.classList.add('immersive');
-    updateFullscreenIcon();
 };
 
 /* ============================================================
-   MOBILE — Sidebars deslizantes e modo imersivo
+   AÇÕES MOBILE
    ============================================================ */
+function openActionsSheet() {
+    document.getElementById('actionsSheet').classList.add('open');
+    document.getElementById('actionsBackdrop').classList.add('open');
+}
+function closeActionsSheet() {
+    document.getElementById('actionsSheet').classList.remove('open');
+    document.getElementById('actionsBackdrop').classList.remove('open');
+}
+function triggerIfcImport() {
+    // Aguarda a animação do sheet terminar antes de abrir o seletor
+    setTimeout(() => document.getElementById('ifcFileInput').click(), 250);
+}
+function toggleImmersive() {
+    document.body.classList.toggle('immersive');
+}
+
 function toggleLeftSidebar() {
     const sb = document.querySelector('.left-sidebar');
     const other = document.querySelector('.right-sidebar');
@@ -514,45 +534,6 @@ function closeAllSidebars() {
     document.getElementById('sidebarBackdrop').classList.remove('open');
 }
 
-async function toggleFullscreen() {
-    const wrapper = document.getElementById('canvasWrapper');
-    const isNativeFull = document.fullscreenElement || document.webkitFullscreenElement;
-
-    if (isNativeFull) {
-        try { await (document.exitFullscreen?.() || document.webkitExitFullscreen?.()); } catch(e){}
-        document.body.classList.remove('immersive');
-    } else {
-        // Tenta fullscreen nativo (iOS 16.4+ suporta em canvas/divs)
-        try {
-            if (wrapper.requestFullscreen) await wrapper.requestFullscreen();
-            else if (wrapper.webkitRequestFullscreen) wrapper.webkitRequestFullscreen();
-            else document.body.classList.add('immersive');
-            document.body.classList.add('immersive');
-        } catch (e) {
-            document.body.classList.add('immersive');
-        }
-    }
-    // Reajusta o canvas depois da transição
-    setTimeout(onWindowResize, 300);
-    updateFullscreenIcon();
-}
-
-function updateFullscreenIcon() {
-    const isFull = document.body.classList.contains('immersive');
-    const icon = document.getElementById('fabFullscreenIcon');
-    if (icon) icon.className = isFull ? 'fa-solid fa-compress' : 'fa-solid fa-expand';
-}
-
-document.addEventListener('fullscreenchange', () => { updateFullscreenIcon(); setTimeout(onWindowResize, 300); });
-document.addEventListener('webkitfullscreenchange', () => { updateFullscreenIcon(); setTimeout(onWindowResize, 300); });
-
-/* Fecha sidebars ao clicar no 3D */
-document.addEventListener('click', e => {
-    if (isMobile() && (document.querySelector('.left-sidebar.open') || document.querySelector('.right-sidebar.open'))) {
-        if (e.target.id === 'bimCanvas') closeAllSidebars();
-    }
-});
-
 /* ============================================================
    3D SCENE
    ============================================================ */
@@ -564,7 +545,7 @@ function init3DScene() {
     camera.position.set(25, 20, 30);
     renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('bimCanvas'), antialias: !isMobile() });
     renderer.setSize(container.clientWidth, container.clientHeight);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, isMobile() ? 2 : 2));
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     renderer.shadowMap.enabled = false;
     controls = new THREE.OrbitControls(camera, renderer.domElement);
     controls.enableDamping = true;
@@ -610,7 +591,7 @@ function onWindowResize() {
    DEMO
    ============================================================ */
 function loadDemoProject() {
-    closeAllSidebars();
+    closeAllSidebars(); closeActionsSheet();
     showViewportStatus("Carregando demo...");
     clearAllModels();
     const disciplines = [
@@ -622,11 +603,8 @@ function loadDemoProject() {
         { name: 'PREVENÇÃO INCÊNDIO', file: 'INCENDIO.ifc', color: 0xef4444, disc: 'INCENDIO' }
     ];
     disciplines.forEach(d => {
-        const g = new THREE.Group();
-        g.userData.modelId = d.file;
-        g.userData.isModelRoot = true;
-        modelGroup.add(g);
-        state.modelGroups[d.file] = g;
+        const g = new THREE.Group(); g.userData.modelId = d.file; g.userData.isModelRoot = true;
+        modelGroup.add(g); state.modelGroups[d.file] = g;
         state.modelBaseTransforms[d.file] = { position: new THREE.Vector3(), rotation: new THREE.Euler(), scale: new THREE.Vector3(1,1,1) };
     });
     const storeys = [
@@ -675,7 +653,7 @@ function loadDemoProject() {
 }
 
 /* ============================================================
-   IFC — web-ifc 0.0.78
+   IFC
    ============================================================ */
 async function getIfcApi() {
     if (ifcApiInstance) return ifcApiInstance;
@@ -749,8 +727,7 @@ function buildStoreyMap(ifcApi, modelID) {
 }
 function centerGroupAtOrigin(group) {
     const savedPos = group.position.clone();
-    group.position.set(0, 0, 0);
-    group.updateMatrixWorld(true);
+    group.position.set(0, 0, 0); group.updateMatrixWorld(true);
     const box = new THREE.Box3().setFromObject(group);
     if (box.isEmpty()) { group.position.copy(savedPos); return; }
     const center = new THREE.Vector3(); box.getCenter(center);
@@ -764,10 +741,7 @@ async function parseIFCFile(fileName, arrayBuffer) {
     const ifcApi = await getIfcApi();
     const uint8 = new Uint8Array(arrayBuffer);
     const modelID = ifcApi.OpenModel(uint8);
-
-    const gInst = new THREE.Group();
-    gInst.userData.modelId = fileName;
-    gInst.userData.isModelRoot = true;
+    const gInst = new THREE.Group(); gInst.userData.modelId = fileName; gInst.userData.isModelRoot = true;
 
     try {
         const disc = determineDiscipline(fileName);
@@ -786,12 +760,10 @@ async function parseIFCFile(fileName, arrayBuffer) {
             let rawName = '';
             try { rawName = ifcApi.GetNameFromTypeCode(type); } catch(e) {}
             if (!rawName || shouldSkipIfcClass(rawName)) continue;
-
             const ifcClass = toCamelIfc(rawName);
             const storeyName = storeyMap[expressID] || 'Térreo';
             const geoms = [];
             const placedGeometries = flatMesh.geometries;
-
             for (let j = 0; j < placedGeometries.size(); j++) {
                 const pg = placedGeometries.get(j);
                 const geom = ifcApi.GetGeometry(modelID, pg.geometryExpressID);
@@ -809,49 +781,27 @@ async function parseIFCFile(fileName, arrayBuffer) {
                     g.setAttribute('position', new THREE.BufferAttribute(positions, 3));
                     g.setAttribute('normal', new THREE.BufferAttribute(normals, 3));
                     g.setIndex(new THREE.BufferAttribute(new Uint32Array(idxRaw), 1));
-                    const localMatrix = new THREE.Matrix4().fromArray(pg.flatTransformation);
-                    g.applyMatrix4(new THREE.Matrix4().multiplyMatrices(zUpToYUp, localMatrix));
+                    g.applyMatrix4(new THREE.Matrix4().multiplyMatrices(zUpToYUp, new THREE.Matrix4().fromArray(pg.flatTransformation)));
                     geoms.push(g);
                 }
             }
             if (!geoms.length) continue;
-
             let mergedGeom;
             if (geoms.length === 1) mergedGeom = geoms[0];
-            else if (THREE.BufferGeometryUtils?.mergeBufferGeometries) {
-                mergedGeom = THREE.BufferGeometryUtils.mergeBufferGeometries(geoms, false);
-                geoms.forEach(g => g.dispose());
-            } else { mergedGeom = geoms[0]; geoms.slice(1).forEach(g => g.dispose()); }
-
+            else if (THREE.BufferGeometryUtils?.mergeBufferGeometries) { mergedGeom = THREE.BufferGeometryUtils.mergeBufferGeometries(geoms, false); geoms.forEach(g => g.dispose()); }
+            else { mergedGeom = geoms[0]; geoms.slice(1).forEach(g => g.dispose()); }
             const mat = new THREE.MeshStandardMaterial({ color, roughness: 0.5, metalness: 0.15, transparent: true, opacity: 0.92, side: THREE.DoubleSide });
             const mesh = new THREE.Mesh(mergedGeom, mat);
             mergedGeom.computeBoundingBox();
             const bbox = mergedGeom.boundingBox.clone();
             const center = new THREE.Vector3(); bbox.getCenter(center);
             const guid = (() => { try { return ifcApi.GetLine(modelID, expressID).GlobalId?.value || `IFC-${expressID}`; } catch { return `IFC-${expressID}`; } })();
-
-            const elem = {
-                id: expressID, guid, ifcClass, name: `${ifcClass} ${expressID}`,
-                discipline: disc, modelId: fileName, storey: storeyName, elevation: 0,
-                mesh, bbox, originalPos: new THREE.Vector3(), center, hidden: false,
-                properties: { IFCFile: fileName, IFCClass: ifcClass, ExpressID: expressID }
-            };
+            const elem = { id: expressID, guid, ifcClass, name: `${ifcClass} ${expressID}`, discipline: disc, modelId: fileName, storey: storeyName, elevation: 0, mesh, bbox, originalPos: new THREE.Vector3(), center, hidden: false, properties: { IFCFile: fileName, IFCClass: ifcClass, ExpressID: expressID } };
             mesh.userData = { bimElement: elem };
-            gInst.add(mesh);
-            state.elements.push(elem);
-            newElements.push(elem);
-            imported++;
+            gInst.add(mesh); state.elements.push(elem); newElements.push(elem); imported++;
         }
-
-        if (!newElements.length) {
-            ifcApi.CloseModel(modelID); hideLoading();
-            showViewportStatus(`IFC "${fileName}" sem geometria.`); return;
-        }
-
-        modelGroup.add(gInst);
-        state.modelGroups[fileName] = gInst;
-
-        // Escala
+        if (!newElements.length) { ifcApi.CloseModel(modelID); hideLoading(); showViewportStatus(`IFC "${fileName}" sem geometria.`); return; }
+        modelGroup.add(gInst); state.modelGroups[fileName] = gInst;
         gInst.updateMatrixWorld(true);
         const boxAll = new THREE.Box3().setFromObject(gInst);
         const sizeAll = new THREE.Vector3(); boxAll.getSize(sizeAll);
@@ -859,15 +809,8 @@ async function parseIFCFile(fileName, arrayBuffer) {
         let scale = 1;
         if (maxDim > 1000) scale = 0.001; else if (maxDim > 200) scale = 0.01;
         if (scale !== 1) { gInst.scale.setScalar(scale); gInst.updateMatrixWorld(true); }
-
         centerGroupAtOrigin(gInst);
-
-        state.modelBaseTransforms[fileName] = {
-            position: gInst.position.clone(),
-            rotation: gInst.rotation.clone(),
-            scale: gInst.scale.clone()
-        };
-
+        state.modelBaseTransforms[fileName] = { position: gInst.position.clone(), rotation: gInst.rotation.clone(), scale: gInst.scale.clone() };
         ifcApi.CloseModel(modelID);
         state.models.push({ id: fileName, name: fileName, discipline: disc, count: imported, visible: true });
         updateModelsListUI(); buildSpatialTreeUI(); fitAllModels();
@@ -887,11 +830,7 @@ function populateTransformModelList() {
     const sel = document.getElementById('transformModelSelect');
     const current = sel.value;
     sel.innerHTML = '<option value="">— Selecione —</option>';
-    state.models.forEach(m => {
-        const opt = document.createElement('option');
-        opt.value = m.id; opt.textContent = m.name;
-        sel.appendChild(opt);
-    });
+    state.models.forEach(m => { const opt = document.createElement('option'); opt.value = m.id; opt.textContent = m.name; sel.appendChild(opt); });
     if (current && state.modelGroups[current]) sel.value = current;
     else if (state.models.length === 1) { sel.value = state.models[0].id; selectTransformModel(sel.value); }
 }
@@ -904,8 +843,7 @@ function selectTransformModel(modelId) {
     setRotUI('Y', THREE.MathUtils.radToDeg(group.rotation.y));
     setRotUI('Z', THREE.MathUtils.radToDeg(group.rotation.z));
     setPosUI('X', group.position.x); setPosUI('Y', group.position.y); setPosUI('Z', group.position.z);
-    updateTransformInfo(group);
-    updatePositionRanges(group);
+    updateTransformInfo(group); updatePositionRanges(group);
 }
 function updateTransformInfo(group) {
     group.updateMatrixWorld(true);
@@ -924,8 +862,8 @@ function updatePositionRanges(group) {
     const range = Math.max(Math.max(size.x, size.y, size.z) * 2, 10);
     ['posX','posY','posZ'].forEach(id => { const el = document.getElementById(id); el.min = -range; el.max = range; });
 }
-function setRotUI(axis, deg) { document.getElementById(`rot${axis}`).value = deg; document.getElementById(`rot${axis}Num`).value = deg.toFixed(1); document.getElementById(`rot${axis}Val`).innerText = deg.toFixed(1)+'°'; }
-function setPosUI(axis, m) { document.getElementById(`pos${axis}`).value = m; document.getElementById(`pos${axis}Num`).value = m.toFixed(2); document.getElementById(`pos${axis}Val`).innerText = m.toFixed(2)+' m'; }
+function setRotUI(a, deg) { document.getElementById(`rot${a}`).value = deg; document.getElementById(`rot${a}Num`).value = deg.toFixed(1); document.getElementById(`rot${a}Val`).innerText = deg.toFixed(1)+'°'; }
+function setPosUI(a, m) { document.getElementById(`pos${a}`).value = m; document.getElementById(`pos${a}Num`).value = m.toFixed(2); document.getElementById(`pos${a}Val`).innerText = m.toFixed(2)+' m'; }
 function getSelectedTransformModel() { return document.getElementById('transformModelSelect').value; }
 function applyTransformFromUI() {
     const group = state.modelGroups[getSelectedTransformModel()];
@@ -939,8 +877,7 @@ function applyTransformFromUI() {
     group.rotation.set(THREE.MathUtils.degToRad(rx), THREE.MathUtils.degToRad(ry), THREE.MathUtils.degToRad(rz));
     group.position.set(px, py, pz);
     group.updateMatrixWorld(true);
-    updateTransformInfo(group);
-    updateClashPinPositions();
+    updateTransformInfo(group); updateClashPinPositions();
 }
 function onRotSlider(a) { const v = parseFloat(document.getElementById(`rot${a}`).value); document.getElementById(`rot${a}Num`).value = v.toFixed(1); document.getElementById(`rot${a}Val`).innerText = v.toFixed(1)+'°'; applyTransformFromUI(); }
 function onRotNum(a) { let v = parseFloat(document.getElementById(`rot${a}Num`).value); if (isNaN(v)) v = 0; document.getElementById(`rot${a}`).value = ((v+180)%360+360)%360-180; document.getElementById(`rot${a}Val`).innerText = v.toFixed(1)+'°'; applyTransformFromUI(); }
@@ -949,41 +886,31 @@ function onPosNum(a) { let v = parseFloat(document.getElementById(`pos${a}Num`).
 function resetRotation() { ['X','Y','Z'].forEach(a => setRotUI(a, 0)); applyTransformFromUI(); }
 function resetPosition() { ['X','Y','Z'].forEach(a => setPosUI(a, 0)); applyTransformFromUI(); }
 function alignBaseToGrid() {
-    const group = state.modelGroups[getSelectedTransformModel()];
-    if (!group) return;
+    const group = state.modelGroups[getSelectedTransformModel()]; if (!group) return;
     group.updateMatrixWorld(true);
-    const box = new THREE.Box3().setFromObject(group);
-    if (box.isEmpty()) return;
-    group.position.y += -box.min.y;
-    group.updateMatrixWorld(true);
-    setPosUI('Y', group.position.y);
-    updateTransformInfo(group);
-    updateClashPinPositions();
+    const box = new THREE.Box3().setFromObject(group); if (box.isEmpty()) return;
+    group.position.y += -box.min.y; group.updateMatrixWorld(true);
+    setPosUI('Y', group.position.y); updateTransformInfo(group); updateClashPinPositions();
     showViewportStatus("Base alinhada ao plano Y=0.");
 }
 function centerOnGrid() {
-    const group = state.modelGroups[getSelectedTransformModel()];
-    if (!group) return;
+    const group = state.modelGroups[getSelectedTransformModel()]; if (!group) return;
     const savedRot = group.rotation.clone();
     group.position.set(0, 0, 0); group.rotation.copy(savedRot);
     group.updateMatrixWorld(true);
     const box = new THREE.Box3().setFromObject(group);
     const c = new THREE.Vector3(); box.getCenter(c);
-    group.position.set(-c.x, -box.min.y, -c.z);
-    group.updateMatrixWorld(true);
+    group.position.set(-c.x, -box.min.y, -c.z); group.updateMatrixWorld(true);
     setPosUI('X', group.position.x); setPosUI('Y', group.position.y); setPosUI('Z', group.position.z);
     updateTransformInfo(group); updateClashPinPositions();
     showViewportStatus("Modelo centralizado no grid.");
 }
 function resetTransform() {
-    const id = getSelectedTransformModel();
-    const group = state.modelGroups[id];
-    if (!group) return;
+    const id = getSelectedTransformModel(); const group = state.modelGroups[id]; if (!group) return;
     const base = state.modelBaseTransforms[id];
     if (base) { group.position.copy(base.position); group.rotation.copy(base.rotation); group.scale.copy(base.scale); }
     else { group.position.set(0,0,0); group.rotation.set(0,0,0); }
-    group.updateMatrixWorld(true);
-    selectTransformModel(id); updateClashPinPositions();
+    group.updateMatrixWorld(true); selectTransformModel(id); updateClashPinPositions();
     showViewportStatus("Transformação resetada.");
 }
 
@@ -992,7 +919,7 @@ function resetTransform() {
    ============================================================ */
 function runClashDetection() {
     if (!state.elements.length) { alert("⚠️ Carregue um modelo."); return; }
-    closeAllSidebars();
+    closeAllSidebars(); closeActionsSheet();
     showViewportStatus("Executando análise...");
     state.clashes = []; clashMarkersGroup.clear();
     document.getElementById('clashMarkersContainer').innerHTML = '';
@@ -1002,7 +929,6 @@ function runClashDetection() {
     let counter = 0;
     const tolHard = parseFloat(document.getElementById('tolHard').value) || 0;
     const tolCritical = parseFloat(document.getElementById('tolCritical').value) || 25;
-
     for (let i = 0; i < state.elements.length; i++) {
         for (let j = i + 1; j < state.elements.length; j++) {
             const A = state.elements[i], B = state.elements[j];
@@ -1026,16 +952,12 @@ function runClashDetection() {
             if (!rawInt.isEmpty()) rawInt.getCenter(c);
             else { const ca = new THREE.Vector3(); boxA.getCenter(ca); const cb = new THREE.Vector3(); boxB.getCenter(cb); c.copy(ca).lerp(cb, 0.5); }
             let sev = 'LOW';
-            if (penMm > 100) sev = 'CRITICAL';
-            else if (penMm > 30) sev = 'HIGH';
-            else if (penMm > 0) sev = 'MEDIUM';
-            else if (clMm <= tolCritical) sev = 'MEDIUM';
+            if (penMm > 100) sev = 'CRITICAL'; else if (penMm > 30) sev = 'HIGH'; else if (penMm > 0) sev = 'MEDIUM'; else if (clMm <= tolCritical) sev = 'MEDIUM';
             state.clashes.push({
                 id: `CLASH-${String(counter).padStart(4,'0')}`, title: `${A.ifcClass} × ${B.ifcClass}`,
                 elemA: A, elemB: B, discA: A.discipline, discB: B.discipline,
                 overlapMm: penMm, clearanceMm: clMm, ruleType: rule.type,
-                position: c, severity: sev, status: 'Novo',
-                floor: A.storey || 'Térreo',
+                position: c, severity: sev, status: 'Novo', floor: A.storey || 'Térreo',
                 assignee: getSuggestedAssignee(A.discipline, B.discipline),
                 notes: `Penetração: ${penMm} mm | Folga: ${clMm} mm.`,
                 date: new Date().toLocaleDateString('pt-BR')
@@ -1056,12 +978,10 @@ function boxDistance(a, b) {
 function create3DClashMarker(clash) {
     const geom = new THREE.SphereGeometry(0.35, 16, 16);
     const mat = new THREE.MeshBasicMaterial({ color: getSeverityColorHex(clash.severity), wireframe: true });
-    const mesh = new THREE.Mesh(geom, mat);
-    mesh.position.copy(clash.position);
+    const mesh = new THREE.Mesh(geom, mat); mesh.position.copy(clash.position);
     clashMarkersGroup.add(mesh);
     const pin = document.createElement('div');
-    pin.className = 'clash-pin z-20 pointer-events-auto';
-    pin.id = `pin-${clash.id}`;
+    pin.className = 'clash-pin z-20 pointer-events-auto'; pin.id = `pin-${clash.id}`;
     pin.innerHTML = `<div class="px-2 py-1 rounded text-[10px] font-bold shadow-lg flex items-center gap-1 border border-white/20" style="background-color: ${getSeverityColorCSS(clash.severity)}; color: white;"><i class="fa-solid fa-triangle-exclamation"></i><span>${clash.id}</span></div>`;
     pin.onclick = () => selectClash(clash.id);
     document.getElementById('clashMarkersContainer').appendChild(pin);
@@ -1071,8 +991,7 @@ function updateClashPinPositions() {
     const container = document.getElementById('canvasWrapper');
     const w2 = container.clientWidth / 2, h2 = container.clientHeight / 2;
     state.clashes.forEach(clash => {
-        const pin = document.getElementById(`pin-${clash.id}`);
-        if (!pin) return;
+        const pin = document.getElementById(`pin-${clash.id}`); if (!pin) return;
         if (clash.elemA.hidden || clash.elemB.hidden) { pin.style.display = 'none'; return; }
         const pos = clash.position.clone(); pos.project(camera);
         if (pos.z > 1) { pin.style.display = 'none'; return; }
@@ -1082,8 +1001,7 @@ function updateClashPinPositions() {
     });
 }
 function selectClash(clashId) {
-    const clash = state.clashes.find(c => c.id === clashId);
-    if (!clash) return;
+    const clash = state.clashes.find(c => c.id === clashId); if (!clash) return;
     state.selectedClash = clash;
     restoreElementMaterials();
     state.elements.forEach(e => {
@@ -1207,14 +1125,13 @@ function updateModelsListUI() {
     state.models.forEach(m => {
         const item = document.createElement('div');
         item.className = 'bg-slate-950 p-2 rounded border border-slate-800 flex items-center justify-between text-xs';
-        item.innerHTML = `<div class="flex items-center space-x-2 truncate"><span class="w-3 h-3 rounded-full shrink-0" style="background-color:${getDisciplineColorCSS(m.discipline)}"></span><div class="truncate"><div class="font-semibold text-slate-200 truncate">${m.name}</div><div class="text-[10px] text-slate-500">${m.discipline} • ${m.count} elem.</div></div></div><button onclick="toggleModelVisibility('${m.id}')" class="text-slate-400 hover:text-white px-1"><i class="fa-solid ${m.visible ? 'fa-eye' : 'fa-eye-slash'}"></i></button>`;
+        item.innerHTML = `<div class="flex items-center space-x-2 truncate"><span class="w-3 h-3 rounded-full shrink-0" style="background-color:${getDisciplineColorCSS(m.discipline)}"></span><div class="truncate"><div class="font-semibold text-slate-200 truncate">${m.name}</div><div class="text-[10px] text-slate-500">${m.discipline} • ${m.count} elem.</div></div></div><button onclick="toggleModelVisibility('${m.id}')" class="text-slate-400 px-1"><i class="fa-solid ${m.visible ? 'fa-eye' : 'fa-eye-slash'}"></i></button>`;
         list.appendChild(item);
     });
     populateTransformModelList();
 }
 function buildSpatialTreeUI() {
-    const tree = document.getElementById('ifcSpatialTree');
-    tree.innerHTML = '';
+    const tree = document.getElementById('ifcSpatialTree'); tree.innerHTML = '';
     if (!state.elements.length) { tree.innerHTML = '<div class="text-slate-500 italic">Carregue um projeto...</div>'; return; }
     const root = document.createElement('div');
     root.className = 'text-slate-300 font-bold mb-1';
@@ -1336,7 +1253,6 @@ function clearAllModels() {
     modelGroup.clear(); clashMarkersGroup.clear();
     document.getElementById('clashMarkersContainer').innerHTML = '';
     document.getElementById('clashDetailCard').classList.add('hidden');
-    document.getElementById('selectedElementBar').classList.add('hidden');
     state.elements = []; state.models = []; state.clashes = [];
     state.modelGroups = {}; state.modelBaseTransforms = {};
     state.selectedElement = null; state.selectedClash = null;
@@ -1374,16 +1290,10 @@ function applyFloorFilter() {
     state.elements.forEach(e => e.mesh.visible = !e.hidden && (floor === 'ALL' || e.storey === floor));
     updateClashPinPositions(); fitAllModels();
 }
-function toggleCompareMode(on) { state.compareMode = on; }
 function highlightElementByGUID(guid) {
-    const elem = state.elements.find(e => e.guid === guid);
-    if (!elem) return;
+    const elem = state.elements.find(e => e.guid === guid); if (!elem) return;
     state.selectedElement = elem;
-    document.getElementById('selElemName').innerText = elem.name;
-    document.getElementById('selElemGUID').innerText = `GUID: ${elem.guid}`;
-    document.getElementById('selElemDisc').innerText = elem.discipline;
-    document.getElementById('selElemFloor').innerText = elem.storey;
-    document.getElementById('selectedElementBar').classList.remove('hidden');
+    document.getElementById('selElemName') && (document.getElementById('selElemName').innerText = elem.name);
     const box = new THREE.Box3().setFromObject(elem.mesh);
     const center = new THREE.Vector3(); box.getCenter(center);
     const size = new THREE.Vector3(); box.getSize(size);
@@ -1397,7 +1307,6 @@ function isolateSelectedElement() {
     if (!state.selectedElement) return;
     const t = state.selectedElement;
     state.elements.forEach(e => e.mesh.visible = (e === t));
-    showViewportStatus(`Isolado: ${t.name}`);
 }
 function hideSelectedElement() {
     if (!state.selectedElement) return;
@@ -1410,8 +1319,7 @@ function showAllElements() {
     updateClashPinPositions(); fitAllModels();
 }
 function toggleModelVisibility(modelId) {
-    const m = state.models.find(x => x.id === modelId);
-    if (!m) return;
+    const m = state.models.find(x => x.id === modelId); if (!m) return;
     m.visible = !m.visible;
     state.elements.forEach(e => { if (e.modelId === modelId) { e.hidden = !m.visible; e.mesh.visible = m.visible; } });
     updateModelsListUI(); updateClashPinPositions();
@@ -1423,20 +1331,10 @@ function pickElementAt(event) {
     raycaster.setFromCamera(mouse, camera);
     const hits = raycaster.intersectObjects(modelGroup.children, true);
     if (hits.length > 0 && hits[0].object.userData?.bimElement) {
-        const e = hits[0].object.userData.bimElement;
-        state.selectedElement = e;
-        document.getElementById('selElemName').innerText = e.name;
-        document.getElementById('selElemGUID').innerText = `GUID: ${e.guid}`;
-        document.getElementById('selElemDisc').innerText = e.discipline;
-        document.getElementById('selElemFloor').innerText = e.storey;
-        document.getElementById('selectedElementBar').classList.remove('hidden');
+        state.selectedElement = hits[0].object.userData.bimElement;
     }
 }
-function clearSelection() {
-    state.selectedElement = null;
-    document.getElementById('selectedElementBar').classList.add('hidden');
-    if (!state.selectedClash) restoreElementMaterials();
-}
+function clearSelection() { state.selectedElement = null; if (!state.selectedClash) restoreElementMaterials(); }
 function getDisciplineColorCSS(d) { return { ARQUITETURA:'#cbd5e1', ESTRUTURA:'#64748b', HIDRAULICO:'#3b82f6', ELETRICO:'#eab308', HVAC:'#a855f7', INCENDIO:'#ef4444' }[d] || '#94a3b8'; }
 function getDisciplineColorHex(d) { return { ARQUITETURA:0xcbd5e1, ESTRUTURA:0x64748b, HIDRAULICO:0x3b82f6, ELETRICO:0xeab308, HVAC:0xa855f7, INCENDIO:0xef4444 }[d] || 0x94a3b8; }
 function getSeverityColorCSS(s) { return { CRITICAL:'#dc2626', HIGH:'#ea580c', MEDIUM:'#eab308', LOW:'#2563eb' }[s] || '#64748b'; }

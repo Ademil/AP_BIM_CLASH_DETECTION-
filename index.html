@@ -47,12 +47,12 @@
         .sidebar-backdrop.open { display: block; }
         .actions-sheet-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.55); z-index: 70; display: none; opacity: 0; transition: opacity 0.2s ease; }
         .actions-sheet-backdrop.open { display: block; opacity: 1; }
-        .actions-sheet { position: fixed; left: 0; right: 0; bottom: 0; background: #0f172a; border-top-left-radius: 20px; border-top-right-radius: 20px; z-index: 75; padding: 8px 12px calc(env(safe-area-inset-bottom) + 16px); transform: translateY(110%); transition: transform 0.28s cubic-bezier(.4,0,.2,1); box-shadow: 0 -10px 40px rgba(0,0,0,0.6); border-top: 1px solid rgba(255,255,255,0.1); max-width: 500px; margin: 0 auto; }
+        .actions-sheet { position: fixed; left: 0; right: 0; bottom: 0; background: #0f172a; border-top-left-radius: 20px; border-top-right-radius: 20px; z-index: 75; padding: 8px 12px calc(env(safe-area-inset-bottom) + 16px); transform: translateY(110%); transition: transform 0.28s cubic-bezier(.4,0,.2,1); box-shadow: 0 -10px 40px rgba(0,0,0,0.6); border-top: 1px solid rgba(255,255,255,0.1); max-width: 500px; margin: 0 auto; max-height: 85vh; overflow-y: auto; }
         .actions-sheet.open { transform: translateY(0); }
         .actions-sheet-handle { width: 40px; height: 4px; background: #475569; border-radius: 2px; margin: 6px auto 14px; }
         .actions-sheet h3 { font-size: 12px; color: #94a3b8; text-transform: uppercase; letter-spacing: 1px; font-weight: 700; margin-bottom: 10px; padding: 0 4px; }
         .actions-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 8px; }
-        .actions-grid .action-btn { background: #1e293b; border: 1px solid rgba(255,255,255,0.08); border-radius: 14px; padding: 14px 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; color: #e2e8f0; font-size: 11px; font-weight: 600; text-align: center; cursor: pointer; transition: background 0.15s; -webkit-tap-highlight-color: transparent; }
+        .actions-grid .action-btn { background: #1e293b; border: 1px solid rgba(255,255,255,0.08); border-radius: 14px; padding: 14px 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; color: #e2e8f0; font-size: 11px; font-weight: 600; text-align: center; cursor: pointer; transition: background 0.15s; -webkit-tap-highlight-color: transparent; min-height: 60px; }
         .actions-grid .action-btn:active { background: #334155; transform: scale(0.97); }
         .actions-grid .action-btn i { font-size: 22px; }
         .actions-grid .action-btn.primary { background: linear-gradient(135deg, #2563eb, #1d4ed8); border-color: rgba(96,165,250,0.4); }
@@ -77,6 +77,7 @@
             .viewport-status { top: calc(env(safe-area-inset-top) + 60px) !important; right: 8px !important; }
             .viewport-toolbar button { padding: 8px 10px !important; font-size: 12px; }
             #selectedElementBar { bottom: calc(env(safe-area-inset-bottom) + 76px); left: 8px; right: 8px; border-radius: 12px; border: 1px solid rgba(96,165,250,0.35); padding: 10px 12px; }
+            .model-action-btn { min-width: 44px !important; min-height: 44px !important; display: inline-flex !important; align-items: center; justify-content: center; }
         }
         body.immersive header, body.immersive footer, body.immersive .left-sidebar, body.immersive .right-sidebar, body.immersive .viewport-toolbar, body.immersive .viewport-status, body.immersive .mobile-fab.auto-hide { display: none !important; }
         body.immersive main { position: absolute !important; inset: 0; z-index: 1; }
@@ -110,7 +111,6 @@
         .material-btn { padding: 8px 4px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); background: #1e293b; color: #cbd5e1; font-size: 10px; font-weight: 600; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 4px; transition: all 0.15s; }
         .material-btn:hover { background: #334155; border-color: #3b82f6; }
         .material-btn i { font-size: 16px; }
-        /* Dimensões */
         .dim-card { background: #0f172a; border: 1px solid #1e293b; border-radius: 8px; padding: 10px; }
         .dim-label { font-size: 9px; text-transform: uppercase; color: #94a3b8; font-weight: 700; letter-spacing: 0.5px; }
         .dim-value { font-size: 15px; font-weight: 800; color: #e2e8f0; font-family: 'Courier New', monospace; }
@@ -122,6 +122,16 @@
         .dim-highlight { border-left: 3px solid #f59e0b; background: rgba(245,158,11,0.08); }
         .dim-green { border-left: 3px solid #22c55e; background: rgba(34,197,94,0.08); }
         .dim-purple { border-left: 3px solid #a855f7; background: rgba(168,85,247,0.08); }
+        .confirm-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.75); z-index: 200; display: none; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
+        .confirm-overlay.open { display: flex; }
+        .confirm-box { background: #1e293b; border: 1px solid #334155; border-radius: 16px; padding: 20px; max-width: 340px; width: 100%; box-shadow: 0 20px 60px rgba(0,0,0,0.6); }
+        .confirm-box h3 { font-size: 16px; font-weight: 700; margin-bottom: 8px; color: #f8fafc; }
+        .confirm-box p { font-size: 13px; color: #94a3b8; margin-bottom: 16px; line-height: 1.4; }
+        .confirm-box .btn-row { display: flex; gap: 8px; }
+        .confirm-box button { flex: 1; padding: 12px; border-radius: 10px; font-size: 14px; font-weight: 600; border: none; cursor: pointer; transition: opacity 0.15s; }
+        .confirm-box button:active { opacity: 0.8; }
+        .confirm-box .btn-cancel { background: #334155; color: #e2e8f0; }
+        .confirm-box .btn-danger { background: #dc2626; color: white; }
     </style>
 </head>
 <body class="h-screen w-screen flex flex-col overflow-hidden bg-slate-950 text-slate-100">
@@ -151,6 +161,12 @@
             <button class="action-btn" onclick="closeActionsSheet(); exportPDFReport()"><i class="fa-solid fa-file-pdf" style="color:#f87171"></i><span>PDF</span></button>
             <button class="action-btn" onclick="closeActionsSheet(); exportBCF()"><i class="fa-solid fa-share-nodes" style="color:#fbbf24"></i><span>BCF</span></button>
             <button class="action-btn" onclick="closeActionsSheet(); exportCSV()"><i class="fa-solid fa-file-excel" style="color:#34d399"></i><span>Excel</span></button>
+        </div>
+        <h3>Zona de Perigo</h3>
+        <div class="actions-grid" style="grid-template-columns: 1fr;">
+            <button class="action-btn" style="background: linear-gradient(135deg, #991b1b, #7f1d1d); border-color: rgba(248,113,113,0.4);" onclick="closeActionsSheet(); confirmClearAll()">
+                <i class="fa-solid fa-trash"></i><span>Limpar Todos os Modelos</span>
+            </button>
         </div>
     </div>
 
@@ -184,9 +200,9 @@
             <div class="header-title-block">
                 <div class="flex items-center space-x-2">
                     <span class="font-extrabold tracking-wider text-base text-white">APAVAN</span>
-                    <span class="text-xs bg-blue-600/30 text-blue-400 px-2 py-0.5 rounded border border-blue-500/30 font-semibold">BIM v4.5</span>
+                    <span class="text-xs bg-blue-600/30 text-blue-400 px-2 py-0.5 rounded border border-blue-500/30 font-semibold">BIM v4.6</span>
                 </div>
-                <p class="text-[10px] text-slate-400 hidden md:block">APAVAN ENGENHARIA E CONSULTORIA • Ademilton Pavan CREA-SC 86959-8</p>
+                <p class="text-[10px] text-slate-400 hidden md:block">APAVAN-ENGENHARIA E CONSULTORIA </p>
             </div>
         </div>
         <div class="flex items-center space-x-2">
@@ -234,7 +250,9 @@
                     <b class="text-blue-300">Coordenadas (Z-Up):</b><br>
                     <b>X</b> = Largura (Leste-Oeste)<br>
                     <b>Y</b> = Profundidade (Norte-Sul)<br>
-                    <b>Z</b> = Altura (vertical)
+                    <b>Z</b> = Altura (vertical)<br><br>
+                    <b class="text-blue-300">Excluir modelo:</b><br>
+                    Toque no 🗑 ou <b>mantenha pressionado</b> o modelo por 0,6 s.
                 </div>
             </div>
 
@@ -259,9 +277,9 @@
                     <div class="border-t border-slate-800 pt-3">
                         <div class="flex items-center justify-between mb-2"><span class="font-bold text-slate-300"><i class="fa-solid fa-arrows-up-down-left-right text-emerald-400 mr-1"></i> Posição (m)</span><button onclick="resetPosition()" class="text-[10px] text-slate-400"><i class="fa-solid fa-rotate-left"></i></button></div>
                         <div class="space-y-2">
-                            <div><div class="flex justify-between text-[10px] text-slate-400 mb-1"><label>X</label><span id="posXVal" class="font-mono text-emerald-300">0.00 m</span></div><div class="flex items-center gap-2"><input type="range" id="posX" min="-50" max="50" step="0.1" value="0" oninput="onPosSlider('X')" class="flex-1"><input type="number" id="posXNum" step="0.1" value="0" onchange="onPosNum('X')" class="w-16 bg-slate-950 border border-slate-800 rounded p-1 text-[11px] text-center"></div></div>
-                            <div><div class="flex justify-between text-[10px] text-slate-400 mb-1"><label>Y</label><span id="posYVal" class="font-mono text-emerald-300">0.00 m</span></div><div class="flex items-center gap-2"><input type="range" id="posY" min="-50" max="50" step="0.1" value="0" oninput="onPosSlider('Y')" class="flex-1"><input type="number" id="posYNum" step="0.1" value="0" onchange="onPosNum('Y')" class="w-16 bg-slate-950 border border-slate-800 rounded p-1 text-[11px] text-center"></div></div>
-                            <div><div class="flex justify-between text-[10px] text-slate-400 mb-1"><label>Z</label><span id="posZVal" class="font-mono text-emerald-300">0.00 m</span></div><div class="flex items-center gap-2"><input type="range" id="posZ" min="-50" max="50" step="0.1" value="0" oninput="onPosSlider('Z')" class="flex-1"><input type="number" id="posZNum" step="0.1" value="0" onchange="onPosNum('Z')" class="w-16 bg-slate-950 border border-slate-800 rounded p-1 text-[11px] text-center"></div></div>
+                            <div><div class="flex justify-between text-[10px] text-slate-400 mb-1"><label>X — Leste/Oeste</label><span id="posXVal" class="font-mono text-emerald-300">0.00 m</span></div><div class="flex items-center gap-2"><input type="range" id="posX" min="-50" max="50" step="0.1" value="0" oninput="onPosSlider('X')" class="flex-1"><input type="number" id="posXNum" step="0.1" value="0" onchange="onPosNum('X')" class="w-16 bg-slate-950 border border-slate-800 rounded p-1 text-[11px] text-center"></div></div>
+                            <div><div class="flex justify-between text-[10px] text-slate-400 mb-1"><label>Y — Norte/Sul</label><span id="posYVal" class="font-mono text-emerald-300">0.00 m</span></div><div class="flex items-center gap-2"><input type="range" id="posY" min="-50" max="50" step="0.1" value="0" oninput="onPosSlider('Y')" class="flex-1"><input type="number" id="posYNum" step="0.1" value="0" onchange="onPosNum('Y')" class="w-16 bg-slate-950 border border-slate-800 rounded p-1 text-[11px] text-center"></div></div>
+                            <div><div class="flex justify-between text-[10px] text-slate-400 mb-1"><label>Z — Altura</label><span id="posZVal" class="font-mono text-emerald-300">0.00 m</span></div><div class="flex items-center gap-2"><input type="range" id="posZ" min="-50" max="50" step="0.1" value="0" oninput="onPosSlider('Z')" class="flex-1"><input type="number" id="posZNum" step="0.1" value="0" onchange="onPosNum('Z')" class="w-16 bg-slate-950 border border-slate-800 rounded p-1 text-[11px] text-center"></div></div>
                         </div>
                     </div>
                     <div class="border-t border-slate-800 pt-3 space-y-1.5">
@@ -279,6 +297,7 @@
                         <button onclick="expandTreeAll()" class="flex-1 py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded text-[10px] border border-slate-700"><i class="fa-solid fa-plus-square"></i> Expandir</button>
                         <button onclick="collapseTreeAll()" class="flex-1 py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded text-[10px] border border-slate-700"><i class="fa-solid fa-minus-square"></i> Recolher</button>
                     </div>
+                    <p class="text-[9px] text-slate-500 leading-tight">Marque a caixa da <b>pasta</b> para mostrar/ocultar o grupo inteiro. Ou abra e marque <b>item por item</b>.</p>
                 </div>
                 <div id="ifcSpatialTree" class="ifc-tree"></div>
             </div>
@@ -287,7 +306,7 @@
                 <div class="bg-slate-950 border border-slate-800 rounded p-3">
                     <div class="flex items-center justify-between mb-2">
                         <span class="text-xs font-bold text-slate-300 uppercase tracking-wider"><i class="fa-solid fa-palette text-pink-400 mr-1"></i> Cor</span>
-                        <button onclick="applyRandomColor()" class="text-[10px] text-slate-400 hover:text-white" title="Cor aleatória"><i class="fa-solid fa-dice"></i> Aleatória</button>
+                        <button onclick="applyRandomColor()" class="text-[10px] text-slate-400 hover:text-white"><i class="fa-solid fa-dice"></i> Aleatória</button>
                     </div>
                     <div class="flex items-center gap-2 mb-3">
                         <input type="color" id="colorPicker" value="#3b82f6" oninput="syncColorHex()" class="w-14 h-11 rounded cursor-pointer">
@@ -331,12 +350,7 @@
                 </div>
             </div>
 
-            <!-- ============================================================
-                 NOVA ABA DIMENSIONAR
-                 ============================================================ -->
             <div id="tab-content-dimension" class="flex-1 overflow-y-auto p-3 hidden space-y-3 text-xs">
-
-                <!-- Elemento selecionado -->
                 <div class="bg-slate-950 border border-slate-800 rounded p-3">
                     <div class="flex items-center justify-between mb-2">
                         <span class="text-xs font-bold text-slate-300 uppercase tracking-wider"><i class="fa-solid fa-ruler-combined text-orange-400 mr-1"></i> Elemento</span>
@@ -347,7 +361,6 @@
                         Selecione um elemento no 3D ou na árvore para ver as dimensões.
                     </div>
                     <div id="dimContent" class="hidden space-y-2">
-                        <!-- Dimensões X/Y/Z -->
                         <div class="dim-grid">
                             <div class="dim-card dim-axis-x">
                                 <div class="dim-label">X · Largura</div>
@@ -366,8 +379,6 @@
                                 <div><span class="dim-value" id="dimPerimeter">0.00</span><span class="dim-unit">m</span></div>
                             </div>
                         </div>
-
-                        <!-- Áreas por face -->
                         <div class="dim-grid">
                             <div class="dim-card dim-green">
                                 <div class="dim-label">Área base (X·Y)</div>
@@ -382,12 +393,10 @@
                                 <div><span class="dim-value" id="dimAreaYZ">0.00</span><span class="dim-unit">m²</span></div>
                             </div>
                             <div class="dim-card dim-highlight">
-                                <div class="dim-label">Sup. envolvente (AABB)</div>
+                                <div class="dim-label">Sup. envolvente</div>
                                 <div><span class="dim-value" id="dimAreaBox">0.00</span><span class="dim-unit">m²</span></div>
                             </div>
                         </div>
-
-                        <!-- Área real e volume -->
                         <div class="dim-grid">
                             <div class="dim-card dim-purple">
                                 <div class="dim-label">Área real (malha)</div>
@@ -398,16 +407,12 @@
                                 <div><span class="dim-value" id="dimVolume">0.00</span><span class="dim-unit">m³</span></div>
                             </div>
                         </div>
-
-                        <!-- Centroide -->
                         <div class="dim-card">
                             <div class="dim-label">Centroide (X, Y, Z)</div>
                             <div class="font-mono text-[11px] text-slate-300" id="dimCentroid">(0.00, 0.00, 0.00)</div>
                         </div>
                     </div>
                 </div>
-
-                <!-- Totalização -->
                 <div class="bg-slate-950 border border-slate-800 rounded p-3">
                     <div class="flex items-center justify-between mb-2">
                         <span class="text-xs font-bold text-slate-300 uppercase tracking-wider"><i class="fa-solid fa-chart-simple text-blue-400 mr-1"></i> Totalização</span>
@@ -415,7 +420,7 @@
                     </div>
                     <div class="grid grid-cols-2 gap-2">
                         <div class="dim-card dim-green">
-                            <div class="dim-label">Área total (malha)</div>
+                            <div class="dim-label">Área total</div>
                             <div><span class="dim-value" id="totalArea">—</span><span class="dim-unit">m²</span></div>
                         </div>
                         <div class="dim-card dim-purple">
@@ -424,34 +429,19 @@
                         </div>
                     </div>
                 </div>
-
-                <!-- Por disciplina -->
                 <div class="bg-slate-950 border border-slate-800 rounded p-3">
                     <span class="text-xs font-bold text-slate-300 uppercase tracking-wider block mb-2"><i class="fa-solid fa-layer-group text-cyan-400 mr-1"></i> Por Disciplina</span>
-                    <div id="dimByDiscipline" class="space-y-1 text-[11px]">
-                        <div class="text-slate-500 text-center py-2">—</div>
-                    </div>
+                    <div id="dimByDiscipline" class="space-y-1 text-[11px]"><div class="text-slate-500 text-center py-2">—</div></div>
                 </div>
-
-                <!-- Por pavimento -->
                 <div class="bg-slate-950 border border-slate-800 rounded p-3">
                     <span class="text-xs font-bold text-slate-300 uppercase tracking-wider block mb-2"><i class="fa-solid fa-layer-group text-emerald-400 mr-1"></i> Por Pavimento</span>
-                    <div id="dimByStorey" class="space-y-1 text-[11px]">
-                        <div class="text-slate-500 text-center py-2">—</div>
-                    </div>
+                    <div id="dimByStorey" class="space-y-1 text-[11px]"><div class="text-slate-500 text-center py-2">—</div></div>
                 </div>
-
-                <!-- Por tipo IFC -->
                 <div class="bg-slate-950 border border-slate-800 rounded p-3">
                     <span class="text-xs font-bold text-slate-300 uppercase tracking-wider block mb-2"><i class="fa-solid fa-folder text-amber-400 mr-1"></i> Por Tipo IFC</span>
-                    <div id="dimByType" class="space-y-1 text-[11px] max-h-48 overflow-y-auto">
-                        <div class="text-slate-500 text-center py-2">—</div>
-                    </div>
+                    <div id="dimByType" class="space-y-1 text-[11px] max-h-48 overflow-y-auto"><div class="text-slate-500 text-center py-2">—</div></div>
                 </div>
-
-                <button onclick="exportDimensionsCSV()" class="w-full py-2 bg-gradient-to-r from-orange-600 to-amber-600 hover:from-orange-500 hover:to-amber-500 text-white rounded text-xs font-bold flex items-center justify-center gap-2">
-                    <i class="fa-solid fa-file-excel"></i> Exportar Dimensionamento CSV
-                </button>
+                <button onclick="exportDimensionsCSV()" class="w-full py-2 bg-gradient-to-r from-orange-600 to-amber-600 text-white rounded text-xs font-bold flex items-center justify-center gap-2"><i class="fa-solid fa-file-excel"></i> Exportar Dimensionamento CSV</button>
             </div>
 
             <div id="tab-content-rules" class="flex-1 overflow-y-auto p-3 hidden space-y-4 text-xs">
@@ -561,6 +551,18 @@
         <div class="italic">Z-Up: X=largura, Y=profundidade, Z=altura</div>
     </footer>
 
+    <!-- Modal de confirmação iPhone-friendly -->
+    <div class="confirm-overlay" id="confirmOverlay">
+        <div class="confirm-box">
+            <h3 id="confirmTitle">Confirmar?</h3>
+            <p id="confirmMessage">Esta ação não pode ser desfeita.</p>
+            <div class="btn-row">
+                <button class="btn-cancel" onclick="closeConfirm(false)">Cancelar</button>
+                <button class="btn-danger" onclick="closeConfirm(true)">Confirmar</button>
+            </div>
+        </div>
+    </div>
+
 <script>
 const AI_CONFIG = { apiKey: "", model: "gemini-2.0-flash", endpoint: "https://generativelanguage.googleapis.com/v1beta/models/" };
 const PALETTE = ['#2563eb','#3b82f6','#60a5fa','#93c5fd','#a855f7','#f59e0b','#10b981','#ef4444','#14b8a6','#f472b6'];
@@ -609,90 +611,131 @@ window.onload = function() {
 };
 
 /* ============================================================
-   DIMENSIONAMENTO — cálculo de medidas por elemento
+   CONFIRMAÇÃO (iPhone-friendly)
+   ============================================================ */
+let _confirmResolver = null;
+function showConfirm(title, message) {
+    return new Promise(resolve => {
+        _confirmResolver = resolve;
+        document.getElementById('confirmTitle').innerText = title;
+        document.getElementById('confirmMessage').innerText = message;
+        document.getElementById('confirmOverlay').classList.add('open');
+    });
+}
+function closeConfirm(result) {
+    document.getElementById('confirmOverlay').classList.remove('open');
+    if (_confirmResolver) { _confirmResolver(result); _confirmResolver = null; }
+}
+
+/* ============================================================
+   EXCLUIR / ENQUADRAR MODELO
+   ============================================================ */
+async function removeModel(modelId) {
+    if (!modelId) return;
+    const model = state.models.find(m => m.id === modelId);
+    if (!model) return;
+    const ok = await showConfirm('Excluir modelo?', `"${model.name}" — ${model.count} elementos serão removidos permanentemente.`);
+    if (!ok) return;
+    const toRemove = state.elements.filter(e => e.modelId === modelId);
+    toRemove.forEach(e => {
+        e.mesh.geometry?.dispose();
+        if (Array.isArray(e.mesh.material)) e.mesh.material.forEach(m => m.dispose());
+        else e.mesh.material?.dispose();
+        if (e.mesh.parent) e.mesh.parent.remove(e.mesh);
+        const idx = state.elements.indexOf(e);
+        if (idx >= 0) state.elements.splice(idx, 1);
+    });
+    const group = state.modelGroups[modelId];
+    if (group && group.parent) group.parent.remove(group);
+    delete state.modelGroups[modelId];
+    delete state.modelBaseTransforms[modelId];
+    const mIdx = state.models.findIndex(m => m.id === modelId);
+    if (mIdx >= 0) state.models.splice(mIdx, 1);
+    if (state.selectedElement && state.selectedElement.modelId === modelId) {
+        state.selectedElement = null;
+        hideSelectedElementBar();
+        updateDimensionsUI();
+    }
+    state.clashes = state.clashes.filter(c => c.elemA.modelId !== modelId && c.elemB.modelId !== modelId);
+    clashMarkersGroup.clear();
+    document.getElementById('clashMarkersContainer').innerHTML = '';
+    state.clashes.forEach(c => create3DClashMarker(c));
+    updateModelsListUI(); buildSpatialTreeUI(); updateClashListUI(); updateDashboardUI(); updateScopeUI();
+    showViewportStatus(`Modelo "${model.name}" excluído.`);
+}
+
+async function confirmClearAll() {
+    if (!state.models.length) { alert('Nenhum modelo carregado.'); return; }
+    const ok = await showConfirm('Limpar tudo?', `Todos os ${state.models.length} modelos e ${state.clashes.length} conflitos serão removidos.`);
+    if (ok) { clearAllModels(); showViewportStatus("Tudo limpo."); }
+}
+
+function zoomToModel(modelId) {
+    const group = state.modelGroups[modelId];
+    if (!group) return;
+    group.updateMatrixWorld(true);
+    const box = new THREE.Box3().setFromObject(group);
+    if (box.isEmpty()) return;
+    const center = new THREE.Vector3(); box.getCenter(center);
+    const size = new THREE.Vector3(); box.getSize(size);
+    const dist = Math.max(size.x, size.y, size.z) * 1.2 + 5;
+    controls.target.copy(center);
+    camera.up.set(0, 0, 1);
+    camera.position.set(center.x + dist * 0.7, center.y - dist * 0.7, center.z + dist * 0.5);
+    camera.far = Math.max(1000, dist * 10);
+    camera.updateProjectionMatrix();
+    controls.update();
+    showViewportStatus(`Focado: ${modelId}`);
+}
+
+/* ============================================================
+   DIMENSIONAMENTO
    ============================================================ */
 function computeElementMetrics(elem) {
     elem.bbox.setFromObject(elem.mesh);
-    const size = new THREE.Vector3();
-    elem.bbox.getSize(size);
-    const center = new THREE.Vector3();
-    elem.bbox.getCenter(center);
-
-    // Área real (soma dos triângulos) e volume (método dos tetraedros)
-    let meshArea = 0;
-    let meshVolume = 0;
+    const size = new THREE.Vector3(); elem.bbox.getSize(size);
+    const center = new THREE.Vector3(); elem.bbox.getCenter(center);
+    let meshArea = 0, meshVolume = 0;
     const geom = elem.mesh.geometry;
     if (geom && geom.attributes && geom.attributes.position) {
         const pos = geom.attributes.position;
         const idx = geom.index;
+        const a = new THREE.Vector3(), b = new THREE.Vector3(), c = new THREE.Vector3();
+        const ab = new THREE.Vector3(), ac = new THREE.Vector3(), cross = new THREE.Vector3();
         if (idx && idx.count >= 3) {
-            const a = new THREE.Vector3(), b = new THREE.Vector3(), c = new THREE.Vector3();
-            const ab = new THREE.Vector3(), ac = new THREE.Vector3(), cross = new THREE.Vector3();
             for (let i = 0; i < idx.count; i += 3) {
                 a.fromBufferAttribute(pos, idx.getX(i));
                 b.fromBufferAttribute(pos, idx.getX(i + 1));
                 c.fromBufferAttribute(pos, idx.getX(i + 2));
-                ab.subVectors(b, a);
-                ac.subVectors(c, a);
-                cross.crossVectors(ab, ac);
+                ab.subVectors(b, a); ac.subVectors(c, a); cross.crossVectors(ab, ac);
                 meshArea += cross.length() * 0.5;
-                // Volume assinado do tetraedro com origem
                 meshVolume += a.dot(b.clone().cross(c)) / 6;
             }
         } else {
-            // Sem índices: assume triângulos sequenciais
-            const a = new THREE.Vector3(), b = new THREE.Vector3(), c = new THREE.Vector3();
-            const ab = new THREE.Vector3(), ac = new THREE.Vector3(), cross = new THREE.Vector3();
             for (let i = 0; i + 2 < pos.count; i += 3) {
-                a.fromBufferAttribute(pos, i);
-                b.fromBufferAttribute(pos, i + 1);
-                c.fromBufferAttribute(pos, i + 2);
-                ab.subVectors(b, a);
-                ac.subVectors(c, a);
-                cross.crossVectors(ab, ac);
+                a.fromBufferAttribute(pos, i); b.fromBufferAttribute(pos, i + 1); c.fromBufferAttribute(pos, i + 2);
+                ab.subVectors(b, a); ac.subVectors(c, a); cross.crossVectors(ab, ac);
                 meshArea += cross.length() * 0.5;
                 meshVolume += a.dot(b.clone().cross(c)) / 6;
             }
         }
     }
     meshVolume = Math.abs(meshVolume);
-
     return {
-        x: size.x,
-        y: size.y,
-        z: size.z,
+        x: size.x, y: size.y, z: size.z,
         perimeter: 2 * (size.x + size.y),
-        areaBase: size.x * size.y,
-        areaXZ: size.x * size.z,
-        areaYZ: size.y * size.z,
+        areaBase: size.x * size.y, areaXZ: size.x * size.z, areaYZ: size.y * size.z,
         areaBox: 2 * (size.x * size.y + size.x * size.z + size.y * size.z),
-        areaMesh: meshArea,
-        volumeBox: size.x * size.y * size.z,
-        volumeMesh: meshVolume,
+        areaMesh: meshArea, volumeBox: size.x * size.y * size.z, volumeMesh: meshVolume,
         center: center
     };
 }
-
-function fmt(v, d) {
-    if (v === undefined || v === null || isNaN(v)) return '0.00';
-    return Number(v).toFixed(d === undefined ? 2 : d);
-}
-
+function fmt(v, d) { if (v === undefined || v === null || isNaN(v)) return '0.00'; return Number(v).toFixed(d === undefined ? 2 : d); }
 function updateDimensionsUI() {
     const elem = state.selectedElement;
-    const empty = document.getElementById('dimEmpty');
-    const content = document.getElementById('dimContent');
-    const nameEl = document.getElementById('dimElemName');
-    if (!elem) {
-        empty.classList.remove('hidden');
-        content.classList.add('hidden');
-        nameEl.innerText = '—';
-        return;
-    }
-    empty.classList.add('hidden');
-    content.classList.remove('hidden');
-    nameEl.innerText = elem.name;
-
+    const empty = document.getElementById('dimEmpty'), content = document.getElementById('dimContent'), nameEl = document.getElementById('dimElemName');
+    if (!elem) { empty.classList.remove('hidden'); content.classList.add('hidden'); nameEl.innerText = '—'; return; }
+    empty.classList.add('hidden'); content.classList.remove('hidden'); nameEl.innerText = elem.name;
     const m = computeElementMetrics(elem);
     document.getElementById('dimX').innerText = fmt(m.x);
     document.getElementById('dimY').innerText = fmt(m.y);
@@ -706,119 +749,54 @@ function updateDimensionsUI() {
     document.getElementById('dimVolume').innerText = fmt(m.volumeMesh);
     document.getElementById('dimCentroid').innerText = `(${fmt(m.center.x)}, ${fmt(m.center.y)}, ${fmt(m.center.z)})`;
 }
-
 function measureWholeModel() {
     if (!state.elements.length) { alert('Nenhum modelo carregado.'); return; }
-
-    // Totais globais
     let totalArea = 0, totalVolume = 0;
     const byDisc = {}, byStorey = {}, byType = {};
-
     state.elements.forEach(elem => {
         const m = computeElementMetrics(elem);
-        totalArea += m.areaMesh;
-        totalVolume += m.volumeMesh;
-
-        // Por disciplina
+        totalArea += m.areaMesh; totalVolume += m.volumeMesh;
         if (!byDisc[elem.discipline]) byDisc[elem.discipline] = { count: 0, area: 0, volume: 0 };
-        byDisc[elem.discipline].count++;
-        byDisc[elem.discipline].area += m.areaMesh;
-        byDisc[elem.discipline].volume += m.volumeMesh;
-
-        // Por pavimento
+        byDisc[elem.discipline].count++; byDisc[elem.discipline].area += m.areaMesh; byDisc[elem.discipline].volume += m.volumeMesh;
         if (!byStorey[elem.storey]) byStorey[elem.storey] = { count: 0, area: 0, volume: 0 };
-        byStorey[elem.storey].count++;
-        byStorey[elem.storey].area += m.areaMesh;
-        byStorey[elem.storey].volume += m.volumeMesh;
-
-        // Por tipo IFC
+        byStorey[elem.storey].count++; byStorey[elem.storey].area += m.areaMesh; byStorey[elem.storey].volume += m.volumeMesh;
         if (!byType[elem.ifcClass]) byType[elem.ifcClass] = { count: 0, area: 0, volume: 0 };
-        byType[elem.ifcClass].count++;
-        byType[elem.ifcClass].area += m.areaMesh;
-        byType[elem.ifcClass].volume += m.volumeMesh;
+        byType[elem.ifcClass].count++; byType[elem.ifcClass].area += m.areaMesh; byType[elem.ifcClass].volume += m.volumeMesh;
     });
-
     document.getElementById('totalArea').innerText = fmt(totalArea);
     document.getElementById('totalVolume').innerText = fmt(totalVolume);
-
-    // Renderiza por disciplina
-    const discEl = document.getElementById('dimByDiscipline');
-    discEl.innerHTML = '';
+    const discEl = document.getElementById('dimByDiscipline'); discEl.innerHTML = '';
     const discs = Object.keys(byDisc).sort();
     if (!discs.length) discEl.innerHTML = '<div class="text-slate-500 text-center py-2">—</div>';
     discs.forEach(d => {
-        const info = byDisc[d];
-        const color = getDisciplineColorCSS(d);
+        const info = byDisc[d]; const color = getDisciplineColorCSS(d);
         const row = document.createElement('div');
         row.className = 'bg-slate-900 border border-slate-800 rounded p-2 flex items-center justify-between';
-        row.innerHTML = `
-            <div class="flex items-center gap-2 min-w-0">
-                <span class="w-2.5 h-2.5 rounded-full shrink-0" style="background:${color}"></span>
-                <div class="min-w-0">
-                    <div class="font-semibold text-slate-200 truncate">${d}</div>
-                    <div class="text-[9px] text-slate-500">${info.count} elementos</div>
-                </div>
-            </div>
-            <div class="text-right shrink-0">
-                <div class="font-mono text-emerald-300 text-[11px]">${fmt(info.area)} m²</div>
-                <div class="font-mono text-purple-300 text-[10px]">${fmt(info.volume)} m³</div>
-            </div>`;
+        row.innerHTML = `<div class="flex items-center gap-2 min-w-0"><span class="w-2.5 h-2.5 rounded-full shrink-0" style="background:${color}"></span><div class="min-w-0"><div class="font-semibold text-slate-200 truncate">${d}</div><div class="text-[9px] text-slate-500">${info.count} elem.</div></div></div><div class="text-right shrink-0"><div class="font-mono text-emerald-300 text-[11px]">${fmt(info.area)} m²</div><div class="font-mono text-purple-300 text-[10px]">${fmt(info.volume)} m³</div></div>`;
         discEl.appendChild(row);
     });
-
-    // Renderiza por pavimento
-    const storeyEl = document.getElementById('dimByStorey');
-    storeyEl.innerHTML = '';
-    const storeys = Object.keys(byStorey).sort((a,b) => {
-        const ia = FLOOR_ORDER.indexOf(a), ib = FLOOR_ORDER.indexOf(b);
-        if (ia !== -1 && ib !== -1) return ia - ib;
-        if (ia !== -1) return -1; if (ib !== -1) return 1;
-        return a.localeCompare(b);
-    });
+    const storeyEl = document.getElementById('dimByStorey'); storeyEl.innerHTML = '';
+    const storeys = Object.keys(byStorey).sort((a,b) => { const ia = FLOOR_ORDER.indexOf(a), ib = FLOOR_ORDER.indexOf(b); if (ia !== -1 && ib !== -1) return ia - ib; if (ia !== -1) return -1; if (ib !== -1) return 1; return a.localeCompare(b); });
     if (!storeys.length) storeyEl.innerHTML = '<div class="text-slate-500 text-center py-2">—</div>';
     storeys.forEach(s => {
         const info = byStorey[s];
         const row = document.createElement('div');
         row.className = 'bg-slate-900 border border-slate-800 rounded p-2 flex items-center justify-between';
-        row.innerHTML = `
-            <div class="flex items-center gap-2 min-w-0">
-                <i class="fa-solid fa-layer-group text-slate-500 text-[11px]"></i>
-                <div class="min-w-0">
-                    <div class="font-semibold text-slate-200 truncate">${s}</div>
-                    <div class="text-[9px] text-slate-500">${info.count} elementos</div>
-                </div>
-            </div>
-            <div class="text-right shrink-0">
-                <div class="font-mono text-emerald-300 text-[11px]">${fmt(info.area)} m²</div>
-                <div class="font-mono text-purple-300 text-[10px]">${fmt(info.volume)} m³</div>
-            </div>`;
+        row.innerHTML = `<div class="flex items-center gap-2 min-w-0"><i class="fa-solid fa-layer-group text-slate-500 text-[11px]"></i><div class="min-w-0"><div class="font-semibold text-slate-200 truncate">${s}</div><div class="text-[9px] text-slate-500">${info.count} elem.</div></div></div><div class="text-right shrink-0"><div class="font-mono text-emerald-300 text-[11px]">${fmt(info.area)} m²</div><div class="font-mono text-purple-300 text-[10px]">${fmt(info.volume)} m³</div></div>`;
         storeyEl.appendChild(row);
     });
-
-    // Renderiza por tipo IFC
-    const typeEl = document.getElementById('dimByType');
-    typeEl.innerHTML = '';
+    const typeEl = document.getElementById('dimByType'); typeEl.innerHTML = '';
     const types = Object.keys(byType).sort((a,b) => byType[b].area - byType[a].area);
     if (!types.length) typeEl.innerHTML = '<div class="text-slate-500 text-center py-2">—</div>';
     types.forEach(t => {
         const info = byType[t];
         const row = document.createElement('div');
         row.className = 'bg-slate-900 border border-slate-800 rounded p-2 flex items-center justify-between';
-        row.innerHTML = `
-            <div class="min-w-0">
-                <div class="font-semibold text-slate-200 truncate text-[11px]">${t}</div>
-                <div class="text-[9px] text-slate-500">${info.count} elementos</div>
-            </div>
-            <div class="text-right shrink-0">
-                <div class="font-mono text-emerald-300 text-[11px]">${fmt(info.area)} m²</div>
-                <div class="font-mono text-purple-300 text-[10px]">${fmt(info.volume)} m³</div>
-            </div>`;
+        row.innerHTML = `<div class="min-w-0"><div class="font-semibold text-slate-200 truncate text-[11px]">${t}</div><div class="text-[9px] text-slate-500">${info.count} elem.</div></div><div class="text-right shrink-0"><div class="font-mono text-emerald-300 text-[11px]">${fmt(info.area)} m²</div><div class="font-mono text-purple-300 text-[10px]">${fmt(info.volume)} m³</div></div>`;
         typeEl.appendChild(row);
     });
-
-    showViewportStatus(`Dimensionamento calculado: ${fmt(totalArea)} m² | ${fmt(totalVolume)} m³`);
+    showViewportStatus(`Dimensionamento: ${fmt(totalArea)} m² | ${fmt(totalVolume)} m³`);
 }
-
 function exportDimensionsCSV() {
     if (!state.elements.length) { alert('Nenhum modelo carregado.'); return; }
     let csv = "Tipo;Nome;GUID;Disciplina;Pavimento;X (m);Y (m);Z (m);Perímetro (m);Área base (m²);Área real (m²);Volume real (m³);Centroide X;Centroide Y;Centroide Z\n";
@@ -829,24 +807,18 @@ function exportDimensionsCSV() {
     const blob = new Blob(["\uFEFF" + csv], { type:'text/csv;charset=utf-8;' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
-    a.href = url;
-    a.download = `Dimensionamento_APAVAN_${Date.now()}.csv`;
-    a.click();
+    a.href = url; a.download = `Dimensionamento_APAVAN_${Date.now()}.csv`; a.click();
     URL.revokeObjectURL(url);
-    showViewportStatus("Dimensionamento exportado em CSV.");
+    showViewportStatus("Dimensionamento exportado.");
 }
 
-/* ============================================================
-   COR / APARÊNCIA
-   ============================================================ */
+/* COR / APARÊNCIA */
 function initColorSwatches() {
     const grid = document.getElementById('colorSwatches'); if (!grid) return;
     grid.innerHTML = '';
     COLOR_SWATCHES.forEach(c => {
         const sw = document.createElement('div');
-        sw.className = 'color-swatch';
-        sw.style.background = c;
-        sw.title = c;
+        sw.className = 'color-swatch'; sw.style.background = c; sw.title = c;
         sw.onclick = () => { document.getElementById('colorPicker').value = c; document.getElementById('colorHex').value = c.toUpperCase(); };
         grid.appendChild(sw);
     });
@@ -857,14 +829,8 @@ function updateOpacityLabel() { document.getElementById('opacityVal').innerText 
 function applyRandomColor() { const c = '#' + Math.floor(Math.random()*16777215).toString(16).padStart(6, '0'); document.getElementById('colorPicker').value = c; document.getElementById('colorHex').value = c.toUpperCase(); }
 function updateScopeUI() {
     const scope = document.getElementById('applyScope').value;
-    const extra = document.getElementById('scopeExtra');
-    const sel = document.getElementById('scopeValue');
-    const hint = document.getElementById('scopeHint');
-    if (scope === 'selected') {
-        extra.classList.add('hidden');
-        hint.innerText = state.selectedElement ? `Aplicar em: ${state.selectedElement.name}` : '⚠️ Nenhum elemento selecionado.';
-        return;
-    }
+    const extra = document.getElementById('scopeExtra'), sel = document.getElementById('scopeValue'), hint = document.getElementById('scopeHint');
+    if (scope === 'selected') { extra.classList.add('hidden'); hint.innerText = state.selectedElement ? `Aplicar em: ${state.selectedElement.name}` : '⚠️ Nenhum elemento selecionado.'; return; }
     extra.classList.remove('hidden');
     sel.innerHTML = '<option value="">— Todos —</option>';
     let values = [];
@@ -873,7 +839,7 @@ function updateScopeUI() {
     else if (scope === 'storey') values = [...new Set(state.elements.map(e => e.storey))];
     else if (scope === 'type') values = [...new Set(state.elements.map(e => e.ifcClass))].sort();
     values.forEach(v => { const o = document.createElement('option'); o.value = v; o.textContent = v; sel.appendChild(o); });
-    hint.innerText = 'Escolha um valor específico ou deixe em "Todos".';
+    hint.innerText = 'Escolha um valor específico ou "Todos".';
 }
 function getTargetElements() {
     const scope = document.getElementById('applyScope').value;
@@ -889,7 +855,7 @@ function applyColorFromUI() {
     const colorHex = document.getElementById('colorPicker').value;
     const opacity = parseInt(document.getElementById('opacityRange').value) / 100;
     const targets = getTargetElements();
-    if (!targets.length) { alert('⚠️ Nenhum elemento. Selecione um ou escolha um escopo.'); return; }
+    if (!targets.length) { alert('⚠️ Nenhum elemento.'); return; }
     const colorInt = parseInt(colorHex.replace('#',''), 16);
     targets.forEach(elem => {
         if (!elem.mesh.userData._matCloned) { elem.mesh.material = elem.mesh.material.clone(); elem.mesh.userData._matCloned = true; }
@@ -913,17 +879,15 @@ function applyMaterialPreset(name) {
         elem.mesh.material.transparent = preset.opacity < 1;
         elem.mesh.material.needsUpdate = true;
     });
-    showViewportStatus(`Material "${name}" aplicado em ${targets.length} elemento(s).`);
+    showViewportStatus(`Material "${name}" aplicado.`);
 }
 function resetColors() {
     if (!state.elements.length) return;
     state.elements.forEach(elem => {
         if (!elem.mesh.userData._matCloned) return;
         elem.mesh.material.color.setHex(getDisciplineColorHex(elem.discipline));
-        elem.mesh.material.roughness = 0.5;
-        elem.mesh.material.metalness = 0.15;
-        elem.mesh.material.opacity = 0.92;
-        elem.mesh.material.transparent = true;
+        elem.mesh.material.roughness = 0.5; elem.mesh.material.metalness = 0.15;
+        elem.mesh.material.opacity = 0.92; elem.mesh.material.transparent = true;
         elem.mesh.material.needsUpdate = true;
     });
     showViewportStatus("Cores restauradas.");
@@ -932,14 +896,12 @@ function makeAllTransparent() {
     if (!state.elements.length) return;
     state.elements.forEach(elem => {
         if (!elem.mesh.userData._matCloned) { elem.mesh.material = elem.mesh.material.clone(); elem.mesh.userData._matCloned = true; }
-        elem.mesh.material.opacity = 0.15;
-        elem.mesh.material.transparent = true;
-        elem.mesh.material.needsUpdate = true;
+        elem.mesh.material.opacity = 0.15; elem.mesh.material.transparent = true; elem.mesh.material.needsUpdate = true;
     });
     showViewportStatus("Todos translúcidos.");
 }
 
-/* AÇÕES MOBILE */
+/* MOBILE */
 function openActionsSheet() { document.getElementById('actionsSheet').classList.add('open'); document.getElementById('actionsBackdrop').classList.add('open'); }
 function closeActionsSheet() { document.getElementById('actionsSheet').classList.remove('open'); document.getElementById('actionsBackdrop').classList.remove('open'); }
 function triggerIfcImport() { setTimeout(() => document.getElementById('ifcFileInput').click(), 250); }
@@ -954,8 +916,7 @@ function init3DScene() {
     scene = new THREE.Scene();
     scene.background = new THREE.Color(0x090d16);
     camera = new THREE.PerspectiveCamera(45, container.clientWidth / container.clientHeight, 0.1, 100000);
-    camera.up.set(0, 0, 1);
-    camera.position.set(25, -25, 25);
+    camera.up.set(0, 0, 1); camera.position.set(25, -25, 25);
     renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('bimCanvas'), antialias: !isMobile() });
     renderer.setSize(container.clientWidth, container.clientHeight);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
@@ -990,8 +951,7 @@ function initAxisCompass() {
     window._compassRenderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     window._compassScene = new THREE.Scene();
     window._compassCamera = new THREE.PerspectiveCamera(45, 1, 0.1, 100);
-    window._compassCamera.up.set(0, 0, 1);
-    window._compassCamera.position.set(3, -3, 3);
+    window._compassCamera.up.set(0, 0, 1); window._compassCamera.position.set(3, -3, 3);
     window._compassScene.add(new THREE.AxesHelper(1.2));
     const mkDot = (c, p) => { const s = new THREE.Mesh(new THREE.SphereGeometry(0.12, 8, 8), new THREE.MeshBasicMaterial({ color: c })); s.position.copy(p); window._compassScene.add(s); };
     mkDot(0xef4444, new THREE.Vector3(1.2, 0, 0));
@@ -1251,8 +1211,7 @@ function selectTransformModel(modelId) {
 }
 function updateTransformInfo(group) {
     group.updateMatrixWorld(true);
-    const box = new THREE.Box3().setFromObject(group);
-    if (box.isEmpty()) return;
+    const box = new THREE.Box3().setFromObject(group); if (box.isEmpty()) return;
     const size = new THREE.Vector3(); box.getSize(size);
     const center = new THREE.Vector3(); box.getCenter(center);
     document.getElementById('tInfoDims').innerText = `${size.x.toFixed(2)} × ${size.y.toFixed(2)} × ${size.z.toFixed(2)} m`;
@@ -1260,8 +1219,7 @@ function updateTransformInfo(group) {
 }
 function updatePositionRanges(group) {
     group.updateMatrixWorld(true);
-    const box = new THREE.Box3().setFromObject(group);
-    if (box.isEmpty()) return;
+    const box = new THREE.Box3().setFromObject(group); if (box.isEmpty()) return;
     const size = new THREE.Vector3(); box.getSize(size);
     const range = Math.max(Math.max(size.x, size.y, size.z) * 2, 10);
     ['posX','posY','posZ'].forEach(id => { const el = document.getElementById(id); el.min = -range; el.max = range; });
@@ -1293,7 +1251,7 @@ function alignBaseToGrid() {
     const box = new THREE.Box3().setFromObject(group); if (box.isEmpty()) return;
     group.position.z += -box.min.z; group.updateMatrixWorld(true);
     setPosUI('Z', group.position.z); updateTransformInfo(group); updateClashPinPositions();
-    showViewportStatus("Base alinhada ao plano Z=0 (piso).");
+    showViewportStatus("Base alinhada ao plano Z=0.");
 }
 function centerOnGrid() {
     const group = state.modelGroups[getSelectedTransformModel()]; if (!group) return;
@@ -1340,7 +1298,6 @@ function createTreeNode({ icon, iconColor, label, count, level, ifcClass }) {
     row.className = 'tree-row'; row.style.paddingLeft = `${level * 3}px`;
     const toggle = document.createElement('span'); toggle.className = 'tree-toggle'; toggle.innerHTML = '<i class="fa-solid fa-chevron-down"></i>'; row.appendChild(toggle);
     const cb = document.createElement('input'); cb.type = 'checkbox'; cb.className = 'folder-cb'; cb.checked = true;
-    cb.title = 'Mostrar / Ocultar tudo neste grupo';
     cb.addEventListener('click', (ev) => { ev.stopPropagation(); setFolderVisibility(wrap, cb.checked); cb.indeterminate = false; refreshFolderCheckboxes(); });
     row.appendChild(cb);
     const ic = document.createElement('i'); ic.className = `fa-solid ${icon} ${iconColor || 'text-slate-400'} folder-icon`; row.appendChild(ic);
@@ -1370,7 +1327,6 @@ function createLeafNode(elem) {
     const lbl = document.createElement('div'); lbl.className = 'flex-1 min-w-0 flex flex-col leading-tight';
     lbl.innerHTML = `<span class="lbl-type text-[9px] truncate">${elem.ifcClass}</span><span class="lbl-name text-[10px] truncate">${elem.name}</span>`;
     row.appendChild(lbl);
-    row.title = `${elem.ifcClass} — ${elem.name}\nGUID: ${elem.guid}`;
     row.addEventListener('click', (ev) => { if (ev.target.closest('input')) return; highlightTreeNodeByGUID(elem.guid); highlightElementByGUID(elem.guid); });
     leafWrap.appendChild(row);
     return leafWrap;
@@ -1666,13 +1622,62 @@ function exportPDFReport() {
 
 /* UI */
 function updateModelsListUI() {
-    const list = document.getElementById('loadedModelsList'); list.innerHTML = '';
+    const list = document.getElementById('loadedModelsList');
+    list.innerHTML = '';
     document.getElementById('modelCountBadge').innerText = state.models.length;
-    if (!state.models.length) { list.innerHTML = `<div class="text-xs text-slate-500 text-center py-6 border border-dashed border-slate-800 rounded">Nenhum modelo.</div>`; populateTransformModelList(); return; }
+
+    if (!state.models.length) {
+        list.innerHTML = `<div class="text-xs text-slate-500 text-center py-6 border border-dashed border-slate-800 rounded">Nenhum modelo.</div>`;
+        populateTransformModelList();
+        return;
+    }
+
     state.models.forEach(m => {
         const item = document.createElement('div');
-        item.className = 'bg-slate-950 p-2 rounded border border-slate-800 flex items-center justify-between text-xs';
-        item.innerHTML = `<div class="flex items-center space-x-2 truncate"><span class="w-3 h-3 rounded-full shrink-0" style="background-color:${getDisciplineColorCSS(m.discipline)}"></span><div class="truncate"><div class="font-semibold text-slate-200 truncate">${m.name}</div><div class="text-[10px] text-slate-500">${m.discipline} • ${m.count} elem.</div></div></div><button onclick="toggleModelVisibility('${m.id}')" class="text-slate-400 px-1"><i class="fa-solid ${m.visible ? 'fa-eye' : 'fa-eye-slash'}"></i></button>`;
+        item.className = 'bg-slate-950 p-2 rounded border border-slate-800 flex items-center justify-between text-xs gap-1';
+        const safeId = m.id.replace(/'/g, "\\'");
+        item.innerHTML = `
+            <div class="flex items-center space-x-2 truncate flex-1 min-w-0">
+                <span class="w-3 h-3 rounded-full shrink-0" style="background-color:${getDisciplineColorCSS(m.discipline)}"></span>
+                <div class="truncate">
+                    <div class="font-semibold text-slate-200 truncate" title="${m.name}">${m.name}</div>
+                    <div class="text-[10px] text-slate-500">${m.discipline} • ${m.count} elem.</div>
+                </div>
+            </div>
+            <div class="flex items-center gap-0.5 shrink-0">
+                <button onclick="event.stopPropagation(); toggleModelVisibility('${safeId}')"
+                    class="model-action-btn text-slate-400 hover:text-blue-400 px-1.5 py-1 rounded hover:bg-slate-800"
+                    title="${m.visible ? 'Ocultar' : 'Mostrar'}">
+                    <i class="fa-solid ${m.visible ? 'fa-eye' : 'fa-eye-slash'}"></i>
+                </button>
+                <button onclick="event.stopPropagation(); zoomToModel('${safeId}')"
+                    class="model-action-btn text-slate-400 hover:text-emerald-400 px-1.5 py-1 rounded hover:bg-slate-800"
+                    title="Enquadrar">
+                    <i class="fa-solid fa-crosshairs"></i>
+                </button>
+                <button onclick="event.stopPropagation(); removeModel('${safeId}')"
+                    class="model-action-btn text-slate-400 hover:text-red-400 px-1.5 py-1 rounded hover:bg-red-950/40"
+                    title="Excluir">
+                    <i class="fa-solid fa-trash"></i>
+                </button>
+            </div>
+        `;
+
+        // Long-press 600ms → excluir (iPhone)
+        let pressTimer = null;
+        const onStart = () => {
+            pressTimer = setTimeout(() => {
+                if (navigator.vibrate) navigator.vibrate(50);
+                removeModel(m.id);
+                pressTimer = null;
+            }, 600);
+        };
+        const onEnd = () => { if (pressTimer) { clearTimeout(pressTimer); pressTimer = null; } };
+        item.addEventListener('touchstart', onStart, { passive: true });
+        item.addEventListener('touchend', onEnd);
+        item.addEventListener('touchcancel', onEnd);
+        item.addEventListener('touchmove', onEnd);
+
         list.appendChild(item);
     });
     populateTransformModelList();
@@ -1820,13 +1825,8 @@ function selectElement(elem) {
     document.getElementById('selElemDisc').innerText = elem.discipline;
     document.getElementById('selElemFloor').innerText = elem.storey;
     bar.classList.add('show');
-
-    // Atualiza abas sensíveis à seleção SEM trocar de aba
     if (document.getElementById('applyScope').value === 'selected') updateScopeUI();
-    // Só recalcula dim se a aba estiver visível
-    if (!document.getElementById('tab-content-dimension').classList.contains('hidden')) {
-        updateDimensionsUI();
-    }
+    if (!document.getElementById('tab-content-dimension').classList.contains('hidden')) updateDimensionsUI();
 }
 function hideSelectedElementBar() { document.getElementById('selectedElementBar').classList.remove('show'); }
 function isolateSelectedElement() {
@@ -1840,8 +1840,7 @@ function isolateSelectedElement() {
         if (cb) cb.checked = elem && !elem.hidden;
         leaf.querySelector('.tree-row')?.classList.toggle('hidden-elem', elem?.hidden);
     });
-    refreshFolderCheckboxes();
-    updateClashPinPositions();
+    refreshFolderCheckboxes(); updateClashPinPositions();
     showViewportStatus(`Isolado: ${t.name}.`);
 }
 function hideSelectedElement() {
@@ -1850,8 +1849,7 @@ function hideSelectedElement() {
     t.mesh.visible = false; t.hidden = true;
     const leaf = document.querySelector(`#ifcSpatialTree .tree-leaf[data-guid="${CSS.escape(t.guid)}"]`);
     if (leaf) { const cb = leaf.querySelector('input[type="checkbox"]'); if (cb) cb.checked = false; leaf.querySelector('.tree-row')?.classList.add('hidden-elem'); }
-    refreshFolderCheckboxes();
-    clearSelection(); updateClashPinPositions();
+    refreshFolderCheckboxes(); clearSelection(); updateClashPinPositions();
     showViewportStatus(`Ocultado: ${t.name}`);
 }
 function showAllElements() {
@@ -1860,8 +1858,7 @@ function showAllElements() {
         const cb = leaf.querySelector('input[type="checkbox"]'); if (cb) cb.checked = true;
         leaf.querySelector('.tree-row')?.classList.remove('hidden-elem');
     });
-    refreshFolderCheckboxes();
-    updateClashPinPositions(); fitAllModels();
+    refreshFolderCheckboxes(); updateClashPinPositions(); fitAllModels();
     showViewportStatus("Todos os elementos visíveis.");
 }
 function clearSelection() { state.selectedElement = null; hideSelectedElementBar(); updateDimensionsUI(); if (!state.selectedClash) restoreElementMaterials(); }
@@ -1888,7 +1885,6 @@ function pickElementAt(event) {
         const elem = hits[0].object.userData.bimElement;
         selectElement(elem);
         highlightTreeNodeByGUID(elem.guid);
-        // NÃO troca de aba automaticamente — mantém a que o usuário estava
     } else {
         if (state.selectedElement) clearSelection();
     }

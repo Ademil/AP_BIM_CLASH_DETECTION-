@@ -3,22 +3,56 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0, user-scalable=no">
-    <title>AP BIM Clash Detection — APAVAN Engenharia</title>
+    <title>AP BIM — APAVAN Engenharia</title>
+
+    <!-- ============================================================
+         PWA / iOS — Nome e comportamento na tela inicial
+         ============================================================ -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="AP BIM Clash">
+    <!-- ▼ Nome exibido embaixo do ícone no iPhone -->
+    <meta name="apple-mobile-web-app-title" content="AP BIM">
+    <meta name="application-name" content="AP BIM">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="theme-color" content="#1e3a8a">
-    <link rel="apple-touch-icon" sizes="180x180" href="data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%230f2559'/%3E%3Cstop offset='1' stop-color='%232563eb'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='180' height='180' rx='40' fill='url(%23g)'/%3E%3Ctext x='90' y='112' font-family='Helvetica,Arial,sans-serif' font-size='80' font-weight='900' fill='%23ffffff' text-anchor='middle' letter-spacing='-3'%3EAP%3C/text%3E%3Crect x='52' y='128' width='76' height='7' rx='3.5' fill='%2360a5fa'/%3E%3C/svg%3E">
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%230f2559'/%3E%3Cstop offset='1' stop-color='%232563eb'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='180' height='180' rx='40' fill='url(%23g)'/%3E%3Ctext x='90' y='112' font-family='Helvetica,Arial,sans-serif' font-size='80' font-weight='900' fill='%23ffffff' text-anchor='middle' letter-spacing='-3'%3EAP%3C/text%3E%3Crect x='52' y='128' width='76' height='7' rx='3.5' fill='%2360a5fa'/%3E%3C/svg%3E">
+    <meta name="description" content="AP BIM — Compatibilização e Clash Detection IFC • APAVAN Engenharia">
+
+    <!-- ============================================================
+         ÍCONE — estilo "AP VIGAS" azul arredondado
+         AP grande • BIM embaixo • 5 pontinhos
+         ============================================================ -->
+    <link rel="apple-touch-icon" sizes="180x180"
+          href="data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%230b1e4a'/%3E%3Cstop offset='0.55' stop-color='%231e3a8a'/%3E%3Cstop offset='1' stop-color='%232563eb'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='180' height='180' rx='40' fill='url(%23g)'/%3E%3Ctext x='90' y='100' font-family='Helvetica,Arial,sans-serif' font-size='76' font-weight='900' fill='%23ffffff' text-anchor='middle' letter-spacing='-3'%3EAP%3C/text%3E%3Ctext x='90' y='128' font-family='Helvetica,Arial,sans-serif' font-size='20' font-weight='700' fill='%23ffffff' text-anchor='middle' letter-spacing='1.5'%3EBIM%3C/text%3E%3Ccircle cx='62' cy='148' r='3.5' fill='%23dbeafe'/%3E%3Ccircle cx='76' cy='148' r='3.5' fill='%23dbeafe'/%3E%3Ccircle cx='90' cy='148' r='3.5' fill='%23dbeafe'/%3E%3Ccircle cx='104' cy='148' r='3.5' fill='%23dbeafe'/%3E%3Ccircle cx='118' cy='148' r='3.5' fill='%23dbeafe'/%3E%3C/svg%3E">
+
+    <link rel="icon" type="image/svg+xml"
+          href="data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%230b1e4a'/%3E%3Cstop offset='0.55' stop-color='%231e3a8a'/%3E%3Cstop offset='1' stop-color='%232563eb'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='180' height='180' rx='40' fill='url(%23g)'/%3E%3Ctext x='90' y='100' font-family='Helvetica,Arial,sans-serif' font-size='76' font-weight='900' fill='%23ffffff' text-anchor='middle' letter-spacing='-3'%3EAP%3C/text%3E%3Ctext x='90' y='128' font-family='Helvetica,Arial,sans-serif' font-size='20' font-weight='700' fill='%23ffffff' text-anchor='middle' letter-spacing='1.5'%3EBIM%3C/text%3E%3Ccircle cx='62' cy='148' r='3.5' fill='%23dbeafe'/%3E%3Ccircle cx='76' cy='148' r='3.5' fill='%23dbeafe'/%3E%3Ccircle cx='90' cy='148' r='3.5' fill='%23dbeafe'/%3E%3Ccircle cx='104' cy='148' r='3.5' fill='%23dbeafe'/%3E%3Ccircle cx='118' cy='148' r='3.5' fill='%23dbeafe'/%3E%3C/svg%3E">
+
+    <!-- ============================================================
+         MANIFEST embutido (Android / Chrome)
+         ============================================================ -->
+    <link rel="manifest"
+          href="data:application/manifest+json;charset=utf-8,%7B%22name%22%3A%22AP%20BIM%22%2C%22short_name%22%3A%22AP%20BIM%22%2C%22start_url%22%3A%22.%2F%22%2C%22display%22%3A%22standalone%22%2C%22orientation%22%3A%22any%22%2C%22background_color%22%3A%22%230f172a%22%2C%22theme_color%22%3A%22%231e3a8a%22%7D">
+
+    <!-- ============================================================
+         BIBLIOTECAS
+         ============================================================ -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <script>tailwind.config={darkMode:'class',theme:{extend:{colors:{apavan:{50:'#f0f7ff',100:'#e0effe',500:'#2563eb',700:'#1d4ed8',800:'#1e3a8a',900:'#0f172a'}}}}}</script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: { extend: { colors: { apavan: { 50:'#f0f7ff',100:'#e0effe',500:'#2563eb',700:'#1d4ed8',800:'#1e3a8a',900:'#0f172a' } } } }
+        }
+    </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/utils/BufferGeometryUtils.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="./web-ifc-api-iife.js"></script>
+
+    <!-- ============================================================
+         ESTILOS (iguais ao v5.0 — não precisa alterar)
+         ============================================================ -->
     <style>
         body { font-family: 'Inter', system-ui, -apple-system, sans-serif; background-color: #0f172a; color: #f8fafc; -webkit-tap-highlight-color: transparent; overscroll-behavior: none; }
         ::-webkit-scrollbar { width: 6px; height: 6px; }
@@ -133,8 +167,7 @@
         .confirm-box .btn-cancel { background: #334155; color: #e2e8f0; }
         .confirm-box .btn-danger { background: #dc2626; color: white; }
     </style>
-</head>
-<body class="h-screen w-screen flex flex-col overflow-hidden bg-slate-950 text-slate-100">
+</head><body class="h-screen w-screen flex flex-col overflow-hidden bg-slate-950 text-slate-100">
 
     <button class="mobile-fab mobile-only fab-top-left" onclick="toggleLeftSidebar()"><i class="fa-solid fa-bars"></i></button>
     <button class="mobile-fab mobile-only fab-top-right" onclick="toggleRightSidebar()"><i class="fa-solid fa-list-check"></i></button>
@@ -200,9 +233,9 @@
             <div class="header-title-block">
                 <div class="flex items-center space-x-2">
                     <span class="font-extrabold tracking-wider text-base text-white">APAVAN</span>
-                    <span class="text-xs bg-blue-600/30 text-blue-400 px-2 py-0.5 rounded border border-blue-500/30 font-semibold">BIM v4.6</span>
+                    <span class="text-xs bg-blue-600/30 text-blue-400 px-2 py-0.5 rounded border border-blue-500/30 font-semibold">BIM v5.0</span>
                 </div>
-                <p class="text-[10px] text-slate-400 hidden md:block">APAVAN-ENGENHARIA E CONSULTORIA </p>
+                <p class="text-[10px] text-slate-400 hidden md:block">APAVAN ENGENHARIA E CONSULTORIA </p>
             </div>
         </div>
         <div class="flex items-center space-x-2">
@@ -252,7 +285,7 @@
                     <b>Y</b> = Profundidade (Norte-Sul)<br>
                     <b>Z</b> = Altura (vertical)<br><br>
                     <b class="text-blue-300">Excluir modelo:</b><br>
-                    Toque no 🗑 ou <b>mantenha pressionado</b> o modelo por 0,6 s.
+                    Toque no 🗑 ou <b>mantenha pressionado</b> por 0,6 s.
                 </div>
             </div>
 
@@ -358,12 +391,15 @@
                     </div>
                     <div id="dimEmpty" class="text-[11px] text-slate-500 text-center py-4">
                         <i class="fa-solid fa-hand-pointer text-2xl block mb-2 opacity-40"></i>
-                        Selecione um elemento no 3D ou na árvore para ver as dimensões.
+                        Selecione um elemento no 3D ou na árvore.
                     </div>
                     <div id="dimContent" class="hidden space-y-2">
+                        <div class="bg-blue-900/20 border border-blue-800/40 rounded p-2 text-[10px] text-slate-300 leading-relaxed">
+                            <b class="text-blue-300">Dimensões reais:</b> medidas pela geometria (PCA) e organizadas conforme o tipo do elemento (Laje, Parede, Pilar, Viga, etc.).
+                        </div>
                         <div class="dim-grid">
                             <div class="dim-card dim-axis-x">
-                                <div class="dim-label">X · Largura</div>
+                                <div class="dim-label">X · Comprimento</div>
                                 <div><span class="dim-value" id="dimX">0.00</span><span class="dim-unit">m</span></div>
                             </div>
                             <div class="dim-card dim-axis-y">
@@ -371,7 +407,7 @@
                                 <div><span class="dim-value" id="dimY">0.00</span><span class="dim-unit">m</span></div>
                             </div>
                             <div class="dim-card dim-axis-z">
-                                <div class="dim-label">Z · Altura</div>
+                                <div class="dim-label">Z · Altura / Espessura</div>
                                 <div><span class="dim-value" id="dimZ">0.00</span><span class="dim-unit">m</span></div>
                             </div>
                             <div class="dim-card dim-highlight">
@@ -551,7 +587,6 @@
         <div class="italic">Z-Up: X=largura, Y=profundidade, Z=altura</div>
     </footer>
 
-    <!-- Modal de confirmação iPhone-friendly -->
     <div class="confirm-overlay" id="confirmOverlay">
         <div class="confirm-box">
             <h3 id="confirmTitle">Confirmar?</h3>
@@ -610,9 +645,7 @@ window.onload = function() {
     if (isMobile()) document.body.classList.add('immersive');
 };
 
-/* ============================================================
-   CONFIRMAÇÃO (iPhone-friendly)
-   ============================================================ */
+/* CONFIRMAÇÃO */
 let _confirmResolver = null;
 function showConfirm(title, message) {
     return new Promise(resolve => {
@@ -627,9 +660,7 @@ function closeConfirm(result) {
     if (_confirmResolver) { _confirmResolver(result); _confirmResolver = null; }
 }
 
-/* ============================================================
-   EXCLUIR / ENQUADRAR MODELO
-   ============================================================ */
+/* EXCLUIR / ENQUADRAR MODELO */
 async function removeModel(modelId) {
     if (!modelId) return;
     const model = state.models.find(m => m.id === modelId);
@@ -652,9 +683,7 @@ async function removeModel(modelId) {
     const mIdx = state.models.findIndex(m => m.id === modelId);
     if (mIdx >= 0) state.models.splice(mIdx, 1);
     if (state.selectedElement && state.selectedElement.modelId === modelId) {
-        state.selectedElement = null;
-        hideSelectedElementBar();
-        updateDimensionsUI();
+        state.selectedElement = null; hideSelectedElementBar(); updateDimensionsUI();
     }
     state.clashes = state.clashes.filter(c => c.elemA.modelId !== modelId && c.elemB.modelId !== modelId);
     clashMarkersGroup.clear();
@@ -663,16 +692,13 @@ async function removeModel(modelId) {
     updateModelsListUI(); buildSpatialTreeUI(); updateClashListUI(); updateDashboardUI(); updateScopeUI();
     showViewportStatus(`Modelo "${model.name}" excluído.`);
 }
-
 async function confirmClearAll() {
     if (!state.models.length) { alert('Nenhum modelo carregado.'); return; }
     const ok = await showConfirm('Limpar tudo?', `Todos os ${state.models.length} modelos e ${state.clashes.length} conflitos serão removidos.`);
     if (ok) { clearAllModels(); showViewportStatus("Tudo limpo."); }
 }
-
 function zoomToModel(modelId) {
-    const group = state.modelGroups[modelId];
-    if (!group) return;
+    const group = state.modelGroups[modelId]; if (!group) return;
     group.updateMatrixWorld(true);
     const box = new THREE.Box3().setFromObject(group);
     if (box.isEmpty()) return;
@@ -682,24 +708,149 @@ function zoomToModel(modelId) {
     controls.target.copy(center);
     camera.up.set(0, 0, 1);
     camera.position.set(center.x + dist * 0.7, center.y - dist * 0.7, center.z + dist * 0.5);
-    camera.far = Math.max(1000, dist * 10);
-    camera.updateProjectionMatrix();
-    controls.update();
+    camera.far = Math.max(1000, dist * 10); camera.updateProjectionMatrix(); controls.update();
     showViewportStatus(`Focado: ${modelId}`);
 }
 
 /* ============================================================
-   DIMENSIONAMENTO
+   DIMENSIONAMENTO — PCA + regra por tipo IFC
    ============================================================ */
+function jacobiEigen3x3(cxx, cxy, cxz, cyy, cyz, czz) {
+    const a = [[cxx, cxy, cxz],[cxy, cyy, cyz],[cxz, cyz, czz]];
+    const v = [[1,0,0],[0,1,0],[0,0,1]];
+    for (let iter = 0; iter < 100; iter++) {
+        let p = 0, q = 1;
+        let maxOff = Math.abs(a[0][1]);
+        if (Math.abs(a[0][2]) > maxOff) { p = 0; q = 2; maxOff = Math.abs(a[0][2]); }
+        if (Math.abs(a[1][2]) > maxOff) { p = 1; q = 2; maxOff = Math.abs(a[1][2]); }
+        if (maxOff < 1e-12) break;
+        const app = a[p][p], aqq = a[q][q], apq = a[p][q];
+        const theta = (aqq - app) / (2 * apq);
+        const t = (theta >= 0 ? 1 : -1) / (Math.abs(theta) + Math.sqrt(theta * theta + 1));
+        const c = 1 / Math.sqrt(t * t + 1);
+        const s = t * c;
+        a[p][p] = app - t * apq;
+        a[q][q] = aqq + t * apq;
+        a[p][q] = a[q][p] = 0;
+        for (let i = 0; i < 3; i++) {
+            if (i !== p && i !== q) {
+                const aip = a[i][p], aiq = a[i][q];
+                a[i][p] = a[p][i] = c * aip - s * aiq;
+                a[i][q] = a[q][i] = s * aip + c * aiq;
+            }
+        }
+        for (let i = 0; i < 3; i++) {
+            const vip = v[i][p], viq = v[i][q];
+            v[i][p] = c * vip - s * viq;
+            v[i][q] = s * vip + c * viq;
+        }
+    }
+    return {
+        values: [a[0][0], a[1][1], a[2][2]],
+        vectors: [
+            [v[0][0], v[1][0], v[2][0]],
+            [v[0][1], v[1][1], v[2][1]],
+            [v[0][2], v[1][2], v[2][2]]
+        ]
+    };
+}
+
+/* Retorna as 3 dimensões reais (PCA) e atribui aos eixos XYZ conforme o tipo IFC */
+function computeRealSize(geometry, groupScale, ifcClass) {
+    if (!geometry || !geometry.attributes || !geometry.attributes.position) {
+        return new THREE.Vector3();
+    }
+    const pos = geometry.attributes.position;
+    const n = pos.count;
+    if (n < 4) return new THREE.Vector3();
+
+    let cx = 0, cy = 0, cz = 0;
+    for (let i = 0; i < n; i++) { cx += pos.getX(i); cy += pos.getY(i); cz += pos.getZ(i); }
+    cx /= n; cy /= n; cz /= n;
+
+    let cxx = 0, cxy = 0, cxz = 0, cyy = 0, cyz = 0, czz = 0;
+    for (let i = 0; i < n; i++) {
+        const dx = pos.getX(i) - cx, dy = pos.getY(i) - cy, dz = pos.getZ(i) - cz;
+        cxx += dx*dx; cxy += dx*dy; cxz += dx*dz;
+        cyy += dy*dy; cyz += dy*dz; czz += dz*dz;
+    }
+    cxx/=n; cxy/=n; cxz/=n; cyy/=n; cyz/=n; czz/=n;
+
+    const eig = jacobiEigen3x3(cxx, cxy, cxz, cyy, cyz, czz);
+    const V = eig.vectors;
+
+    let min0 = Infinity, max0 = -Infinity;
+    let min1 = Infinity, max1 = -Infinity;
+    let min2 = Infinity, max2 = -Infinity;
+    for (let i = 0; i < n; i++) {
+        const dx = pos.getX(i) - cx, dy = pos.getY(i) - cy, dz = pos.getZ(i) - cz;
+        const p0 = dx * V[0][0] + dy * V[0][1] + dz * V[0][2];
+        const p1 = dx * V[1][0] + dy * V[1][1] + dz * V[1][2];
+        const p2 = dx * V[2][0] + dy * V[2][1] + dz * V[2][2];
+        if (p0 < min0) min0 = p0; if (p0 > max0) max0 = p0;
+        if (p1 < min1) min1 = p1; if (p1 > max1) max1 = p1;
+        if (p2 < min2) min2 = p2; if (p2 > max2) max2 = p2;
+    }
+    // Dimensões reais (comprimento das arestas do OBB)
+    const s = [max0 - min0, max1 - min1, max2 - min2].sort((a, b) => b - a);
+    const [big, mid, small] = s;
+
+    // ---- Atribuição por tipo IFC ----
+    const cls = (ifcClass || '').toLowerCase();
+    let X, Y, Z;
+
+    if (cls.includes('slab') || cls.includes('roof') || cls.includes('plate') || cls.includes('covering') || cls.includes('footing')) {
+        // LAJES, COBERTURAS, PISOS: menor = espessura (Z)
+        X = big;   // comprimento
+        Y = mid;   // largura
+        Z = small; // espessura/altura
+    } else if (cls.includes('wall')) {
+        // PAREDES: menor = espessura (Y); maior = comprimento (X); médio = altura (Z)
+        X = big;   // comprimento
+        Y = small; // espessura
+        Z = mid;   // altura
+    } else if (cls.includes('column') || cls.includes('pile')) {
+        // PILARES: maior = altura (Z); outros dois são seção transversal (X, Y)
+        X = mid;
+        Y = small;
+        Z = big;
+    } else if (cls.includes('beam') || cls.includes('member')) {
+        // VIGAS: maior = vão (X); médio = altura (Z); menor = espessura (Y)
+        X = big;
+        Y = small;
+        Z = mid;
+    } else if (cls.includes('pipe') || cls.includes('duct') || cls.includes('cable') || cls.includes('conduit')) {
+        // TUBOS/DUTOS/ELETRODUTOS: maior = comprimento (X); seção em Y, Z
+        X = big;
+        Y = mid;
+        Z = small;
+    } else {
+        // FALLBACK: maior = X, médio = Y, menor = Z
+        X = big;
+        Y = mid;
+        Z = small;
+    }
+
+    return new THREE.Vector3(X, Y, Z).multiplyScalar(groupScale);
+}
+
 function computeElementMetrics(elem) {
-    elem.bbox.setFromObject(elem.mesh);
-    const size = new THREE.Vector3(); elem.bbox.getSize(size);
-    const center = new THREE.Vector3(); elem.bbox.getCenter(center);
-    let meshArea = 0, meshVolume = 0;
-    const geom = elem.mesh.geometry;
-    if (geom && geom.attributes && geom.attributes.position) {
-        const pos = geom.attributes.position;
-        const idx = geom.index;
+    let groupScale = 1;
+    let parent = elem.mesh.parent;
+    while (parent) {
+        if (parent.userData && parent.userData.isModelRoot) { groupScale = parent.scale.x; break; }
+        parent = parent.parent;
+    }
+
+    const size = computeRealSize(elem.mesh.geometry, groupScale, elem.ifcClass);
+
+    const center = new THREE.Vector3();
+    new THREE.Box3().setFromObject(elem.mesh).getCenter(center);
+
+    let meshAreaLocal = 0, meshVolumeLocal = 0;
+    const geo = elem.mesh.geometry;
+    if (geo && geo.attributes && geo.attributes.position) {
+        const pos = geo.attributes.position, idx = geo.index;
         const a = new THREE.Vector3(), b = new THREE.Vector3(), c = new THREE.Vector3();
         const ab = new THREE.Vector3(), ac = new THREE.Vector3(), cross = new THREE.Vector3();
         if (idx && idx.count >= 3) {
@@ -708,28 +859,36 @@ function computeElementMetrics(elem) {
                 b.fromBufferAttribute(pos, idx.getX(i + 1));
                 c.fromBufferAttribute(pos, idx.getX(i + 2));
                 ab.subVectors(b, a); ac.subVectors(c, a); cross.crossVectors(ab, ac);
-                meshArea += cross.length() * 0.5;
-                meshVolume += a.dot(b.clone().cross(c)) / 6;
+                meshAreaLocal += cross.length() * 0.5;
+                meshVolumeLocal += a.dot(b.clone().cross(c)) / 6;
             }
         } else {
             for (let i = 0; i + 2 < pos.count; i += 3) {
                 a.fromBufferAttribute(pos, i); b.fromBufferAttribute(pos, i + 1); c.fromBufferAttribute(pos, i + 2);
                 ab.subVectors(b, a); ac.subVectors(c, a); cross.crossVectors(ab, ac);
-                meshArea += cross.length() * 0.5;
-                meshVolume += a.dot(b.clone().cross(c)) / 6;
+                meshAreaLocal += cross.length() * 0.5;
+                meshVolumeLocal += a.dot(b.clone().cross(c)) / 6;
             }
         }
     }
-    meshVolume = Math.abs(meshVolume);
+    const s = groupScale;
+    const meshArea = meshAreaLocal * s * s;
+    const meshVolume = Math.abs(meshVolumeLocal) * s * s * s;
+
     return {
         x: size.x, y: size.y, z: size.z,
         perimeter: 2 * (size.x + size.y),
-        areaBase: size.x * size.y, areaXZ: size.x * size.z, areaYZ: size.y * size.z,
+        areaBase: size.x * size.y,
+        areaXZ: size.x * size.z,
+        areaYZ: size.y * size.z,
         areaBox: 2 * (size.x * size.y + size.x * size.z + size.y * size.z),
-        areaMesh: meshArea, volumeBox: size.x * size.y * size.z, volumeMesh: meshVolume,
+        areaMesh: meshArea,
+        volumeBox: size.x * size.y * size.z,
+        volumeMesh: meshVolume,
         center: center
     };
 }
+
 function fmt(v, d) { if (v === undefined || v === null || isNaN(v)) return '0.00'; return Number(v).toFixed(d === undefined ? 2 : d); }
 function updateDimensionsUI() {
     const elem = state.selectedElement;
@@ -1662,22 +1821,13 @@ function updateModelsListUI() {
                 </button>
             </div>
         `;
-
-        // Long-press 600ms → excluir (iPhone)
         let pressTimer = null;
-        const onStart = () => {
-            pressTimer = setTimeout(() => {
-                if (navigator.vibrate) navigator.vibrate(50);
-                removeModel(m.id);
-                pressTimer = null;
-            }, 600);
-        };
+        const onStart = () => { pressTimer = setTimeout(() => { if (navigator.vibrate) navigator.vibrate(50); removeModel(m.id); pressTimer = null; }, 600); };
         const onEnd = () => { if (pressTimer) { clearTimeout(pressTimer); pressTimer = null; } };
         item.addEventListener('touchstart', onStart, { passive: true });
         item.addEventListener('touchend', onEnd);
         item.addEventListener('touchcancel', onEnd);
         item.addEventListener('touchmove', onEnd);
-
         list.appendChild(item);
     });
     populateTransformModelList();
@@ -1815,8 +1965,6 @@ function highlightElementByGUID(guid) {
     controls.update();
     if (isMobile()) closeAllSidebars();
 }
-
-/* SELEÇÃO */
 function selectElement(elem) {
     state.selectedElement = elem;
     const bar = document.getElementById('selectedElementBar');
@@ -1889,8 +2037,6 @@ function pickElementAt(event) {
         if (state.selectedElement) clearSelection();
     }
 }
-
-/* CORES */
 function getDisciplineColorCSS(d) { return { ARQUITETURA:'#cbd5e1', ESTRUTURA:'#64748b', HIDRAULICO:'#3b82f6', ELETRICO:'#eab308', HVAC:'#a855f7', INCENDIO:'#ef4444' }[d] || '#94a3b8'; }
 function getDisciplineColorHex(d) { return { ARQUITETURA:0xcbd5e1, ESTRUTURA:0x64748b, HIDRAULICO:0x3b82f6, ELETRICO:0xeab308, HVAC:0xa855f7, INCENDIO:0xef4444 }[d] || 0x94a3b8; }
 function getSeverityColorCSS(s) { return { CRITICAL:'#dc2626', HIGH:'#ea580c', MEDIUM:'#eab308', LOW:'#2563eb' }[s] || '#64748b'; }

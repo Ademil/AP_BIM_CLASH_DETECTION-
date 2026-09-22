@@ -4,55 +4,24 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0, user-scalable=no">
     <title>AP BIM — APAVAN Engenharia</title>
-
-    <!-- ============================================================
-         PWA / iOS — Nome e comportamento na tela inicial
-         ============================================================ -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <!-- ▼ Nome exibido embaixo do ícone no iPhone -->
     <meta name="apple-mobile-web-app-title" content="AP BIM">
     <meta name="application-name" content="AP BIM">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="theme-color" content="#1e3a8a">
     <meta name="description" content="AP BIM — Compatibilização e Clash Detection IFC • APAVAN Engenharia">
-
-    <!-- ============================================================
-         ÍCONE — estilo "AP VIGAS" azul arredondado
-         AP grande • BIM embaixo • 5 pontinhos
-         ============================================================ -->
-    <link rel="apple-touch-icon" sizes="180x180"
-          href="data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%230b1e4a'/%3E%3Cstop offset='0.55' stop-color='%231e3a8a'/%3E%3Cstop offset='1' stop-color='%232563eb'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='180' height='180' rx='40' fill='url(%23g)'/%3E%3Ctext x='90' y='100' font-family='Helvetica,Arial,sans-serif' font-size='76' font-weight='900' fill='%23ffffff' text-anchor='middle' letter-spacing='-3'%3EAP%3C/text%3E%3Ctext x='90' y='128' font-family='Helvetica,Arial,sans-serif' font-size='20' font-weight='700' fill='%23ffffff' text-anchor='middle' letter-spacing='1.5'%3EBIM%3C/text%3E%3Ccircle cx='62' cy='148' r='3.5' fill='%23dbeafe'/%3E%3Ccircle cx='76' cy='148' r='3.5' fill='%23dbeafe'/%3E%3Ccircle cx='90' cy='148' r='3.5' fill='%23dbeafe'/%3E%3Ccircle cx='104' cy='148' r='3.5' fill='%23dbeafe'/%3E%3Ccircle cx='118' cy='148' r='3.5' fill='%23dbeafe'/%3E%3C/svg%3E">
-
-    <link rel="icon" type="image/svg+xml"
-          href="data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%230b1e4a'/%3E%3Cstop offset='0.55' stop-color='%231e3a8a'/%3E%3Cstop offset='1' stop-color='%232563eb'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='180' height='180' rx='40' fill='url(%23g)'/%3E%3Ctext x='90' y='100' font-family='Helvetica,Arial,sans-serif' font-size='76' font-weight='900' fill='%23ffffff' text-anchor='middle' letter-spacing='-3'%3EAP%3C/text%3E%3Ctext x='90' y='128' font-family='Helvetica,Arial,sans-serif' font-size='20' font-weight='700' fill='%23ffffff' text-anchor='middle' letter-spacing='1.5'%3EBIM%3C/text%3E%3Ccircle cx='62' cy='148' r='3.5' fill='%23dbeafe'/%3E%3Ccircle cx='76' cy='148' r='3.5' fill='%23dbeafe'/%3E%3Ccircle cx='90' cy='148' r='3.5' fill='%23dbeafe'/%3E%3Ccircle cx='104' cy='148' r='3.5' fill='%23dbeafe'/%3E%3Ccircle cx='118' cy='148' r='3.5' fill='%23dbeafe'/%3E%3C/svg%3E">
-
-    <!-- ============================================================
-         MANIFEST embutido (Android / Chrome)
-         ============================================================ -->
-    <link rel="manifest"
-          href="data:application/manifest+json;charset=utf-8,%7B%22name%22%3A%22AP%20BIM%22%2C%22short_name%22%3A%22AP%20BIM%22%2C%22start_url%22%3A%22.%2F%22%2C%22display%22%3A%22standalone%22%2C%22orientation%22%3A%22any%22%2C%22background_color%22%3A%22%230f172a%22%2C%22theme_color%22%3A%22%231e3a8a%22%7D">
-
-    <!-- ============================================================
-         BIBLIOTECAS
-         ============================================================ -->
+    <link rel="apple-touch-icon" sizes="180x180" href="data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%230b1e4a'/%3E%3Cstop offset='0.55' stop-color='%231e3a8a'/%3E%3Cstop offset='1' stop-color='%232563eb'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='180' height='180' rx='40' fill='url(%23g)'/%3E%3Ctext x='90' y='100' font-family='Helvetica,Arial,sans-serif' font-size='76' font-weight='900' fill='%23ffffff' text-anchor='middle' letter-spacing='-3'%3EAP%3C/text%3E%3Ctext x='90' y='128' font-family='Helvetica,Arial,sans-serif' font-size='20' font-weight='700' fill='%23ffffff' text-anchor='middle' letter-spacing='1.5'%3EBIM%3C/text%3E%3Ccircle cx='62' cy='148' r='3.5' fill='%23dbeafe'/%3E%3Ccircle cx='76' cy='148' r='3.5' fill='%23dbeafe'/%3E%3Ccircle cx='90' cy='148' r='3.5' fill='%23dbeafe'/%3E%3Ccircle cx='104' cy='148' r='3.5' fill='%23dbeafe'/%3E%3Ccircle cx='118' cy='148' r='3.5' fill='%23dbeafe'/%3E%3C/svg%3E">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%230b1e4a'/%3E%3Cstop offset='0.55' stop-color='%231e3a8a'/%3E%3Cstop offset='1' stop-color='%232563eb'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='180' height='180' rx='40' fill='url(%23g)'/%3E%3Ctext x='90' y='100' font-family='Helvetica,Arial,sans-serif' font-size='76' font-weight='900' fill='%23ffffff' text-anchor='middle' letter-spacing='-3'%3EAP%3C/text%3E%3Ctext x='90' y='128' font-family='Helvetica,Arial,sans-serif' font-size='20' font-weight='700' fill='%23ffffff' text-anchor='middle' letter-spacing='1.5'%3EBIM%3C/text%3E%3Ccircle cx='62' cy='148' r='3.5' fill='%23dbeafe'/%3E%3Ccircle cx='76' cy='148' r='3.5' fill='%23dbeafe'/%3E%3Ccircle cx='90' cy='148' r='3.5' fill='%23dbeafe'/%3E%3Ccircle cx='104' cy='148' r='3.5' fill='%23dbeafe'/%3E%3Ccircle cx='118' cy='148' r='3.5' fill='%23dbeafe'/%3E%3C/svg%3E">
+    <link rel="manifest" href="data:application/manifest+json;charset=utf-8,%7B%22name%22%3A%22AP%20BIM%22%2C%22short_name%22%3A%22AP%20BIM%22%2C%22start_url%22%3A%22.%2F%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%230f172a%22%2C%22theme_color%22%3A%22%231e3a8a%22%7D">
     <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: { extend: { colors: { apavan: { 50:'#f0f7ff',100:'#e0effe',500:'#2563eb',700:'#1d4ed8',800:'#1e3a8a',900:'#0f172a' } } } }
-        }
-    </script>
+    <script>tailwind.config={darkMode:'class',theme:{extend:{colors:{apavan:{50:'#f0f7ff',100:'#e0effe',500:'#2563eb',700:'#1d4ed8',800:'#1e3a8a',900:'#0f172a'}}}}}</script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/utils/BufferGeometryUtils.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="./web-ifc-api-iife.js"></script>
-
-    <!-- ============================================================
-         ESTILOS (iguais ao v5.0 — não precisa alterar)
-         ============================================================ -->
     <style>
         body { font-family: 'Inter', system-ui, -apple-system, sans-serif; background-color: #0f172a; color: #f8fafc; -webkit-tap-highlight-color: transparent; overscroll-behavior: none; }
         ::-webkit-scrollbar { width: 6px; height: 6px; }
@@ -166,8 +135,30 @@
         .confirm-box button:active { opacity: 0.8; }
         .confirm-box .btn-cancel { background: #334155; color: #e2e8f0; }
         .confirm-box .btn-danger { background: #dc2626; color: white; }
+
+        /* LICENÇA */
+        .license-overlay { position: fixed; inset: 0; background: radial-gradient(ellipse at center, rgba(15,23,42,0.98), rgba(2,6,23,0.99)); z-index: 9999; display: none; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+        .license-overlay.show { display: flex; }
+        .license-box { background: linear-gradient(160deg, #0f172a 0%, #1e293b 100%); border: 1px solid #334155; border-radius: 20px; padding: 32px 24px; max-width: 400px; width: 100%; text-align: center; box-shadow: 0 30px 80px rgba(0,0,0,0.8), 0 0 0 1px rgba(59,130,246,0.15); }
+        .license-icon { font-size: 48px; margin-bottom: 12px; }
+        .license-title { font-size: 20px; font-weight: 800; color: #f1f5f9; margin-bottom: 8px; }
+        .license-subtitle { font-size: 13px; color: #94a3b8; margin-bottom: 20px; line-height: 1.5; white-space: pre-line; }
+        .license-box input { width: 100%; padding: 14px 16px; background: #020617; border: 1px solid #334155; border-radius: 10px; color: #f1f5f9; font-family: 'Courier New', monospace; font-size: 14px; text-align: center; letter-spacing: 1px; outline: none; transition: border-color 0.15s; text-transform: uppercase; }
+        .license-box input:focus { border-color: #3b82f6; }
+        .license-box button { width: 100%; margin-top: 12px; padding: 14px; border-radius: 10px; background: linear-gradient(135deg, #2563eb, #1d4ed8); color: white; font-weight: 700; font-size: 14px; border: none; cursor: pointer; transition: transform 0.1s; }
+        .license-box button:active { transform: scale(0.97); }
+        .license-msg { font-size: 12px; margin-top: 10px; min-height: 16px; }
+        .license-msg.error { color: #f87171; }
+        .license-msg.success { color: #34d399; }
+        .license-contact { margin-top: 20px; padding-top: 16px; border-top: 1px solid #334155; font-size: 11px; color: #64748b; line-height: 1.6; }
+        .license-contact p:first-child { color: #94a3b8; margin-bottom: 4px; }
+        .trial-badge { padding: 3px 8px; border-radius: 6px; font-size: 10px; font-weight: 700; background: rgba(245,158,11,0.15); color: #fbbf24; border: 1px solid rgba(245,158,11,0.4); display: inline-flex; align-items: center; gap: 4px; }
+        .trial-badge.hidden { display: none; }
+        .trial-badge.urgent { background: rgba(239,68,68,0.15); color: #f87171; border-color: rgba(239,68,68,0.4); animation: pulse-warn 2s infinite; }
+        @keyframes pulse-warn { 0%, 100% { opacity: 1; } 50% { opacity: 0.6; } }
     </style>
-</head><body class="h-screen w-screen flex flex-col overflow-hidden bg-slate-950 text-slate-100">
+</head>
+<body class="h-screen w-screen flex flex-col overflow-hidden bg-slate-950 text-slate-100">
 
     <button class="mobile-fab mobile-only fab-top-left" onclick="toggleLeftSidebar()"><i class="fa-solid fa-bars"></i></button>
     <button class="mobile-fab mobile-only fab-top-right" onclick="toggleRightSidebar()"><i class="fa-solid fa-list-check"></i></button>
@@ -194,6 +185,12 @@
             <button class="action-btn" onclick="closeActionsSheet(); exportPDFReport()"><i class="fa-solid fa-file-pdf" style="color:#f87171"></i><span>PDF</span></button>
             <button class="action-btn" onclick="closeActionsSheet(); exportBCF()"><i class="fa-solid fa-share-nodes" style="color:#fbbf24"></i><span>BCF</span></button>
             <button class="action-btn" onclick="closeActionsSheet(); exportCSV()"><i class="fa-solid fa-file-excel" style="color:#34d399"></i><span>Excel</span></button>
+        </div>
+        <h3>Licença</h3>
+        <div class="actions-grid" style="grid-template-columns: 1fr;">
+            <button class="action-btn" onclick="closeActionsSheet(); showLicenseModal()">
+                <i class="fa-solid fa-key" style="color:#fbbf24"></i><span>Inserir / Ver Chave de Licença</span>
+            </button>
         </div>
         <h3>Zona de Perigo</h3>
         <div class="actions-grid" style="grid-template-columns: 1fr;">
@@ -232,10 +229,14 @@
             <div class="bg-gradient-to-tr from-blue-700 to-indigo-600 text-white p-2 rounded-lg font-bold shadow-lg"><i class="fa-solid fa-cubes text-xl"></i></div>
             <div class="header-title-block">
                 <div class="flex items-center space-x-2">
-                    <span class="font-extrabold tracking-wider text-base text-white">APAVAN</span>
-                    <span class="text-xs bg-blue-600/30 text-blue-400 px-2 py-0.5 rounded border border-blue-500/30 font-semibold">BIM v5.0</span>
+                    <span class="font-extrabold tracking-wider text-base text-white">AP BIM</span>
+                    <span class="text-xs bg-blue-600/30 text-blue-400 px-2 py-0.5 rounded border border-blue-500/30 font-semibold">v5.1</span>
+                    <span id="trialBadge" class="trial-badge hidden" title="Período de teste">
+                        <i class="fa-solid fa-hourglass-half"></i>
+                        <span>Trial: <span id="trialDays">15</span>d</span>
+                    </span>
                 </div>
-                <p class="text-[10px] text-slate-400 hidden md:block">APAVAN ENGENHARIA E CONSULTORIA </p>
+                <p class="text-[10px] text-slate-400 hidden md:block">APAVAN ENGENHARIA E CONSULTORIA • Ademilton Pavan CREA-SC 86959-8</p>
             </div>
         </div>
         <div class="flex items-center space-x-2">
@@ -330,7 +331,6 @@
                         <button onclick="expandTreeAll()" class="flex-1 py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded text-[10px] border border-slate-700"><i class="fa-solid fa-plus-square"></i> Expandir</button>
                         <button onclick="collapseTreeAll()" class="flex-1 py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded text-[10px] border border-slate-700"><i class="fa-solid fa-minus-square"></i> Recolher</button>
                     </div>
-                    <p class="text-[9px] text-slate-500 leading-tight">Marque a caixa da <b>pasta</b> para mostrar/ocultar o grupo inteiro. Ou abra e marque <b>item por item</b>.</p>
                 </div>
                 <div id="ifcSpatialTree" class="ifc-tree"></div>
             </div>
@@ -598,7 +598,140 @@
         </div>
     </div>
 
+    <div id="licenseOverlay" class="license-overlay">
+        <div class="license-box">
+            <div class="license-icon">🔒</div>
+            <h2 class="license-title">Período de Teste Expirado</h2>
+            <p class="license-subtitle">Seu teste gratuito de 15 dias chegou ao fim.
+Insira uma chave de licença APAVAN para continuar.</p>
+            <input type="text" id="licenseInput" placeholder="APAVAN-XXXXX-XXXX" autocomplete="off" spellcheck="false" autocapitalize="characters">
+            <button id="licenseBtn" onclick="submitLicense()"><i class="fa-solid fa-key"></i> Ativar Licença</button>
+            <p id="licenseMsg" class="license-msg"></p>
+            <div class="license-contact">
+                <p><b>Para adquirir uma licença:</b></p>
+                <p>contato@apavan.com.br • +55 (48) 99999-9999</p>
+                <p>APAVAN Engenharia e Consultoria • CREA-SC 86959-8</p>
+            </div>
+        </div>
+    </div>
+
 <script>
+/* ============================================================
+   SISTEMA DE LICENÇA — 15 dias de teste grátis
+   ============================================================ */
+const LICENSE = {
+    TRIAL_DAYS: 15,
+    KEY_FIRST_RUN: 'apbim_v1_first_run',
+    KEY_LICENSE:   'apbim_v1_license',
+    _SECRET: 'APAVAN-2024-BIM-AUTH-V1'
+};
+
+function _computeCheck(payload) {
+    const str = payload + LICENSE._SECRET;
+    let h = 0;
+    for (let i = 0; i < str.length; i++) h = ((h << 5) - h + str.charCodeAt(i)) | 0;
+    return Math.abs(h).toString(36).toUpperCase().padStart(4, '0').slice(-4);
+}
+function _isValidKey(key) {
+    if (typeof key !== 'string') return false;
+    const k = key.toUpperCase().trim();
+    const parts = k.split('-');
+    if (parts.length < 3) return false;
+    if (parts[0] !== 'APAVAN') return false;
+    const check = parts[parts.length - 1];
+    const payload = parts.slice(1, -1).join('-');
+    return _computeCheck(payload) === check;
+}
+window.generateLicenseKey = function(payload) {
+    const clean = String(payload).toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 12);
+    if (!clean) return null;
+    return `APAVAN-${clean}-${_computeCheck(clean)}`;
+};
+function _getFirstRun() {
+    let v = localStorage.getItem(LICENSE.KEY_FIRST_RUN);
+    if (!v) { v = Date.now().toString(); localStorage.setItem(LICENSE.KEY_FIRST_RUN, v); }
+    return parseInt(v, 10);
+}
+function _daysLeft() {
+    const elapsed = Math.floor((Date.now() - _getFirstRun()) / 86400000);
+    return Math.max(0, LICENSE.TRIAL_DAYS - elapsed);
+}
+function getLicenseState() {
+    const saved = localStorage.getItem(LICENSE.KEY_LICENSE);
+    if (saved && _isValidKey(saved)) return { licensed: true, daysLeft: Infinity, key: saved };
+    const daysLeft = _daysLeft();
+    return { licensed: false, daysLeft, valid: daysLeft > 0 };
+}
+function activateLicense(key) {
+    if (!_isValidKey(key)) return false;
+    localStorage.setItem(LICENSE.KEY_LICENSE, key.toUpperCase().trim());
+    return true;
+}
+function submitLicense() {
+    const input = document.getElementById('licenseInput');
+    const msg = document.getElementById('licenseMsg');
+    const key = (input.value || '').trim();
+    if (!key) { msg.innerText = 'Digite uma chave de licença.'; msg.className = 'license-msg error'; return; }
+    if (activateLicense(key)) {
+        msg.innerText = '✓ Licença ativada! Recarregando...';
+        msg.className = 'license-msg success';
+        setTimeout(() => location.reload(), 800);
+    } else {
+        msg.innerText = 'Chave inválida. Verifique e tente novamente.';
+        msg.className = 'license-msg error';
+        if (navigator.vibrate) navigator.vibrate([50, 30, 50]);
+    }
+}
+if (location.search.includes('reset-trial')) {
+    localStorage.removeItem(LICENSE.KEY_FIRST_RUN);
+    localStorage.removeItem(LICENSE.KEY_LICENSE);
+    console.log('[LICENSE] Trial resetado.');
+}
+function applyLicenseGate() {
+    const st = getLicenseState();
+    const overlay = document.getElementById('licenseOverlay');
+    const badge = document.getElementById('trialBadge');
+    const badgeDays = document.getElementById('trialDays');
+    if (st.licensed) {
+        if (overlay) overlay.classList.remove('show');
+        if (badge) badge.classList.add('hidden');
+        return true;
+    }
+    if (st.valid) {
+        if (overlay) overlay.classList.remove('show');
+        if (badge && badgeDays) {
+            badge.classList.remove('hidden');
+            badgeDays.innerText = st.daysLeft;
+            if (st.daysLeft <= 3) badge.classList.add('urgent');
+        }
+        return true;
+    }
+    if (overlay) overlay.classList.add('show');
+    if (badge) badge.classList.add('hidden');
+    return false;
+}
+function showLicenseModal() {
+    const st = getLicenseState();
+    const overlay = document.getElementById('licenseOverlay');
+    const title = overlay.querySelector('.license-title');
+    const subtitle = overlay.querySelector('.license-subtitle');
+    const icon = overlay.querySelector('.license-icon');
+    if (st.licensed) {
+        icon.innerText = '✓';
+        title.innerText = 'Licença Ativa';
+        subtitle.innerText = `Chave: ${st.key}\n\nObrigado por usar o AP BIM!`;
+    } else {
+        icon.innerText = '🔑';
+        title.innerText = 'Ativar Licença';
+        subtitle.innerText = `Trial: ${st.daysLeft} dia(s) restante(s).\nInsira uma chave APAVAN válida.`;
+    }
+    overlay.classList.add('show');
+    setTimeout(() => document.getElementById('licenseInput').focus(), 100);
+}
+
+/* ============================================================
+   APLICAÇÃO — variáveis e estado
+   ============================================================ */
 const AI_CONFIG = { apiKey: "", model: "gemini-2.0-flash", endpoint: "https://generativelanguage.googleapis.com/v1beta/models/" };
 const PALETTE = ['#2563eb','#3b82f6','#60a5fa','#93c5fd','#a855f7','#f59e0b','#10b981','#ef4444','#14b8a6','#f472b6'];
 const FLOOR_ORDER = ['Subsolo','Térreo','Pavimento 01','Pavimento 02','Cobertura'];
@@ -635,6 +768,7 @@ let pointerDownPos = null;
 let ifcApiInstance = null;
 
 window.onload = function() {
+    if (!applyLicenseGate()) { setInterval(applyLicenseGate, 60000); return; }
     init3DScene();
     initRulesUI();
     initCharts();
@@ -643,6 +777,7 @@ window.onload = function() {
     window.addEventListener('resize', onWindowResize);
     window.addEventListener('orientationchange', () => setTimeout(onWindowResize, 200));
     if (isMobile()) document.body.classList.add('immersive');
+    setInterval(applyLicenseGate, 60000);
 };
 
 /* CONFIRMAÇÃO */
@@ -712,9 +847,7 @@ function zoomToModel(modelId) {
     showViewportStatus(`Focado: ${modelId}`);
 }
 
-/* ============================================================
-   DIMENSIONAMENTO — PCA + regra por tipo IFC
-   ============================================================ */
+/* DIMENSIONAMENTO — PCA + regra por tipo IFC */
 function jacobiEigen3x3(cxx, cxy, cxz, cyy, cyz, czz) {
     const a = [[cxx, cxy, cxz],[cxy, cyy, cyz],[cxz, cyz, czz]];
     const v = [[1,0,0],[0,1,0],[0,0,1]];
@@ -747,27 +880,17 @@ function jacobiEigen3x3(cxx, cxy, cxz, cyy, cyz, czz) {
     }
     return {
         values: [a[0][0], a[1][1], a[2][2]],
-        vectors: [
-            [v[0][0], v[1][0], v[2][0]],
-            [v[0][1], v[1][1], v[2][1]],
-            [v[0][2], v[1][2], v[2][2]]
-        ]
+        vectors: [[v[0][0], v[1][0], v[2][0]],[v[0][1], v[1][1], v[2][1]],[v[0][2], v[1][2], v[2][2]]]
     };
 }
-
-/* Retorna as 3 dimensões reais (PCA) e atribui aos eixos XYZ conforme o tipo IFC */
 function computeRealSize(geometry, groupScale, ifcClass) {
-    if (!geometry || !geometry.attributes || !geometry.attributes.position) {
-        return new THREE.Vector3();
-    }
+    if (!geometry || !geometry.attributes || !geometry.attributes.position) return new THREE.Vector3();
     const pos = geometry.attributes.position;
     const n = pos.count;
     if (n < 4) return new THREE.Vector3();
-
     let cx = 0, cy = 0, cz = 0;
     for (let i = 0; i < n; i++) { cx += pos.getX(i); cy += pos.getY(i); cz += pos.getZ(i); }
     cx /= n; cy /= n; cz /= n;
-
     let cxx = 0, cxy = 0, cxz = 0, cyy = 0, cyz = 0, czz = 0;
     for (let i = 0; i < n; i++) {
         const dx = pos.getX(i) - cx, dy = pos.getY(i) - cy, dz = pos.getZ(i) - cz;
@@ -775,13 +898,9 @@ function computeRealSize(geometry, groupScale, ifcClass) {
         cyy += dy*dy; cyz += dy*dz; czz += dz*dz;
     }
     cxx/=n; cxy/=n; cxz/=n; cyy/=n; cyz/=n; czz/=n;
-
     const eig = jacobiEigen3x3(cxx, cxy, cxz, cyy, cyz, czz);
     const V = eig.vectors;
-
-    let min0 = Infinity, max0 = -Infinity;
-    let min1 = Infinity, max1 = -Infinity;
-    let min2 = Infinity, max2 = -Infinity;
+    let min0 = Infinity, max0 = -Infinity, min1 = Infinity, max1 = -Infinity, min2 = Infinity, max2 = -Infinity;
     for (let i = 0; i < n; i++) {
         const dx = pos.getX(i) - cx, dy = pos.getY(i) - cy, dz = pos.getZ(i) - cz;
         const p0 = dx * V[0][0] + dy * V[0][1] + dz * V[0][2];
@@ -791,49 +910,25 @@ function computeRealSize(geometry, groupScale, ifcClass) {
         if (p1 < min1) min1 = p1; if (p1 > max1) max1 = p1;
         if (p2 < min2) min2 = p2; if (p2 > max2) max2 = p2;
     }
-    // Dimensões reais (comprimento das arestas do OBB)
     const s = [max0 - min0, max1 - min1, max2 - min2].sort((a, b) => b - a);
     const [big, mid, small] = s;
-
-    // ---- Atribuição por tipo IFC ----
     const cls = (ifcClass || '').toLowerCase();
     let X, Y, Z;
-
     if (cls.includes('slab') || cls.includes('roof') || cls.includes('plate') || cls.includes('covering') || cls.includes('footing')) {
-        // LAJES, COBERTURAS, PISOS: menor = espessura (Z)
-        X = big;   // comprimento
-        Y = mid;   // largura
-        Z = small; // espessura/altura
+        X = big; Y = mid; Z = small;
     } else if (cls.includes('wall')) {
-        // PAREDES: menor = espessura (Y); maior = comprimento (X); médio = altura (Z)
-        X = big;   // comprimento
-        Y = small; // espessura
-        Z = mid;   // altura
+        X = big; Y = small; Z = mid;
     } else if (cls.includes('column') || cls.includes('pile')) {
-        // PILARES: maior = altura (Z); outros dois são seção transversal (X, Y)
-        X = mid;
-        Y = small;
-        Z = big;
+        X = mid; Y = small; Z = big;
     } else if (cls.includes('beam') || cls.includes('member')) {
-        // VIGAS: maior = vão (X); médio = altura (Z); menor = espessura (Y)
-        X = big;
-        Y = small;
-        Z = mid;
+        X = big; Y = small; Z = mid;
     } else if (cls.includes('pipe') || cls.includes('duct') || cls.includes('cable') || cls.includes('conduit')) {
-        // TUBOS/DUTOS/ELETRODUTOS: maior = comprimento (X); seção em Y, Z
-        X = big;
-        Y = mid;
-        Z = small;
+        X = big; Y = mid; Z = small;
     } else {
-        // FALLBACK: maior = X, médio = Y, menor = Z
-        X = big;
-        Y = mid;
-        Z = small;
+        X = big; Y = mid; Z = small;
     }
-
     return new THREE.Vector3(X, Y, Z).multiplyScalar(groupScale);
 }
-
 function computeElementMetrics(elem) {
     let groupScale = 1;
     let parent = elem.mesh.parent;
@@ -841,12 +936,9 @@ function computeElementMetrics(elem) {
         if (parent.userData && parent.userData.isModelRoot) { groupScale = parent.scale.x; break; }
         parent = parent.parent;
     }
-
     const size = computeRealSize(elem.mesh.geometry, groupScale, elem.ifcClass);
-
     const center = new THREE.Vector3();
     new THREE.Box3().setFromObject(elem.mesh).getCenter(center);
-
     let meshAreaLocal = 0, meshVolumeLocal = 0;
     const geo = elem.mesh.geometry;
     if (geo && geo.attributes && geo.attributes.position) {
@@ -874,7 +966,6 @@ function computeElementMetrics(elem) {
     const s = groupScale;
     const meshArea = meshAreaLocal * s * s;
     const meshVolume = Math.abs(meshVolumeLocal) * s * s * s;
-
     return {
         x: size.x, y: size.y, z: size.z,
         perimeter: 2 * (size.x + size.y),
@@ -888,7 +979,6 @@ function computeElementMetrics(elem) {
         center: center
     };
 }
-
 function fmt(v, d) { if (v === undefined || v === null || isNaN(v)) return '0.00'; return Number(v).toFixed(d === undefined ? 2 : d); }
 function updateDimensionsUI() {
     const elem = state.selectedElement;

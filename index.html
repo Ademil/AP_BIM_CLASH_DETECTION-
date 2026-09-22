@@ -1,0 +1,1474 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>APAVAN BIM Clash Detection — Compatibilização de Modelos IFC</title>
+    <link rel="icon" href="data:,">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: { extend: { colors: { apavan: { 50:'#f0f7ff',100:'#e0effe',500:'#2563eb',700:'#1d4ed8',800:'#1e3a8a',900:'#0f172a' } } } }
+        }
+    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/utils/BufferGeometryUtils.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="./web-ifc-api-iife.js"></script>
+    <style>
+        body { font-family: 'Inter', system-ui, -apple-system, sans-serif; background-color: #0f172a; color: #f8fafc; }
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: #1e293b; }
+        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: #475569; }
+        .canvas-container { position: relative; width: 100%; height: 100%; overflow: hidden; }
+        #bimCanvas { width: 100% !important; height: 100% !important; display: block; }
+        .glass-panel { background: rgba(15,23,42,0.85); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.1); }
+        .clash-pin { position: absolute; transform: translate(-50%,-100%); cursor: pointer; transition: transform 0.2s ease; }
+        .clash-pin:hover { transform: translate(-50%,-110%) scale(1.15); z-index: 50; }
+        .tab-btn.active { border-bottom: 2px solid #3b82f6; color: #60a5fa; background: rgba(59,130,246,0.1); }
+        .loading-overlay { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; background:rgba(15,23,42,0.9); z-index:100; backdrop-filter: blur(4px); }
+        .spinner { width:48px; height:48px; border:4px solid rgba(59,130,246,0.2); border-top-color:#3b82f6; border-radius:50%; animation: spin 1s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        input[type="range"] { -webkit-appearance: none; appearance: none; height: 4px; background: #334155; border-radius: 2px; outline: none; }
+        input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 14px; height: 14px; background: #3b82f6; border-radius: 50%; cursor: pointer; }
+        input[type="range"]::-moz-range-thumb { width: 14px; height: 14px; background: #3b82f6; border-radius: 50%; cursor: pointer; border: none; }
+    </style>
+</head>
+<body class="h-screen w-screen flex flex-col overflow-hidden bg-slate-950 text-slate-100">
+
+    <header class="h-14 bg-slate-900 border-b border-slate-800 flex items-center justify-between px-4 z-20 shrink-0">
+        <div class="flex items-center space-x-3">
+            <div class="bg-gradient-to-tr from-blue-700 to-indigo-600 text-white p-2 rounded-lg font-bold shadow-lg">
+                <i class="fa-solid fa-cubes text-xl"></i>
+            </div>
+            <div>
+                <div class="flex items-center space-x-2">
+                    <span class="font-extrabold tracking-wider text-base text-white">APAVAN</span>
+                    <span class="text-xs bg-blue-600/30 text-blue-400 px-2 py-0.5 rounded border border-blue-500/30 font-semibold">BIM CLASH DETECTION v3.7</span>
+                </div>
+                <p class="text-[10px] text-slate-400">APAVAN ENGENHARIA E CONSULTORIA • Ademilton Pavan CREA-SC 86959-8 • Tubarão - SC</p>
+            </div>
+        </div>
+        <div class="flex items-center space-x-2">
+            <button onclick="loadDemoProject()" class="px-3 py-1.5 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white rounded text-xs font-semibold shadow flex items-center gap-1.5 transition">
+                <i class="fa-solid fa-wand-magic-sparkles"></i><span>Demo Multidisciplinar</span>
+            </button>
+            <label class="px-3 py-1.5 bg-blue-600 hover:bg-blue-500 text-white rounded text-xs font-semibold shadow cursor-pointer flex items-center gap-1.5 transition">
+                <i class="fa-solid fa-file-import"></i><span>Importar IFC</span>
+                <input type="file" id="ifcFileInput" accept=".ifc" multiple class="hidden" onchange="handleIFCUpload(event)">
+            </label>
+            <button onclick="runClashDetection()" class="px-3 py-1.5 bg-red-600 hover:bg-red-500 text-white rounded text-xs font-semibold shadow flex items-center gap-1.5 transition">
+                <i class="fa-solid fa-bolt"></i><span>Executar Análise</span>
+            </button>
+            <div class="h-6 w-px bg-slate-700 mx-1"></div>
+            <button onclick="exportPDFReport()" class="px-2.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded text-xs font-medium border border-slate-700 flex items-center gap-1">
+                <i class="fa-solid fa-file-pdf text-red-400"></i> Relatório
+            </button>
+            <button onclick="exportBCF()" class="px-2.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded text-xs font-medium border border-slate-700 flex items-center gap-1">
+                <i class="fa-solid fa-share-nodes text-amber-400"></i> BCF
+            </button>
+            <button onclick="exportCSV()" class="px-2.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded text-xs font-medium border border-slate-700 flex items-center gap-1">
+                <i class="fa-solid fa-file-excel text-emerald-400"></i> Excel
+            </button>
+        </div>
+    </header>
+
+    <div class="flex-1 flex overflow-hidden relative">
+        <aside class="w-80 bg-slate-900 border-r border-slate-800 flex flex-col z-10 shrink-0">
+            <div class="flex border-b border-slate-800 text-[10px] font-semibold text-slate-400 bg-slate-950/50">
+                <button onclick="switchLeftTab('models')" id="tab-btn-models" class="tab-btn flex-1 py-2.5 text-center hover:text-slate-200 active"><i class="fa-solid fa-cubes mr-1"></i>Modelos</button>
+                <button onclick="switchLeftTab('transform')" id="tab-btn-transform" class="tab-btn flex-1 py-2.5 text-center hover:text-slate-200"><i class="fa-solid fa-rotate mr-1"></i>Transformar</button>
+                <button onclick="switchLeftTab('tree')" id="tab-btn-tree" class="tab-btn flex-1 py-2.5 text-center hover:text-slate-200"><i class="fa-solid fa-sitemap mr-1"></i>Árvore</button>
+                <button onclick="switchLeftTab('rules')" id="tab-btn-rules" class="tab-btn flex-1 py-2.5 text-center hover:text-slate-200"><i class="fa-solid fa-sliders mr-1"></i>Regras</button>
+            </div>
+
+            <!-- TAB: Modelos -->
+            <div id="tab-content-models" class="flex-1 overflow-y-auto p-3 space-y-4">
+                <div>
+                    <div class="flex justify-between items-center mb-2">
+                        <span class="text-xs font-bold text-slate-300 uppercase tracking-wider">Modelos Carregados</span>
+                        <span class="text-[11px] bg-slate-800 text-slate-400 px-2 py-0.5 rounded" id="modelCountBadge">0</span>
+                    </div>
+                    <div id="loadedModelsList" class="space-y-2">
+                        <div class="text-xs text-slate-500 text-center py-6 border border-dashed border-slate-800 rounded">
+                            Nenhum modelo IFC importado.
+                        </div>
+                    </div>
+                </div>
+                <div class="border-t border-slate-800 pt-3">
+                    <span class="text-xs font-bold text-slate-300 uppercase tracking-wider block mb-2">Filtro por Pavimento</span>
+                    <select id="floorFilter" onchange="applyFloorFilter()" class="w-full bg-slate-950 border border-slate-800 text-xs text-slate-200 rounded p-2 focus:border-blue-500 outline-none">
+                        <option value="ALL">Todos os Pavimentos</option>
+                        <option value="Subsolo">Subsolo (-3.00m)</option>
+                        <option value="Térreo">Térreo (0.00m)</option>
+                        <option value="Pavimento 01">Pavimento 01 (+3.20m)</option>
+                        <option value="Pavimento 02">Pavimento 02 (+6.40m)</option>
+                        <option value="Cobertura">Cobertura (+9.60m)</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- TAB: Transformar (NOVO) -->
+            <div id="tab-content-transform" class="flex-1 overflow-y-auto p-3 hidden space-y-3 text-xs">
+                <div>
+                    <span class="text-xs font-bold text-slate-300 uppercase tracking-wider block mb-2">Modelo para Ajustar</span>
+                    <select id="transformModelSelect" onchange="selectTransformModel(this.value)" class="w-full bg-slate-950 border border-slate-800 text-xs text-slate-200 rounded p-2 focus:border-blue-500 outline-none">
+                        <option value="">— Selecione —</option>
+                    </select>
+                    <p class="text-[10px] text-slate-500 mt-1">Rotacione e posicione o modelo em relação ao plano/grid.</p>
+                </div>
+
+                <div id="transformControls" class="hidden space-y-3">
+                    <!-- Info do modelo -->
+                    <div class="bg-slate-950 border border-slate-800 rounded p-2 text-[10px]">
+                        <div class="flex justify-between text-slate-400">
+                            <span>Dimensões:</span>
+                            <span class="font-mono text-slate-200" id="tInfoDims">- × - × -</span>
+                        </div>
+                        <div class="flex justify-between text-slate-400 mt-1">
+                            <span>Centro (X,Y,Z):</span>
+                            <span class="font-mono text-slate-200" id="tInfoCenter">-</span>
+                        </div>
+                    </div>
+
+                    <!-- Rotação -->
+                    <div class="border-t border-slate-800 pt-3">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="font-bold text-slate-300"><i class="fa-solid fa-rotate text-blue-400 mr-1"></i> Rotação (graus)</span>
+                            <button onclick="resetRotation()" class="text-[10px] text-slate-400 hover:text-white"><i class="fa-solid fa-rotate-left"></i> Zerar</button>
+                        </div>
+                        <div class="space-y-2">
+                            <div>
+                                <div class="flex justify-between text-[10px] text-slate-400 mb-1"><label>Eixo X</label><span id="rotXVal" class="font-mono text-blue-300">0.0°</span></div>
+                                <div class="flex items-center gap-2">
+                                    <input type="range" id="rotX" min="-180" max="180" step="1" value="0" oninput="onRotSlider('X')" class="flex-1">
+                                    <input type="number" id="rotXNum" min="-360" max="360" step="1" value="0" onchange="onRotNum('X')" class="w-16 bg-slate-950 border border-slate-800 rounded p-1 text-[11px] text-center">
+                                </div>
+                            </div>
+                            <div>
+                                <div class="flex justify-between text-[10px] text-slate-400 mb-1"><label>Eixo Y</label><span id="rotYVal" class="font-mono text-blue-300">0.0°</span></div>
+                                <div class="flex items-center gap-2">
+                                    <input type="range" id="rotY" min="-180" max="180" step="1" value="0" oninput="onRotSlider('Y')" class="flex-1">
+                                    <input type="number" id="rotYNum" min="-360" max="360" step="1" value="0" onchange="onRotNum('Y')" class="w-16 bg-slate-950 border border-slate-800 rounded p-1 text-[11px] text-center">
+                                </div>
+                            </div>
+                            <div>
+                                <div class="flex justify-between text-[10px] text-slate-400 mb-1"><label>Eixo Z</label><span id="rotZVal" class="font-mono text-blue-300">0.0°</span></div>
+                                <div class="flex items-center gap-2">
+                                    <input type="range" id="rotZ" min="-180" max="180" step="1" value="0" oninput="onRotSlider('Z')" class="flex-1">
+                                    <input type="number" id="rotZNum" min="-360" max="360" step="1" value="0" onchange="onRotNum('Z')" class="w-16 bg-slate-950 border border-slate-800 rounded p-1 text-[11px] text-center">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Posição -->
+                    <div class="border-t border-slate-800 pt-3">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="font-bold text-slate-300"><i class="fa-solid fa-arrows-up-down-left-right text-emerald-400 mr-1"></i> Posição (m)</span>
+                            <button onclick="resetPosition()" class="text-[10px] text-slate-400 hover:text-white"><i class="fa-solid fa-rotate-left"></i> Zerar</button>
+                        </div>
+                        <div class="space-y-2">
+                            <div>
+                                <div class="flex justify-between text-[10px] text-slate-400 mb-1"><label>X</label><span id="posXVal" class="font-mono text-emerald-300">0.00 m</span></div>
+                                <div class="flex items-center gap-2">
+                                    <input type="range" id="posX" min="-50" max="50" step="0.1" value="0" oninput="onPosSlider('X')" class="flex-1">
+                                    <input type="number" id="posXNum" step="0.1" value="0" onchange="onPosNum('X')" class="w-16 bg-slate-950 border border-slate-800 rounded p-1 text-[11px] text-center">
+                                </div>
+                            </div>
+                            <div>
+                                <div class="flex justify-between text-[10px] text-slate-400 mb-1"><label>Y</label><span id="posYVal" class="font-mono text-emerald-300">0.00 m</span></div>
+                                <div class="flex items-center gap-2">
+                                    <input type="range" id="posY" min="-50" max="50" step="0.1" value="0" oninput="onPosSlider('Y')" class="flex-1">
+                                    <input type="number" id="posYNum" step="0.1" value="0" onchange="onPosNum('Y')" class="w-16 bg-slate-950 border border-slate-800 rounded p-1 text-[11px] text-center">
+                                </div>
+                            </div>
+                            <div>
+                                <div class="flex justify-between text-[10px] text-slate-400 mb-1"><label>Z</label><span id="posZVal" class="font-mono text-emerald-300">0.00 m</span></div>
+                                <div class="flex items-center gap-2">
+                                    <input type="range" id="posZ" min="-50" max="50" step="0.1" value="0" oninput="onPosSlider('Z')" class="flex-1">
+                                    <input type="number" id="posZNum" step="0.1" value="0" onchange="onPosNum('Z')" class="w-16 bg-slate-950 border border-slate-800 rounded p-1 text-[11px] text-center">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Ações rápidas -->
+                    <div class="border-t border-slate-800 pt-3 space-y-1.5">
+                        <span class="font-bold text-slate-300 block mb-2"><i class="fa-solid fa-wand-magic text-amber-400 mr-1"></i> Ações Rápidas</span>
+                        <button onclick="alignBaseToGrid()" class="w-full py-1.5 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white rounded text-[11px] font-semibold flex items-center justify-center gap-1">
+                            <i class="fa-solid fa-layer-group"></i> Alinhar Base ao Plano (Y=0)
+                        </button>
+                        <button onclick="centerOnGrid()" class="w-full py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded text-[11px] font-semibold border border-slate-700 flex items-center justify-center gap-1">
+                            <i class="fa-solid fa-crosshairs"></i> Centralizar no Grid (X/Y/Z)
+                        </button>
+                        <button onclick="resetTransform()" class="w-full py-1.5 bg-slate-800 hover:bg-slate-700 text-amber-400 rounded text-[11px] font-semibold border border-slate-700 flex items-center justify-center gap-1">
+                            <i class="fa-solid fa-rotate-left"></i> Resetar Transformação
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB: Árvore -->
+            <div id="tab-content-tree" class="flex-1 overflow-y-auto p-3 hidden space-y-2 text-xs">
+                <div class="mb-2">
+                    <input type="text" placeholder="Filtrar por nome ou GUID..." id="treeSearch" oninput="filterTree()" class="w-full bg-slate-950 border border-slate-800 rounded p-1.5 text-xs text-slate-200 focus:border-blue-500 outline-none">
+                </div>
+                <div id="ifcSpatialTree" class="space-y-1 font-mono text-[11px]">
+                    <div class="text-slate-500 italic">Carregue um projeto...</div>
+                </div>
+            </div>
+
+            <!-- TAB: Regras -->
+            <div id="tab-content-rules" class="flex-1 overflow-y-auto p-3 hidden space-y-4 text-xs">
+                <div>
+                    <span class="font-bold text-slate-300 block mb-1">Matriz de Tolerâncias (mm)</span>
+                    <div class="grid grid-cols-2 gap-2 text-[11px]">
+                        <div class="bg-slate-950 p-2 rounded border border-slate-800">
+                            <label class="text-red-400 block font-semibold">Duro</label>
+                            <input type="number" id="tolHard" value="0" class="w-full bg-slate-900 border border-slate-800 p-1 text-slate-200 rounded mt-1">
+                        </div>
+                        <div class="bg-slate-950 p-2 rounded border border-slate-800">
+                            <label class="text-amber-400 block font-semibold">Crítico</label>
+                            <input type="number" id="tolCritical" value="25" class="w-full bg-slate-900 border border-slate-800 p-1 text-slate-200 rounded mt-1">
+                        </div>
+                    </div>
+                </div>
+                <div class="border-t border-slate-800 pt-3">
+                    <span class="font-bold text-slate-300 block mb-2">Regras Ativas por Par</span>
+                    <div id="rulesContainer" class="space-y-2"></div>
+                </div>
+            </div>
+        </aside>
+
+        <main class="flex-1 flex flex-col relative bg-slate-950">
+            <div class="absolute top-3 left-3 z-10 flex items-center space-x-1 glass-panel p-1.5 rounded-lg shadow-xl text-xs">
+                <button onclick="resetCameraView('iso')" class="px-2 py-1 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded" title="Isométrica"><i class="fa-solid fa-cube"></i> Iso</button>
+                <button onclick="resetCameraView('top')" class="px-2 py-1 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded" title="Topo"><i class="fa-solid fa-arrows-up-to-line"></i> Topo</button>
+                <button onclick="resetCameraView('front')" class="px-2 py-1 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded" title="Frente"><i class="fa-solid fa-square-full"></i> Frente</button>
+                <div class="h-4 w-px bg-slate-700 mx-1"></div>
+                <button onclick="toggleWireframe()" class="px-2 py-1 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded" title="Wireframe"><i class="fa-solid fa-border-all"></i></button>
+                <button onclick="toggleGhostMode()" class="px-2 py-1 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded" title="Transparência"><i class="fa-solid fa-ghost"></i></button>
+                <button onclick="toggleExplodedView()" class="px-2 py-1 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded" title="Explodir"><i class="fa-solid fa-burst"></i></button>
+                <div class="h-4 w-px bg-slate-700 mx-1"></div>
+                <button onclick="fitAllModels()" class="px-2 py-1 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded" title="Enquadrar"><i class="fa-solid fa-expand"></i> Fit</button>
+                <button onclick="showAllElements()" class="px-2 py-1 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded" title="Mostrar Todos"><i class="fa-solid fa-eye"></i></button>
+            </div>
+            <div class="absolute top-3 right-3 z-10 glass-panel px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-2">
+                <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                <span id="viewportStatusText" class="text-slate-300">Motor 3D Ativo</span>
+            </div>
+            <div class="canvas-container flex-1" id="canvasWrapper">
+                <canvas id="bimCanvas"></canvas>
+                <div id="clashMarkersContainer" class="absolute inset-0 pointer-events-none"></div>
+                <div id="loadingOverlay" class="loading-overlay hidden">
+                    <div class="flex flex-col items-center gap-3">
+                        <div class="spinner"></div>
+                        <span id="loadingText" class="text-xs text-slate-300">Processando IFC...</span>
+                    </div>
+                </div>
+            </div>
+            <div id="selectedElementBar" class="h-12 bg-slate-900/90 border-t border-slate-800 px-4 flex items-center justify-between text-xs text-slate-300 z-10 hidden">
+                <div class="flex items-center space-x-4 overflow-hidden">
+                    <span class="font-bold text-blue-400" id="selElemName">-</span>
+                    <span class="text-slate-400" id="selElemGUID">GUID: -</span>
+                    <span class="bg-slate-800 px-2 py-0.5 rounded text-[11px]" id="selElemDisc">-</span>
+                    <span class="text-slate-400" id="selElemFloor">-</span>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <button onclick="isolateSelectedElement()" class="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 rounded text-[11px]">Isolar</button>
+                    <button onclick="hideSelectedElement()" class="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 rounded text-[11px]">Ocultar</button>
+                    <button onclick="clearSelection()" class="px-2 py-1 text-slate-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
+                </div>
+            </div>
+        </main>
+
+        <aside class="w-96 bg-slate-900 border-l border-slate-800 flex flex-col z-10 shrink-0">
+            <div class="flex border-b border-slate-800 text-xs font-semibold text-slate-400 bg-slate-950/50">
+                <button onclick="switchRightTab('clashes')" id="tab-btn-clashes" class="tab-btn flex-1 py-2.5 text-center hover:text-slate-200 active">
+                    <i class="fa-solid fa-triangle-exclamation mr-1 text-amber-500"></i> Conflitos (<span id="clashCountBadge">0</span>)
+                </button>
+                <button onclick="switchRightTab('ai')" id="tab-btn-ai" class="tab-btn flex-1 py-2.5 text-center hover:text-slate-200"><i class="fa-solid fa-brain mr-1 text-blue-400"></i> IA</button>
+                <button onclick="switchRightTab('dash')" id="tab-btn-dash" class="tab-btn flex-1 py-2.5 text-center hover:text-slate-200"><i class="fa-solid fa-chart-pie mr-1 text-emerald-400"></i> Dashboard</button>
+            </div>
+            <div id="tab-content-clashes" class="flex-1 overflow-hidden flex flex-col">
+                <div class="p-2 border-b border-slate-800 bg-slate-950/40 flex items-center gap-1.5 text-xs">
+                    <select id="clashSevFilter" onchange="filterClashList()" class="bg-slate-900 border border-slate-800 text-slate-300 rounded p-1 text-[11px] flex-1">
+                        <option value="ALL">Todas Severidades</option>
+                        <option value="CRITICAL">🔴 Crítico</option>
+                        <option value="HIGH">🟠 Alto</option>
+                        <option value="MEDIUM">🟡 Médio</option>
+                        <option value="LOW">🔵 Baixo</option>
+                    </select>
+                    <select id="clashStatusFilter" onchange="filterClashList()" class="bg-slate-900 border border-slate-800 text-slate-300 rounded p-1 text-[11px] flex-1">
+                        <option value="ALL">Todos Status</option>
+                        <option value="Novo">Novo</option>
+                        <option value="Em análise">Em análise</option>
+                        <option value="Resolvido">Resolvido</option>
+                    </select>
+                </div>
+                <div id="clashesList" class="flex-1 overflow-y-auto p-2 space-y-2">
+                    <div class="text-xs text-slate-500 text-center py-10 border border-dashed border-slate-800 rounded">
+                        Nenhum teste de clash executado ainda.
+                    </div>
+                </div>
+                <div id="clashDetailCard" class="h-64 border-t border-slate-800 bg-slate-950 p-3 flex flex-col overflow-y-auto hidden">
+                    <div class="flex justify-between items-start mb-2">
+                        <div>
+                            <span class="text-xs font-bold text-red-400 font-mono" id="cdID">-</span>
+                            <h4 class="text-xs font-semibold text-slate-200" id="cdTitle">-</h4>
+                        </div>
+                        <span class="text-[10px] px-2 py-0.5 rounded font-bold uppercase" id="cdSeverityBadge">-</span>
+                    </div>
+                    <div class="grid grid-cols-2 gap-2 text-[11px] bg-slate-900 p-2 rounded border border-slate-800 mb-2">
+                        <div><span class="text-slate-500">Interseção:</span> <strong id="cdOverlap" class="text-slate-200">-</strong></div>
+                        <div><span class="text-slate-500">Pavimento:</span> <strong id="cdFloor" class="text-slate-200">-</strong></div>
+                        <div class="col-span-2 truncate"><span class="text-slate-500">A:</span> <span id="cdElemA" class="text-blue-400 font-mono">-</span></div>
+                        <div class="col-span-2 truncate"><span class="text-slate-500">B:</span> <span id="cdElemB" class="text-indigo-400 font-mono">-</span></div>
+                    </div>
+                    <div class="space-y-2 text-xs flex-1">
+                        <div class="flex items-center gap-2">
+                            <label class="text-[11px] text-slate-400 w-20">Status:</label>
+                            <select id="cdStatusSelect" onchange="updateClashStatus()" class="bg-slate-900 border border-slate-800 text-slate-200 rounded p-1 text-xs flex-1">
+                                <option value="Novo">Novo</option>
+                                <option value="Em análise">Em análise</option>
+                                <option value="Confirmado">Confirmado</option>
+                                <option value="Falso positivo">Falso positivo</option>
+                                <option value="Resolvido">Resolvido</option>
+                            </select>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <label class="text-[11px] text-slate-400 w-20">Responsável:</label>
+                            <input type="text" id="cdAssigneeInput" onchange="updateClashAssignee()" class="bg-slate-900 border border-slate-800 text-slate-200 rounded p-1 text-xs flex-1">
+                        </div>
+                        <textarea id="cdNotesTextarea" onchange="updateClashNotes()" rows="2" class="w-full bg-slate-900 border border-slate-800 text-slate-200 rounded p-1.5 text-xs outline-none"></textarea>
+                        <button onclick="askAIForClashDiagnosis()" class="w-full py-1.5 bg-gradient-to-r from-blue-700 to-indigo-700 text-white rounded text-xs font-semibold">
+                            <i class="fa-solid fa-wand-magic-sparkles"></i> Analisar com IA
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div id="tab-content-ai" class="flex-1 overflow-hidden p-3 hidden flex flex-col">
+                <div id="aiChatOutput" class="flex-1 overflow-y-auto space-y-3 p-2 bg-slate-950 rounded border border-slate-800 text-xs">
+                    <div class="bg-slate-900 p-2.5 rounded border border-slate-800 text-slate-300">👋 Olá! Sou o assistente de IA da APAVAN Engenharia.</div>
+                </div>
+                <div class="mt-2 space-y-1.5">
+                    <button onclick="askAIGlobalSummary()" class="w-full py-1 bg-slate-800 text-slate-300 rounded text-[11px] border border-slate-700">
+                        <i class="fa-solid fa-file-contract text-blue-400"></i> Resumo Executivo
+                    </button>
+                    <div class="flex items-center gap-1">
+                        <input type="text" id="aiCustomPrompt" placeholder="Pergunte à IA..." class="flex-1 bg-slate-950 border border-slate-800 rounded p-1.5 text-xs text-slate-200 outline-none" onkeypress="if(event.key==='Enter') sendAIPrompt()">
+                        <button onclick="sendAIPrompt()" class="px-3 py-1.5 bg-blue-600 text-white rounded text-xs"><i class="fa-solid fa-paper-plane"></i></button>
+                    </div>
+                </div>
+            </div>
+            <div id="tab-content-dash" class="flex-1 overflow-y-auto p-3 hidden space-y-4">
+                <div class="grid grid-cols-2 gap-2 text-xs">
+                    <div class="bg-slate-950 p-2.5 rounded border border-slate-800"><span class="text-[10px] text-slate-400 uppercase font-bold block">Total</span><span class="text-xl font-extrabold text-white" id="dashTotal">0</span></div>
+                    <div class="bg-slate-950 p-2.5 rounded border border-slate-800"><span class="text-[10px] text-red-400 uppercase font-bold block">Críticos</span><span class="text-xl font-extrabold text-red-400" id="dashCritical">0</span></div>
+                    <div class="bg-slate-950 p-2.5 rounded border border-slate-800"><span class="text-[10px] text-emerald-400 uppercase font-bold block">Resolvidos</span><span class="text-xl font-extrabold text-emerald-400" id="dashResolved">0</span></div>
+                    <div class="bg-slate-950 p-2.5 rounded border border-slate-800"><span class="text-[10px] text-amber-400 uppercase font-bold block">Pendentes</span><span class="text-xl font-extrabold text-amber-400" id="dashPending">0</span></div>
+                </div>
+                <div class="bg-slate-950 p-3 rounded border border-slate-800">
+                    <span class="text-xs font-bold text-slate-300 block mb-2">Por Disciplina</span>
+                    <div class="h-40"><canvas id="chartDisciplines"></canvas></div>
+                </div>
+                <div class="bg-slate-950 p-3 rounded border border-slate-800">
+                    <span class="text-xs font-bold text-slate-300 block mb-2">Por Pavimento</span>
+                    <div class="h-40"><canvas id="chartFloors"></canvas></div>
+                </div>
+            </div>
+        </aside>
+    </div>
+
+    <footer class="h-6 bg-slate-950 border-t border-slate-800 px-4 flex items-center justify-between text-[10px] text-slate-500 z-20 shrink-0">
+        <div>APAVAN ENGENHARIA E CONSULTORIA • ISO 16739 OpenBIM IFC Compliant</div>
+        <div class="italic">A validação técnica e decisão de projeto permanecem sob responsabilidade dos engenheiros de cada disciplina.</div>
+    </footer>
+
+<script>
+const AI_CONFIG = { apiKey: "", model: "gemini-2.0-flash", endpoint: "https://generativelanguage.googleapis.com/v1beta/models/" };
+const PALETTE = ['#2563eb','#3b82f6','#60a5fa','#93c5fd','#a855f7','#f59e0b','#10b981','#ef4444','#14b8a6','#f472b6'];
+const FLOOR_ORDER = ['Subsolo','Térreo','Pavimento 01','Pavimento 02','Cobertura'];
+
+const state = {
+    models: [], elements: [], clashes: [],
+    modelGroups: {},          // modelId -> THREE.Group (permite transformar por modelo)
+    modelBaseTransforms: {},  // modelId -> { position, rotation, scale } após recentralização
+    rules: [
+        { id:1, discA:'HIDRAULICO', discB:'ESTRUTURA', type:'HARD', tolerance:0, active:true },
+        { id:2, discA:'ELETRICO', discB:'ESTRUTURA', type:'HARD', tolerance:0, active:true },
+        { id:3, discA:'HVAC', discB:'ESTRUTURA', type:'HARD', tolerance:0, active:true },
+        { id:4, discA:'HIDRAULICO', discB:'ARQUITETURA', type:'PROXIMITY', tolerance:50, active:true },
+        { id:5, discA:'INCENDIO', discB:'ESTRUTURA', type:'HARD', tolerance:0, active:true }
+    ],
+    selectedElement: null, selectedClash: null,
+    wireframe: false, ghostMode: false, exploded: false, compareMode: false
+};
+
+let scene, camera, renderer, controls;
+let modelGroup, clashMarkersGroup, gridHelper;
+let raycaster, mouse;
+let chartDiscInstance = null, chartFloorInstance = null;
+let pointerDownPos = null;
+let ifcApiInstance = null;
+
+window.onload = function() {
+    init3DScene();
+    initRulesUI();
+    initCharts();
+    updateDashboardUI();
+    window.addEventListener('resize', onWindowResize);
+};
+
+function init3DScene() {
+    const container = document.getElementById('canvasWrapper');
+    scene = new THREE.Scene();
+    scene.background = new THREE.Color(0x090d16);
+    camera = new THREE.PerspectiveCamera(45, container.clientWidth / container.clientHeight, 0.1, 100000);
+    camera.position.set(25, 20, 30);
+    renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('bimCanvas'), antialias: true });
+    renderer.setSize(container.clientWidth, container.clientHeight);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.shadowMap.enabled = true;
+    controls = new THREE.OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = true;
+    controls.dampingFactor = 0.05;
+    scene.add(new THREE.AmbientLight(0xffffff, 0.65));
+    const d1 = new THREE.DirectionalLight(0xffffff, 0.85); d1.position.set(20, 40, 20); scene.add(d1);
+    const d2 = new THREE.DirectionalLight(0x90b0ff, 0.4); d2.position.set(-20, -20, -20); scene.add(d2);
+    gridHelper = new THREE.GridHelper(60, 60, 0x334155, 0x1e293b);
+    gridHelper.position.y = -0.01;
+    scene.add(gridHelper);
+    modelGroup = new THREE.Group(); scene.add(modelGroup);
+    clashMarkersGroup = new THREE.Group(); scene.add(clashMarkersGroup);
+    raycaster = new THREE.Raycaster();
+    mouse = new THREE.Vector2();
+    renderer.domElement.addEventListener('pointerdown', e => { pointerDownPos = { x: e.clientX, y: e.clientY }; });
+    renderer.domElement.addEventListener('pointerup', e => {
+        if (!pointerDownPos) return;
+        const moved = Math.hypot(e.clientX - pointerDownPos.x, e.clientY - pointerDownPos.y);
+        pointerDownPos = null;
+        if (moved > 4) return;
+        pickElementAt(e);
+    });
+    animate();
+}
+
+function animate() {
+    requestAnimationFrame(animate);
+    controls.update();
+    renderer.render(scene, camera);
+    updateClashPinPositions();
+}
+function onWindowResize() {
+    const container = document.getElementById('canvasWrapper');
+    if (!container) return;
+    camera.aspect = container.clientWidth / container.clientHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(container.clientWidth, container.clientHeight);
+    chartDiscInstance?.resize();
+    chartFloorInstance?.resize();
+}
+
+/* ============================================================
+   DEMO MULTIDISCIPLINAR (com grupos por modelo)
+   ============================================================ */
+function loadDemoProject() {
+    showViewportStatus("Carregando demo...");
+    clearAllModels();
+    const disciplines = [
+        { name: 'ARQUITETURA', file: 'ARQUITETURA.ifc', color: 0xcbd5e1, disc: 'ARQUITETURA' },
+        { name: 'ESTRUTURA', file: 'ESTRUTURA.ifc', color: 0x64748b, disc: 'ESTRUTURA' },
+        { name: 'HIDROSSANITÁRIO', file: 'HIDRAULICA.ifc', color: 0x3b82f6, disc: 'HIDRAULICO' },
+        { name: 'ELÉTRICO', file: 'ELETRICA.ifc', color: 0xeab308, disc: 'ELETRICO' },
+        { name: 'HVAC', file: 'AR_CONDICIONADO.ifc', color: 0xa855f7, disc: 'HVAC' },
+        { name: 'PREVENÇÃO INCÊNDIO', file: 'INCENDIO.ifc', color: 0xef4444, disc: 'INCENDIO' }
+    ];
+    // Cria um grupo por modelo (permite transformar individualmente)
+    disciplines.forEach(d => {
+        const g = new THREE.Group();
+        g.userData.modelId = d.file;
+        g.userData.isModelRoot = true;
+        modelGroup.add(g);
+        state.modelGroups[d.file] = g;
+        state.modelBaseTransforms[d.file] = {
+            position: new THREE.Vector3(0, 0, 0),
+            rotation: new THREE.Euler(0, 0, 0),
+            scale: new THREE.Vector3(1, 1, 1)
+        };
+    });
+
+    const storeys = [
+        { name: 'Subsolo', elevation: -3.0 }, { name: 'Térreo', elevation: 0.0 },
+        { name: 'Pavimento 01', elevation: 3.2 }, { name: 'Pavimento 02', elevation: 6.4 },
+        { name: 'Cobertura', elevation: 9.6 }
+    ];
+    let counter = 1000;
+    function addBIMElement(discipline, storey, ifcClass, name, geometry, position, size, extraProps = {}) {
+        counter++;
+        const guid = `3APAVAN-${counter}-${Math.random().toString(36).substr(2, 5).toUpperCase()}`;
+        const mat = new THREE.MeshStandardMaterial({ color: discipline.color, roughness: 0.4, metalness: 0.2, transparent: true, opacity: 0.92 });
+        const mesh = new THREE.Mesh(geometry, mat);
+        mesh.position.set(position.x, position.y + storey.elevation, position.z);
+        mesh.castShadow = true; mesh.receiveShadow = true;
+        mesh.geometry.computeBoundingBox();
+        const bbox = new THREE.Box3().setFromObject(mesh);
+        const bimElem = {
+            id: counter, guid, ifcClass, name: `${name} #${counter}`,
+            discipline: discipline.disc, modelId: discipline.file,
+            storey: storey.name, elevation: storey.elevation,
+            mesh, bbox, originalPos: mesh.position.clone(), hidden: false,
+            properties: { Material: extraProps.material || 'Padrão', Volume: `${(size.x*size.y*size.z).toFixed(2)} m³`, Sistema: extraProps.system || discipline.name }
+        };
+        mesh.userData = { bimElement: bimElem };
+        state.modelGroups[discipline.file].add(mesh);
+        state.elements.push(bimElem);
+    }
+    storeys.forEach(storey => {
+        addBIMElement(disciplines[0], storey, 'IfcSlab', 'Laje', new THREE.BoxGeometry(20, 0.2, 14), { x:0, y:0, z:0 }, { x:20, y:0.2, z:14 });
+        if (storey.name !== 'Subsolo') {
+            for (let z of [-6, 0, 6]) addBIMElement(disciplines[1], storey, 'IfcBeam', 'Viga', new THREE.BoxGeometry(19.8, 0.5, 0.3), { x:0, y:-0.35, z:z }, { x:19.8, y:0.5, z:0.3 });
+        }
+        for (let x of [-9, 0, 9]) for (let z of [-6, 0, 6]) addBIMElement(disciplines[1], storey, 'IfcColumn', 'Pilar', new THREE.BoxGeometry(0.4, 3.0, 0.4), { x:x, y:1.5, z:z }, { x:0.4, y:3.0, z:0.4 });
+        addBIMElement(disciplines[0], storey, 'IfcWall', 'Parede', new THREE.BoxGeometry(19.8, 2.8, 0.2), { x:0, y:1.5, z:6.8 }, { x:19.8, y:2.8, z:0.2 });
+        const pipeGeom = new THREE.CylinderGeometry(0.1, 0.1, 18, 12); pipeGeom.rotateZ(Math.PI/2);
+        addBIMElement(disciplines[2], storey, 'IfcPipeSegment', 'Tubulação', pipeGeom, { x:0, y:-0.35, z:0 }, { x:18, y:0.2, z:0.2 }, { system:'Água Fria' });
+        addBIMElement(disciplines[3], storey, 'IfcCableCarrierSegment', 'Eletrocalha', new THREE.BoxGeometry(18, 0.1, 0.4), { x:0, y:2.6, z:-2.0 }, { x:18, y:0.1, z:0.4 }, { system:'Elétrica' });
+        addBIMElement(disciplines[4], storey, 'IfcDuctSegment', 'Duto HVAC', new THREE.BoxGeometry(0.6, 0.4, 12), { x:4, y:-0.30, z:0 }, { x:0.6, y:0.4, z:12 }, { system:'Exaustão' });
+        const fireGeom = new THREE.CylinderGeometry(0.06, 0.06, 16, 12); fireGeom.rotateZ(Math.PI/2);
+        addBIMElement(disciplines[5], storey, 'IfcPipeSegment', 'Sprinklers', fireGeom, { x:0, y:2.75, z:3.0 }, { x:16, y:0.12, z:0.12 }, { system:'Incêndio' });
+    });
+    disciplines.forEach(d => {
+        state.models.push({ id: d.file, name: d.file, discipline: d.disc, count: state.elements.filter(e => e.discipline === d.disc).length, visible: true });
+    });
+    updateModelsListUI(); buildSpatialTreeUI();
+    showViewportStatus("Demo carregada!");
+    fitAllModels();
+}
+
+/* ============================================================
+   IMPORTAÇÃO IFC — web-ifc 0.0.78
+   ============================================================ */
+async function getIfcApi() {
+    if (ifcApiInstance) return ifcApiInstance;
+    if (typeof WebIFC === 'undefined' || !WebIFC.IfcAPI) throw new Error("Biblioteca web-ifc não carregada.");
+    if (location.protocol === 'file:') throw new Error("O navegador bloqueia WASM em 'file://'.\n\nRode: python -m http.server 8000\nAcesse: http://localhost:8000");
+    try {
+        ifcApiInstance = new WebIFC.IfcAPI();
+        ifcApiInstance.SetWasmPath('./');
+        await ifcApiInstance.Init();
+        if (typeof ifcApiInstance.OpenModel !== 'function') throw new Error("WASM não inicializou.");
+        return ifcApiInstance;
+    } catch (err) {
+        ifcApiInstance = null;
+        throw new Error("Falha ao inicializar WASM. Confirme 'web-ifc.wasm' na pasta.\nDetalhe: " + err.message);
+    }
+}
+
+function handleIFCUpload(event) {
+    const files = event.target.files;
+    if (!files || files.length === 0) return;
+    if (location.protocol === 'file:') {
+        alert("⚠️ Você abriu via file://.\n\nRode:\n  python -m http.server 8000\n\nE acesse http://localhost:8000");
+        event.target.value = ''; return;
+    }
+    Array.from(files).forEach(file => {
+        const reader = new FileReader();
+        reader.onload = async function(e) {
+            try { await parseIFCFile(file.name, e.target.result); }
+            catch (err) { console.error(err); showViewportStatus(`Erro em ${file.name}: ${err.message}`); alert(`Erro ao processar ${file.name}:\n${err.message}`); }
+        };
+        reader.readAsArrayBuffer(file);
+    });
+    event.target.value = '';
+}
+
+function showLoading(text) { document.getElementById('loadingText').innerText = text; document.getElementById('loadingOverlay').classList.remove('hidden'); }
+function hideLoading() { document.getElementById('loadingOverlay').classList.add('hidden'); }
+
+function determineDiscipline(fileName) {
+    const u = fileName.toUpperCase();
+    if (u.includes('ESTR') || u.includes('STRU') || u.includes('CIVIL')) return 'ESTRUTURA';
+    if (u.includes('HIDR') || u.includes('SAN') || u.includes('PLUMB') || u.includes('AGUA')) return 'HIDRAULICO';
+    if (u.includes('ELET') || u.includes('ELEC')) return 'ELETRICO';
+    if (u.includes('HVAC') || u.includes('AR_COND') || u.includes('DUCT') || u.includes('CLIMA')) return 'HVAC';
+    if (u.includes('INC') || u.includes('FIRE') || u.includes('SPRINK')) return 'INCENDIO';
+    if (u.includes('ARQ') || u.includes('ARCH')) return 'ARQUITETURA';
+    return 'ARQUITETURA';
+}
+function shouldSkipIfcClass(ifcClass) {
+    return ['IFCOPENINGELEMENT','IFCSPACE','IFCOPENINGSTANDARDCASE','IFCVOIDINGELEMENT','IFCANNOTATION','IFCGRID','IFCSITE','IFCBUILDING','IFCBUILDINGSTOREY','IFCPROJECT','IFCRELAGGREGATES','IFCRELCONTAINEDINSPATIALSTRUCTURE'].includes(ifcClass);
+}
+function toCamelIfc(name) { if (!name) return 'IfcElement'; const l = name.toLowerCase(); return 'Ifc' + l.charAt(3).toUpperCase() + l.substring(4); }
+
+function buildStoreyMap(ifcApi, modelID) {
+    const storeyMap = {}, storeyNames = {};
+    try {
+        const ids = ifcApi.GetLineIDsWithType(modelID, WebIFC.IFCBUILDINGSTOREY);
+        for (let i = 0; i < ids.size(); i++) {
+            const id = ids.get(i);
+            try { const l = ifcApi.GetLine(modelID, id); storeyNames[id] = (l.Name?.value) || `Storey ${id}`; } catch(e){}
+        }
+        const rels = ifcApi.GetLineIDsWithType(modelID, WebIFC.IFCRELCONTAINEDINSPATIALSTRUCTURE);
+        for (let i = 0; i < rels.size(); i++) {
+            try {
+                const rel = ifcApi.GetLine(modelID, rels.get(i));
+                const sn = storeyNames[rel.RelatingStructure?.value];
+                if (!sn) continue;
+                (rel.RelatedElements || []).forEach(r => { if (r.value) storeyMap[r.value] = sn; });
+            } catch(e){}
+        }
+    } catch(e){}
+    return storeyMap;
+}
+
+/* Recentraliza o grupo inteiro na origem (base em Y=0) */
+function centerGroupAtOrigin(group) {
+    const savedPos = group.position.clone();
+    group.position.set(0, 0, 0);
+    group.updateMatrixWorld(true);
+    const box = new THREE.Box3().setFromObject(group);
+    if (box.isEmpty()) { group.position.copy(savedPos); return; }
+    const center = new THREE.Vector3(); box.getCenter(center);
+    const minY = box.min.y;
+    group.position.set(-center.x, -minY, -center.z);
+    group.updateMatrixWorld(true);
+}
+
+async function parseIFCFile(fileName, arrayBuffer) {
+    showLoading(`Processando IFC: ${fileName}...`);
+    showViewportStatus(`Processando IFC: ${fileName}...`);
+    const ifcApi = await getIfcApi();
+    const uint8 = new Uint8Array(arrayBuffer);
+    const modelID = ifcApi.OpenModel(uint8);
+
+    // Cria grupo dedicado a este modelo
+    const modelGroupInstance = new THREE.Group();
+    modelGroupInstance.userData.modelId = fileName;
+    modelGroupInstance.userData.isModelRoot = true;
+
+    try {
+        const disc = determineDiscipline(fileName);
+        const color = getDisciplineColorHex(disc);
+        const storeyMap = buildStoreyMap(ifcApi, modelID);
+        const flatMeshes = ifcApi.LoadAllGeometry(modelID);
+        const meshCount = flatMeshes.size();
+        let importedCount = 0;
+        const newElements = [];
+        const zUpToYUp = new THREE.Matrix4().makeRotationX(-Math.PI / 2);
+
+        for (let i = 0; i < meshCount; i++) {
+            const flatMesh = flatMeshes.get(i);
+            const expressID = flatMesh.expressID;
+            const type = ifcApi.GetLineType(modelID, expressID);
+            let rawName = '';
+            try { rawName = ifcApi.GetNameFromTypeCode(type); } catch(e) { rawName = ''; }
+            if (!rawName || shouldSkipIfcClass(rawName)) continue;
+
+            const ifcClass = toCamelIfc(rawName);
+            const storeyName = storeyMap[expressID] || 'Térreo';
+            const geoms = [];
+            const placedGeometries = flatMesh.geometries;
+
+            for (let j = 0; j < placedGeometries.size(); j++) {
+                const pg = placedGeometries.get(j);
+                const geom = ifcApi.GetGeometry(modelID, pg.geometryExpressID);
+                if (!geom) continue;
+                const vertsRaw = ifcApi.GetVertexArray(geom.GetVertexData(), geom.GetVertexDataSize());
+                const idxRaw = ifcApi.GetIndexArray(geom.GetIndexData(), geom.GetIndexDataSize());
+                if (vertsRaw.length > 0 && idxRaw.length > 0) {
+                    const positions = new Float32Array((vertsRaw.length / 6) * 3);
+                    const normals = new Float32Array((vertsRaw.length / 6) * 3);
+                    for (let k = 0, idx = 0; k < vertsRaw.length; k += 6, idx += 3) {
+                        positions[idx] = vertsRaw[k]; positions[idx+1] = vertsRaw[k+1]; positions[idx+2] = vertsRaw[k+2];
+                        normals[idx] = vertsRaw[k+3]; normals[idx+1] = vertsRaw[k+4]; normals[idx+2] = vertsRaw[k+5];
+                    }
+                    const indices = new Uint32Array(idxRaw);
+                    const g = new THREE.BufferGeometry();
+                    g.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+                    g.setAttribute('normal', new THREE.BufferAttribute(normals, 3));
+                    g.setIndex(new THREE.BufferAttribute(indices, 1));
+                    const localMatrix = new THREE.Matrix4().fromArray(pg.flatTransformation);
+                    const fullMatrix = new THREE.Matrix4().multiplyMatrices(zUpToYUp, localMatrix);
+                    g.applyMatrix4(fullMatrix);
+                    geoms.push(g);
+                }
+            }
+            if (geoms.length === 0) continue;
+
+            let mergedGeom;
+            if (geoms.length === 1) mergedGeom = geoms[0];
+            else if (THREE.BufferGeometryUtils?.mergeBufferGeometries) {
+                mergedGeom = THREE.BufferGeometryUtils.mergeBufferGeometries(geoms, false);
+                geoms.forEach(g => g.dispose());
+            } else { mergedGeom = geoms[0]; geoms.slice(1).forEach(g => g.dispose()); }
+
+            const material = new THREE.MeshStandardMaterial({ color, roughness: 0.5, metalness: 0.15, transparent: true, opacity: 0.92, side: THREE.DoubleSide });
+            const mesh = new THREE.Mesh(mergedGeom, material);
+            mesh.castShadow = true; mesh.receiveShadow = true;
+            mergedGeom.computeBoundingBox();
+            const bbox = mergedGeom.boundingBox.clone();
+            const center = new THREE.Vector3(); bbox.getCenter(center);
+            const guid = (() => { try { return ifcApi.GetLine(modelID, expressID).GlobalId?.value || `IFC-${expressID}`; } catch { return `IFC-${expressID}`; } })();
+
+            const elem = {
+                id: expressID, guid, ifcClass, name: `${ifcClass} ${expressID}`,
+                discipline: disc, modelId: fileName,
+                storey: storeyName, elevation: 0,
+                mesh, bbox, originalPos: new THREE.Vector3(0, 0, 0), center, hidden: false,
+                properties: { IFCFile: fileName, IFCClass: ifcClass, ExpressID: expressID }
+            };
+            mesh.userData = { bimElement: elem };
+            modelGroupInstance.add(mesh);
+            state.elements.push(elem);
+            newElements.push(elem);
+            importedCount++;
+        }
+
+        if (newElements.length === 0) {
+            ifcApi.CloseModel(modelID);
+            hideLoading();
+            showViewportStatus(`IFC "${fileName}" sem geometria válida.`);
+            return;
+        }
+
+        // Adiciona o grupo ao modelGroup e registra
+        modelGroup.add(modelGroupInstance);
+        state.modelGroups[fileName] = modelGroupInstance;
+
+        // Ajuste de escala (mm/cm → m) aplicado ao grupo
+        modelGroupInstance.updateMatrixWorld(true);
+        const boxAll = new THREE.Box3().setFromObject(modelGroupInstance);
+        const sizeAll = new THREE.Vector3(); boxAll.getSize(sizeAll);
+        const maxDim = Math.max(sizeAll.x, sizeAll.y, sizeAll.z);
+        let scale = 1;
+        if (maxDim > 1000) scale = 0.001;
+        else if (maxDim > 200) scale = 0.01;
+        if (scale !== 1) {
+            modelGroupInstance.scale.setScalar(scale);
+            modelGroupInstance.updateMatrixWorld(true);
+        }
+
+        // Recentraliza (base em Y=0, centro em XZ)
+        centerGroupAtOrigin(modelGroupInstance);
+
+        // Salva transformação base para "Resetar"
+        state.modelBaseTransforms[fileName] = {
+            position: modelGroupInstance.position.clone(),
+            rotation: modelGroupInstance.rotation.clone(),
+            scale: modelGroupInstance.scale.clone()
+        };
+
+        ifcApi.CloseModel(modelID);
+        state.models.push({ id: fileName, name: fileName, discipline: disc, count: importedCount, visible: true });
+        updateModelsListUI(); buildSpatialTreeUI(); fitAllModels();
+        hideLoading();
+        showViewportStatus(`IFC "${fileName}": ${importedCount} elementos (${disc}).`);
+    } catch (err) {
+        hideLoading();
+        try { ifcApi.CloseModel(modelID); } catch (e) {}
+        throw err;
+    }
+}
+
+/* ============================================================
+   ABA TRANSFORMAR — Rotação e Posição
+   ============================================================ */
+function populateTransformModelList() {
+    const sel = document.getElementById('transformModelSelect');
+    const current = sel.value;
+    sel.innerHTML = '<option value="">— Selecione —</option>';
+    state.models.forEach(m => {
+        const opt = document.createElement('option');
+        opt.value = m.id;
+        opt.textContent = m.name;
+        sel.appendChild(opt);
+    });
+    if (current && state.modelGroups[current]) sel.value = current;
+    else if (state.models.length && !current) {
+        // auto-seleciona o primeiro se só há um modelo
+        if (state.models.length === 1) {
+            sel.value = state.models[0].id;
+            selectTransformModel(sel.value);
+        }
+    }
+}
+
+function selectTransformModel(modelId) {
+    const ctrls = document.getElementById('transformControls');
+    if (!modelId || !state.modelGroups[modelId]) {
+        ctrls.classList.add('hidden');
+        return;
+    }
+    ctrls.classList.remove('hidden');
+    const group = state.modelGroups[modelId];
+
+    // Preenche UI com estado atual
+    const rx = THREE.MathUtils.radToDeg(group.rotation.x);
+    const ry = THREE.MathUtils.radToDeg(group.rotation.y);
+    const rz = THREE.MathUtils.radToDeg(group.rotation.z);
+    setRotUI('X', rx); setRotUI('Y', ry); setRotUI('Z', rz);
+    setPosUI('X', group.position.x); setPosUI('Y', group.position.y); setPosUI('Z', group.position.z);
+
+    updateTransformInfo(group);
+    updatePositionRanges(group);
+}
+
+function updateTransformInfo(group) {
+    group.updateMatrixWorld(true);
+    const box = new THREE.Box3().setFromObject(group);
+    if (box.isEmpty()) return;
+    const size = new THREE.Vector3(); box.getSize(size);
+    const center = new THREE.Vector3(); box.getCenter(center);
+    document.getElementById('tInfoDims').innerText = `${size.x.toFixed(2)} × ${size.y.toFixed(2)} × ${size.z.toFixed(2)} m`;
+    document.getElementById('tInfoCenter').innerText = `(${center.x.toFixed(2)}, ${center.y.toFixed(2)}, ${center.z.toFixed(2)})`;
+}
+
+function updatePositionRanges(group) {
+    group.updateMatrixWorld(true);
+    const box = new THREE.Box3().setFromObject(group);
+    if (box.isEmpty()) return;
+    const size = new THREE.Vector3(); box.getSize(size);
+    const maxDim = Math.max(size.x, size.y, size.z);
+    const range = Math.max(maxDim * 2, 10);
+    ['posX','posY','posZ'].forEach(id => {
+        const el = document.getElementById(id);
+        el.min = -range; el.max = range;
+    });
+}
+
+function setRotUI(axis, deg) {
+    document.getElementById(`rot${axis}`).value = deg;
+    document.getElementById(`rot${axis}Num`).value = deg.toFixed(1);
+    document.getElementById(`rot${axis}Val`).innerText = deg.toFixed(1) + '°';
+}
+function setPosUI(axis, m) {
+    document.getElementById(`pos${axis}`).value = m;
+    document.getElementById(`pos${axis}Num`).value = m.toFixed(2);
+    document.getElementById(`pos${axis}Val`).innerText = m.toFixed(2) + ' m';
+}
+
+function getSelectedTransformModel() {
+    return document.getElementById('transformModelSelect').value;
+}
+
+function applyTransformFromUI() {
+    const modelId = getSelectedTransformModel();
+    const group = state.modelGroups[modelId];
+    if (!group) return;
+
+    const rx = parseFloat(document.getElementById('rotX').value) || 0;
+    const ry = parseFloat(document.getElementById('rotY').value) || 0;
+    const rz = parseFloat(document.getElementById('rotZ').value) || 0;
+    const px = parseFloat(document.getElementById('posX').value) || 0;
+    const py = parseFloat(document.getElementById('posY').value) || 0;
+    const pz = parseFloat(document.getElementById('posZ').value) || 0;
+
+    group.rotation.set(THREE.MathUtils.degToRad(rx), THREE.MathUtils.degToRad(ry), THREE.MathUtils.degToRad(rz));
+    group.position.set(px, py, pz);
+    group.updateMatrixWorld(true);
+
+    // Atualiza info do bbox
+    updateTransformInfo(group);
+    updateClashPinPositions();
+}
+
+function onRotSlider(axis) {
+    const v = parseFloat(document.getElementById(`rot${axis}`).value);
+    document.getElementById(`rot${axis}Num`).value = v.toFixed(1);
+    document.getElementById(`rot${axis}Val`).innerText = v.toFixed(1) + '°';
+    applyTransformFromUI();
+}
+function onRotNum(axis) {
+    let v = parseFloat(document.getElementById(`rot${axis}Num`).value);
+    if (isNaN(v)) v = 0;
+    // Normaliza para -180..180 no slider
+    let sv = ((v + 180) % 360 + 360) % 360 - 180;
+    document.getElementById(`rot${axis}`).value = sv;
+    document.getElementById(`rot${axis}Val`).innerText = v.toFixed(1) + '°';
+    applyTransformFromUI();
+}
+function onPosSlider(axis) {
+    const v = parseFloat(document.getElementById(`pos${axis}`).value);
+    document.getElementById(`pos${axis}Num`).value = v.toFixed(2);
+    document.getElementById(`pos${axis}Val`).innerText = v.toFixed(2) + ' m';
+    applyTransformFromUI();
+}
+function onPosNum(axis) {
+    let v = parseFloat(document.getElementById(`pos${axis}Num`).value);
+    if (isNaN(v)) v = 0;
+    document.getElementById(`pos${axis}`).value = v;
+    document.getElementById(`pos${axis}Val`).innerText = v.toFixed(2) + ' m';
+    applyTransformFromUI();
+}
+
+function resetRotation() {
+    ['X','Y','Z'].forEach(a => setRotUI(a, 0));
+    applyTransformFromUI();
+}
+function resetPosition() {
+    ['X','Y','Z'].forEach(a => setPosUI(a, 0));
+    applyTransformFromUI();
+}
+
+function alignBaseToGrid() {
+    const modelId = getSelectedTransformModel();
+    const group = state.modelGroups[modelId];
+    if (!group) return;
+    group.updateMatrixWorld(true);
+    const box = new THREE.Box3().setFromObject(group);
+    if (box.isEmpty()) return;
+    const offsetY = -box.min.y;
+    group.position.y += offsetY;
+    group.updateMatrixWorld(true);
+    setPosUI('Y', group.position.y);
+    updateTransformInfo(group);
+    updateClashPinPositions();
+    showViewportStatus("Base alinhada ao plano Y=0.");
+}
+
+function centerOnGrid() {
+    const modelId = getSelectedTransformModel();
+    const group = state.modelGroups[modelId];
+    if (!group) return;
+    // Zera a posição temporariamente para medir
+    const savedRot = group.rotation.clone();
+    group.position.set(0, 0, 0);
+    group.rotation.copy(savedRot);
+    group.updateMatrixWorld(true);
+    const box = new THREE.Box3().setFromObject(group);
+    const center = new THREE.Vector3(); box.getCenter(center);
+    const minY = box.min.y;
+    group.position.set(-center.x, -minY, -center.z);
+    group.updateMatrixWorld(true);
+    setPosUI('X', group.position.x); setPosUI('Y', group.position.y); setPosUI('Z', group.position.z);
+    updateTransformInfo(group);
+    updateClashPinPositions();
+    showViewportStatus("Modelo centralizado no grid (base em Y=0).");
+}
+
+function resetTransform() {
+    const modelId = getSelectedTransformModel();
+    const group = state.modelGroups[modelId];
+    if (!group) return;
+    const base = state.modelBaseTransforms[modelId];
+    if (base) {
+        group.position.copy(base.position);
+        group.rotation.copy(base.rotation);
+        group.scale.copy(base.scale);
+    } else {
+        group.position.set(0, 0, 0);
+        group.rotation.set(0, 0, 0);
+    }
+    group.updateMatrixWorld(true);
+    selectTransformModel(modelId);
+    updateClashPinPositions();
+    showViewportStatus("Transformação resetada.");
+}
+
+/* ============================================================
+   CLASH DETECTION
+   ============================================================ */
+function runClashDetection() {
+    if (state.elements.length === 0) { alert("⚠️ Carregue um modelo ou clique em 'Demo Multidisciplinar'."); return; }
+    showViewportStatus("Executando Clash Detection...");
+    state.clashes = [];
+    clashMarkersGroup.clear();
+    document.getElementById('clashMarkersContainer').innerHTML = '';
+    document.getElementById('clashDetailCard').classList.add('hidden');
+    state.selectedClash = null;
+
+    const activeRules = state.rules.filter(r => r.active);
+    let clashCounter = 0;
+    const tolHard = parseFloat(document.getElementById('tolHard').value) || 0;
+    const tolCritical = parseFloat(document.getElementById('tolCritical').value) || 25;
+
+    for (let i = 0; i < state.elements.length; i++) {
+        for (let j = i + 1; j < state.elements.length; j++) {
+            const elemA = state.elements[i], elemB = state.elements[j];
+            if (elemA.hidden || elemB.hidden) continue;
+            if (elemA.discipline === elemB.discipline) continue;
+            const rule = activeRules.find(r =>
+                (r.discA === elemA.discipline && r.discB === elemB.discipline) ||
+                (r.discA === elemB.discipline && r.discB === elemA.discipline));
+            if (!rule) continue;
+
+            elemA.bbox.setFromObject(elemA.mesh);
+            elemB.bbox.setFromObject(elemB.mesh);
+            const boxA = elemA.bbox.clone(), boxB = elemB.bbox.clone();
+            const ruleTolMm = rule.type === 'HARD' ? Math.max(rule.tolerance || 0, tolHard) : (rule.tolerance || 0);
+            if (!boxA.clone().expandByScalar(ruleTolMm / 1000).intersectsBox(boxB)) continue;
+
+            const rawInt = boxA.clone().intersect(boxB);
+            const rawSize = new THREE.Vector3(); rawInt.getSize(rawSize);
+            const penetrationMm = rawInt.isEmpty() ? 0 : Math.max(0, Math.round(Math.min(rawSize.x, rawSize.y, rawSize.z) * 1000));
+            const clearanceMm = Math.round(boxDistance(boxA, boxB) * 1000);
+            if (rule.type === 'HARD' && penetrationMm <= 0) continue;
+            if (rule.type === 'PROXIMITY' && penetrationMm <= 0 && clearanceMm > ruleTolMm) continue;
+
+            clashCounter++;
+            const centerPoint = new THREE.Vector3();
+            if (!rawInt.isEmpty()) rawInt.getCenter(centerPoint);
+            else {
+                const cA = new THREE.Vector3(); boxA.getCenter(cA);
+                const cB = new THREE.Vector3(); boxB.getCenter(cB);
+                centerPoint.copy(cA).lerp(cB, 0.5);
+            }
+            let severity = 'LOW';
+            if (penetrationMm > 100) severity = 'CRITICAL';
+            else if (penetrationMm > 30) severity = 'HIGH';
+            else if (penetrationMm > 0) severity = 'MEDIUM';
+            else if (clearanceMm <= tolCritical) severity = 'MEDIUM';
+
+            state.clashes.push({
+                id: `CLASH-${String(clashCounter).padStart(4, '0')}`,
+                title: `${elemA.ifcClass} × ${elemB.ifcClass}`,
+                elemA, elemB, discA: elemA.discipline, discB: elemB.discipline,
+                overlapMm: penetrationMm, clearanceMm, ruleType: rule.type,
+                position: centerPoint, severity, status: 'Novo',
+                floor: elemA.storey || 'Térreo',
+                assignee: getSuggestedAssignee(elemA.discipline, elemB.discipline),
+                notes: `Penetração: ${penetrationMm} mm | Folga: ${clearanceMm} mm.`,
+                date: new Date().toLocaleDateString('pt-BR')
+            });
+            create3DClashMarker(state.clashes[state.clashes.length - 1]);
+        }
+    }
+    updateClashListUI(); updateDashboardUI(); switchRightTab('clashes');
+    showViewportStatus(`Análise concluída! ${state.clashes.length} conflitos.`);
+}
+
+function boxDistance(a, b) {
+    const dx = Math.max(a.min.x - b.max.x, b.min.x - a.max.x, 0);
+    const dy = Math.max(a.min.y - b.max.y, b.min.y - a.max.y, 0);
+    const dz = Math.max(a.min.z - b.max.z, b.min.z - a.max.z, 0);
+    return Math.sqrt(dx*dx + dy*dy + dz*dz);
+}
+
+function create3DClashMarker(clash) {
+    const geom = new THREE.SphereGeometry(0.35, 16, 16);
+    const mat = new THREE.MeshBasicMaterial({ color: getSeverityColorHex(clash.severity), wireframe: true });
+    const mesh = new THREE.Mesh(geom, mat);
+    mesh.position.copy(clash.position);
+    clashMarkersGroup.add(mesh);
+    const pin = document.createElement('div');
+    pin.className = 'clash-pin z-20 pointer-events-auto';
+    pin.id = `pin-${clash.id}`;
+    pin.innerHTML = `<div class="px-2 py-1 rounded text-[10px] font-bold shadow-lg flex items-center gap-1 border border-white/20" style="background-color: ${getSeverityColorCSS(clash.severity)}; color: white;"><i class="fa-solid fa-triangle-exclamation"></i><span>${clash.id}</span></div>`;
+    pin.onclick = () => selectClash(clash.id);
+    document.getElementById('clashMarkersContainer').appendChild(pin);
+}
+
+function updateClashPinPositions() {
+    if (!state.clashes.length) return;
+    const container = document.getElementById('canvasWrapper');
+    const w2 = container.clientWidth / 2, h2 = container.clientHeight / 2;
+    state.clashes.forEach(clash => {
+        const pin = document.getElementById(`pin-${clash.id}`);
+        if (!pin) return;
+        if (clash.elemA.hidden || clash.elemB.hidden) { pin.style.display = 'none'; return; }
+        const pos = clash.position.clone(); pos.project(camera);
+        if (pos.z > 1) { pin.style.display = 'none'; return; }
+        pin.style.display = 'block';
+        pin.style.left = `${pos.x * w2 + w2}px`;
+        pin.style.top = `${-(pos.y * h2) + h2}px`;
+    });
+}
+
+function selectClash(clashId) {
+    const clash = state.clashes.find(c => c.id === clashId);
+    if (!clash) return;
+    state.selectedClash = clash;
+    restoreElementMaterials();
+    state.elements.forEach(e => {
+        if (e === clash.elemA || e === clash.elemB) { e.mesh.material.opacity = 1.0; e.mesh.material.wireframe = false; }
+        else if (e.mesh.visible) e.mesh.material.opacity = 0.15;
+    });
+    controls.target.copy(clash.position);
+    camera.position.copy(clash.position.clone().add(new THREE.Vector3(4, 3, 4)));
+    controls.update();
+    document.getElementById('cdID').innerText = clash.id;
+    document.getElementById('cdTitle').innerText = clash.title;
+    document.getElementById('cdOverlap').innerText = clash.overlapMm > 0 ? `${clash.overlapMm} mm` : `Folga ${clash.clearanceMm} mm`;
+    document.getElementById('cdFloor').innerText = clash.floor;
+    document.getElementById('cdElemA').innerText = `${clash.elemA.ifcClass} (${clash.discA})`;
+    document.getElementById('cdElemB').innerText = `${clash.elemB.ifcClass} (${clash.discB})`;
+    document.getElementById('cdStatusSelect').value = clash.status;
+    document.getElementById('cdAssigneeInput').value = clash.assignee;
+    document.getElementById('cdNotesTextarea').value = clash.notes;
+    const sevBadge = document.getElementById('cdSeverityBadge');
+    sevBadge.innerText = clash.severity;
+    sevBadge.style.backgroundColor = getSeverityColorCSS(clash.severity);
+    sevBadge.style.color = '#fff';
+    document.getElementById('clashDetailCard').classList.remove('hidden');
+    switchRightTab('clashes');
+}
+
+function restoreElementMaterials() {
+    state.elements.forEach(e => {
+        e.mesh.material.opacity = state.ghostMode ? 0.3 : 0.92;
+        e.mesh.material.wireframe = state.wireframe;
+    });
+}
+
+function updateClashStatus() { if (state.selectedClash) { state.selectedClash.status = document.getElementById('cdStatusSelect').value; updateClashListUI(); updateDashboardUI(); } }
+function updateClashAssignee() { if (state.selectedClash) state.selectedClash.assignee = document.getElementById('cdAssigneeInput').value; }
+function updateClashNotes() { if (state.selectedClash) state.selectedClash.notes = document.getElementById('cdNotesTextarea').value; }
+
+/* IA */
+async function callGemini(prompt, sys) {
+    if (!AI_CONFIG.apiKey) return { ok:false, offline:true, text:null };
+    const url = `${AI_CONFIG.endpoint}${AI_CONFIG.model}:generateContent?key=${AI_CONFIG.apiKey}`;
+    const body = { contents: [{ parts: [{ text: prompt }] }] };
+    if (sys) body.systemInstruction = { parts: [{ text: sys }] };
+    const res = await fetch(url, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(body) });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data = await res.json();
+    return { ok:true, offline:false, text: data.candidates?.[0]?.content?.parts?.[0]?.text || "Sem conteúdo." };
+}
+function localClashDiagnosis(c) {
+    const risk = c.severity === 'CRITICAL' ? 'Risco ALTO.' : c.severity === 'HIGH' ? 'Risco MODERADO-ALTO.' : c.severity === 'MEDIUM' ? 'Risco MODERADO.' : 'Risco BAIXO.';
+    const sol = (c.discA === 'ESTRUTURA' || c.discB === 'ESTRUTURA') ? 'Priorizar a estrutura: reposicionar instalação.' : 'Prioridade: estrutura > arquitetura > instalações.';
+    return `<strong>Parecer (local)</strong><br><br><strong>1. Severidade:</strong> ${c.severity} (${c.overlapMm}mm). ${risk}<br><strong>2. Falso positivo?</strong> ${c.overlapMm <= 25 ? 'Possível.' : 'Improvável.'}<br><strong>3. Recomendação:</strong> ${sol}<br><strong>4. Responsável:</strong> ${c.assignee}<br><br><em>Configure AI_CONFIG.apiKey para IA generativa.</em>`;
+}
+function localGlobalSummary() {
+    const t = state.clashes.length, c = state.clashes.filter(x => x.severity === 'CRITICAL').length, h = state.clashes.filter(x => x.severity === 'HIGH').length, r = state.clashes.filter(x => x.status === 'Resolvido').length;
+    const pairs = [...new Set(state.clashes.map(x => `${x.discA} × ${x.discB}`))];
+    return `<strong>Resumo Executivo (local)</strong><br><br>${t} interferências, ${c} críticas, ${h} altas, ${r} resolvidas.<br>Gargalos: ${pairs.join('; ') || 'N/A'}<br><br><em>Configure AI_CONFIG.apiKey para IA generativa.</em>`;
+}
+async function askAIForClashDiagnosis() {
+    if (!state.selectedClash) return;
+    const c = state.selectedClash;
+    switchRightTab('ai');
+    appendAIMessage("user", `🤖 Analisando ${c.id}...`);
+    try {
+        const r = await callGemini(`Conflito BIM: ${c.id}, ${c.discA} (${c.elemA.ifcClass}) × ${c.discB} (${c.elemB.ifcClass}), ${c.overlapMm}mm, ${c.floor}.`, "Você é o Copilot BIM da APAVAN ENGENHARIA.");
+        appendAIMessage("ai", r.offline ? localClashDiagnosis(c) : r.text);
+    } catch (e) { appendAIMessage("ai", `⚠️ ${e.message}. Local:<br>${localClashDiagnosis(c)}`); }
+}
+async function askAIGlobalSummary() {
+    switchRightTab('ai');
+    appendAIMessage("user", "📊 Gerando resumo...");
+    try {
+        const r = await callGemini(`Resumo BIM APAVAN. Total: ${state.clashes.length}, Críticos: ${state.clashes.filter(c=>c.severity==='CRITICAL').length}.`);
+        appendAIMessage("ai", r.offline ? localGlobalSummary() : r.text);
+    } catch (e) { appendAIMessage("ai", `⚠️ ${e.message}. Local:<br>${localGlobalSummary()}`); }
+}
+async function sendAIPrompt() {
+    const input = document.getElementById('aiCustomPrompt');
+    const text = input.value.trim();
+    if (!text) return;
+    appendAIMessage("user", text); input.value = "";
+    try {
+        const r = await callGemini(text, "Copilot BIM APAVAN. Responda em português técnico.");
+        appendAIMessage("ai", r.offline ? "⚠️ Configure AI_CONFIG.apiKey." : r.text);
+    } catch (e) { appendAIMessage("ai", `Erro: ${e.message}`); }
+}
+function appendAIMessage(role, text) {
+    const chat = document.getElementById('aiChatOutput');
+    const div = document.createElement('div');
+    div.className = role === 'user' ? 'bg-blue-900/40 border border-blue-800/50 p-2 rounded text-slate-200 text-xs' : 'bg-slate-900 border border-slate-800 p-2.5 rounded text-slate-300 text-xs';
+    div.innerHTML = String(text).replace(/\n/g, '<br>');
+    chat.appendChild(div); chat.scrollTop = chat.scrollHeight;
+}
+
+/* Exportações */
+function exportBCF() {
+    if (!state.clashes.length) return alert("Nenhum conflito.");
+    const bcfData = { version: "2.1", project: "APAVAN BIM", author: "Ademilton Pavan CREA-SC 86959-8",
+        topics: state.clashes.map(c => ({ guid: c.id, title: c.title, description: c.notes, creation_date: c.date, status: c.status, assigned_to: c.assignee, severity: c.severity })) };
+    const blob = new Blob([JSON.stringify(bcfData, null, 2)], { type:'application/json' });
+    const url = URL.createObjectURL(blob); const a = document.createElement('a');
+    a.href = url; a.download = `APAVAN_BCF_${Date.now()}.bcfjson`; a.click(); URL.revokeObjectURL(url);
+}
+function exportCSV() {
+    if (!state.clashes.length) return alert("Nenhum conflito.");
+    let csv = "ID;Título;Disciplina A;Elemento A;Disciplina B;Elemento B;Penetração (mm);Folga (mm);Pavimento;Severidade;Status;Responsável\n";
+    state.clashes.forEach(c => { csv += `${c.id};"${c.title}";${c.discA};${c.elemA.ifcClass};${c.discB};${c.elemB.ifcClass};${c.overlapMm};${c.clearanceMm};${c.floor};${c.severity};${c.status};"${c.assignee}"\n`; });
+    const blob = new Blob(["\uFEFF" + csv], { type:'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob); const a = document.createElement('a');
+    a.href = url; a.download = `Relatorio_APAVAN_${Date.now()}.csv`; a.click(); URL.revokeObjectURL(url);
+}
+function exportPDFReport() {
+    const w = window.open('', '_blank');
+    const total = state.clashes.length, crit = state.clashes.filter(c => c.severity === 'CRITICAL').length, high = state.clashes.filter(c => c.severity === 'HIGH').length;
+    let rows = '';
+    state.clashes.forEach(c => { rows += `<tr><td>${c.id}</td><td>${c.title}</td><td>${c.discA} × ${c.discB}</td><td>${c.floor}</td><td>${c.overlapMm}mm</td><td><b>${c.severity}</b></td><td>${c.status}</td><td>${c.assignee}</td></tr>`; });
+    w.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Relatório BIM APAVAN</title><style>body{font-family:Arial;padding:20px;}.h{border-bottom:2px solid #1e3a8a;padding-bottom:10px;margin-bottom:20px;}.t{font-size:20px;font-weight:bold;color:#1e3a8a;}.s{font-size:12px;color:#64748b;}.kpi{display:flex;gap:10px;margin-bottom:20px;}.k{background:#f8fafc;border:1px solid #cbd5e1;padding:10px;flex:1;text-align:center;border-radius:4px;}.kv{font-size:18px;font-weight:bold;}table{width:100%;border-collapse:collapse;font-size:11px;}th{background:#0f172a;color:white;padding:8px;text-align:left;}td{padding:6px;border:1px solid #ddd;}</style></head><body><div class="h"><div class="t">APAVAN ENGENHARIA E CONSULTORIA</div><div class="s">RELATÓRIO DE COMPATIBILIZAÇÃO BIM</div><div class="s">Ademilton Pavan CREA-SC 86959-8 • ${new Date().toLocaleDateString('pt-BR')}</div></div><div class="kpi"><div class="k"><div class="s">Total</div><div class="kv">${total}</div></div><div class="k"><div class="s">Críticos</div><div class="kv" style="color:red">${crit}</div></div><div class="k"><div class="s">Altos</div><div class="kv" style="color:orange">${high}</div></div></div><table><thead><tr><th>ID</th><th>Título</th><th>Disciplinas</th><th>Pav.</th><th>Interseção</th><th>Severidade</th><th>Status</th><th>Responsável</th></tr></thead><tbody>${rows || '<tr><td colspan="8">Nenhum conflito.</td></tr>'}</tbody></table><script>window.onload=()=>window.print();<\/script></body></html>`);
+    w.document.close();
+}
+
+/* UI */
+function updateModelsListUI() {
+    const list = document.getElementById('loadedModelsList');
+    list.innerHTML = '';
+    document.getElementById('modelCountBadge').innerText = state.models.length;
+    if (!state.models.length) {
+        list.innerHTML = `<div class="text-xs text-slate-500 text-center py-6 border border-dashed border-slate-800 rounded">Nenhum modelo. Clique em "Demo Multidisciplinar".</div>`;
+        populateTransformModelList();
+        return;
+    }
+    state.models.forEach(m => {
+        const item = document.createElement('div');
+        item.className = 'bg-slate-950 p-2 rounded border border-slate-800 flex items-center justify-between text-xs';
+        item.innerHTML = `<div class="flex items-center space-x-2 truncate"><span class="w-3 h-3 rounded-full shrink-0" style="background-color:${getDisciplineColorCSS(m.discipline)}"></span><div class="truncate"><div class="font-semibold text-slate-200 truncate">${m.name}</div><div class="text-[10px] text-slate-500">${m.discipline} • ${m.count} elem.</div></div></div><button onclick="toggleModelVisibility('${m.id}')" class="text-slate-400 hover:text-white px-1"><i class="fa-solid ${m.visible ? 'fa-eye' : 'fa-eye-slash'}"></i></button>`;
+        list.appendChild(item);
+    });
+    populateTransformModelList();
+}
+
+function buildSpatialTreeUI() {
+    const tree = document.getElementById('ifcSpatialTree');
+    tree.innerHTML = '';
+    if (!state.elements.length) { tree.innerHTML = '<div class="text-slate-500 italic">Carregue um projeto...</div>'; return; }
+    const root = document.createElement('div');
+    root.className = 'text-slate-300 font-bold mb-1';
+    root.innerHTML = '<i class="fa-solid fa-building text-blue-400 mr-1"></i> EDIFÍCIO APAVAN';
+    const storeysPresent = [...new Set(state.elements.map(e => e.storey))];
+    storeysPresent.forEach(s => {
+        const node = document.createElement('div');
+        node.className = 'ml-3 my-1 tree-item';
+        node.dataset.search = s.toLowerCase();
+        const elems = state.elements.filter(e => e.storey === s);
+        node.innerHTML = `<span class="text-slate-400 font-semibold"><i class="fa-solid fa-layer-group mr-1"></i> ${s} (${elems.length})</span>`;
+        const children = document.createElement('div');
+        children.className = 'ml-4 space-y-0.5 text-[10px] text-slate-500 border-l border-slate-800 pl-2 mt-1';
+        elems.slice(0, 12).forEach(elem => {
+            const row = document.createElement('div');
+            row.className = 'hover:text-blue-400 cursor-pointer truncate tree-item';
+            row.dataset.search = `${elem.ifcClass} ${elem.guid} ${elem.name}`.toLowerCase();
+            row.innerHTML = `🔹 ${elem.ifcClass} [${elem.guid.substr(0, 8)}...]`;
+            row.onclick = () => highlightElementByGUID(elem.guid);
+            children.appendChild(row);
+        });
+        node.appendChild(children); root.appendChild(node);
+    });
+    tree.appendChild(root);
+}
+
+function updateClashListUI() {
+    const list = document.getElementById('clashesList');
+    const sev = document.getElementById('clashSevFilter').value, st = document.getElementById('clashStatusFilter').value;
+    document.getElementById('clashCountBadge').innerText = state.clashes.length;
+    const visible = state.clashes.filter(c => (sev === 'ALL' || c.severity === sev) && (st === 'ALL' || c.status === st));
+    list.innerHTML = '';
+    if (!state.clashes.length) { list.innerHTML = `<div class="text-xs text-slate-500 text-center py-10 border border-dashed border-slate-800 rounded">Nenhum clash executado.</div>`; return; }
+    if (!visible.length) { list.innerHTML = `<div class="text-xs text-slate-500 text-center py-10">Nenhum com os filtros.</div>`; return; }
+    visible.forEach(c => {
+        const item = document.createElement('div');
+        item.className = `p-2.5 rounded border border-slate-800 bg-slate-950 hover:border-blue-500 cursor-pointer text-xs transition ${state.selectedClash?.id === c.id ? 'border-blue-500 bg-blue-950/20' : ''}`;
+        item.onclick = () => selectClash(c.id);
+        item.innerHTML = `<div class="flex justify-between items-start mb-1"><span class="font-mono font-bold text-slate-400 text-[11px]">${c.id}</span><span class="text-[9px] px-1.5 py-0.5 rounded font-bold" style="background-color:${getSeverityColorCSS(c.severity)};color:white">${c.severity}</span></div><div class="font-semibold text-slate-200 truncate">${c.title}</div><div class="flex justify-between text-[10px] text-slate-500 mt-1"><span>${c.discA} × ${c.discB}</span><span>${c.overlapMm > 0 ? c.overlapMm + ' mm' : 'folga ' + c.clearanceMm + ' mm'}</span></div>`;
+        list.appendChild(item);
+    });
+}
+
+function updateDashboardUI() {
+    const total = state.clashes.length, crit = state.clashes.filter(c => c.severity === 'CRITICAL').length, res = state.clashes.filter(c => c.status === 'Resolvido').length;
+    document.getElementById('dashTotal').innerText = total;
+    document.getElementById('dashCritical').innerText = crit;
+    document.getElementById('dashResolved').innerText = res;
+    document.getElementById('dashPending').innerText = total - res;
+    document.getElementById('clashCountBadge').innerText = total;
+    if (chartDiscInstance) {
+        const counts = {};
+        state.clashes.forEach(c => { const k = `${c.discA} × ${c.discB}`; counts[k] = (counts[k] || 0) + 1; });
+        const labels = Object.keys(counts);
+        chartDiscInstance.data.labels = labels.length ? labels : ['Sem conflitos'];
+        chartDiscInstance.data.datasets[0].data = labels.length ? Object.values(counts) : [0];
+        chartDiscInstance.data.datasets[0].backgroundColor = labels.length ? labels.map((_, i) => PALETTE[i % PALETTE.length]) : ['#1e293b'];
+        chartDiscInstance.update();
+    }
+    if (chartFloorInstance) {
+        chartFloorInstance.data.datasets[0].data = FLOOR_ORDER.map(f => state.clashes.filter(c => c.floor === f).length);
+        chartFloorInstance.update();
+    }
+}
+function initCharts() {
+    chartDiscInstance = new Chart(document.getElementById('chartDisciplines').getContext('2d'), {
+        type: 'doughnut', data: { labels: ['Sem conflitos'], datasets: [{ data: [0], backgroundColor: PALETTE }] },
+        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
+    });
+    chartFloorInstance = new Chart(document.getElementById('chartFloors').getContext('2d'), {
+        type: 'bar', data: { labels: FLOOR_ORDER, datasets: [{ label: 'Conflitos', data: FLOOR_ORDER.map(() => 0), backgroundColor: '#3b82f6', borderRadius: 3 }] },
+        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { ticks: { color: '#94a3b8', font: { size: 9 } }, grid: { color: '#1e293b' } }, y: { beginAtZero: true, ticks: { color: '#94a3b8', precision: 0 }, grid: { color: '#1e293b' } } } }
+    });
+}
+function initRulesUI() {
+    const c = document.getElementById('rulesContainer'); c.innerHTML = '';
+    state.rules.forEach(r => {
+        const item = document.createElement('div');
+        item.className = 'bg-slate-950 p-2 rounded border border-slate-800 flex items-center justify-between text-xs';
+        item.innerHTML = `<div><strong class="text-slate-300 block">${r.discA} × ${r.discB}</strong><span class="text-[10px] text-slate-500">${r.type} (Tol: ${r.tolerance}mm)</span></div><input type="checkbox" ${r.active ? 'checked' : ''} onchange="toggleRule(${r.id}, this.checked)" class="rounded bg-slate-800 border-slate-700">`;
+        c.appendChild(item);
+    });
+}
+function toggleRule(id, active) { const r = state.rules.find(x => x.id === id); if (r) r.active = active; }
+
+function resetCameraView(view) {
+    if (view === 'top') { camera.position.set(0, 45, 0.01); controls.target.set(0, 0, 0); }
+    else if (view === 'front') { camera.position.set(0, 5, 45); controls.target.set(0, 0, 0); }
+    else { camera.position.set(25, 20, 30); controls.target.set(0, 0, 0); }
+    controls.update();
+}
+function toggleWireframe() { state.wireframe = !state.wireframe; state.elements.forEach(e => e.mesh.material.wireframe = state.wireframe); }
+function toggleGhostMode() { state.ghostMode = !state.ghostMode; state.elements.forEach(e => e.mesh.material.opacity = state.ghostMode ? 0.3 : 0.92); }
+function toggleExplodedView() {
+    state.exploded = !state.exploded;
+    state.elements.forEach(e => {
+        if (state.exploded) {
+            const idx = FLOOR_ORDER.indexOf(e.storey);
+            e.mesh.position.y = (e.originalPos?.y || 0) + (idx >= 0 ? idx * 2 : 0);
+        } else if (e.originalPos) e.mesh.position.copy(e.originalPos);
+        e.mesh.updateMatrixWorld();
+    });
+}
+function fitAllModels() {
+    const visible = state.elements.filter(e => e.mesh.visible);
+    if (!visible.length) return;
+    const box = new THREE.Box3();
+    visible.forEach(e => box.expandByObject(e.mesh));
+    if (box.isEmpty()) return;
+    const center = new THREE.Vector3(); box.getCenter(center);
+    const size = new THREE.Vector3(); box.getSize(size);
+    const dist = Math.max(size.x, size.y, size.z) * 1.2 + 5;
+    controls.target.copy(center);
+    camera.position.set(center.x + dist * 0.7, center.y + dist * 0.5, center.z + dist * 0.7);
+    camera.far = Math.max(1000, dist * 10);
+    camera.updateProjectionMatrix();
+    controls.update();
+}
+function clearAllModels() {
+    state.elements.forEach(e => {
+        e.mesh.geometry?.dispose();
+        if (Array.isArray(e.mesh.material)) e.mesh.material.forEach(m => m.dispose());
+        else e.mesh.material?.dispose();
+    });
+    modelGroup.clear();
+    clashMarkersGroup.clear();
+    document.getElementById('clashMarkersContainer').innerHTML = '';
+    document.getElementById('clashDetailCard').classList.add('hidden');
+    document.getElementById('selectedElementBar').classList.add('hidden');
+    state.elements = []; state.models = []; state.clashes = [];
+    state.modelGroups = {}; state.modelBaseTransforms = {};
+    state.selectedElement = null; state.selectedClash = null;
+    updateModelsListUI(); updateClashListUI(); updateDashboardUI(); buildSpatialTreeUI();
+    document.getElementById('transformControls').classList.add('hidden');
+    document.getElementById('transformModelSelect').innerHTML = '<option value="">— Selecione —</option>';
+}
+function showViewportStatus(msg) { document.getElementById('viewportStatusText').innerText = msg; }
+function switchLeftTab(tab) {
+    ['models','transform','tree','rules'].forEach(t => {
+        document.getElementById(`tab-btn-${t}`).classList.remove('active');
+        document.getElementById(`tab-content-${t}`).classList.add('hidden');
+    });
+    document.getElementById(`tab-btn-${tab}`).classList.add('active');
+    document.getElementById(`tab-content-${tab}`).classList.remove('hidden');
+}
+function switchRightTab(tab) {
+    ['clashes','ai','dash'].forEach(t => {
+        document.getElementById(`tab-btn-${t}`).classList.remove('active');
+        document.getElementById(`tab-content-${t}`).classList.add('hidden');
+    });
+    document.getElementById(`tab-btn-${tab}`).classList.add('active');
+    document.getElementById(`tab-content-${tab}`).classList.remove('hidden');
+    if (tab === 'dash') requestAnimationFrame(() => { chartDiscInstance?.resize(); chartFloorInstance?.resize(); });
+}
+function filterClashList() { updateClashListUI(); }
+function filterTree() {
+    const term = document.getElementById('treeSearch').value.trim().toLowerCase();
+    document.querySelectorAll('#ifcSpatialTree .tree-item').forEach(el => {
+        el.style.display = (!term || (el.dataset.search || '').includes(term)) ? '' : 'none';
+    });
+}
+function applyFloorFilter() {
+    const floor = document.getElementById('floorFilter').value;
+    state.elements.forEach(e => e.mesh.visible = !e.hidden && (floor === 'ALL' || e.storey === floor));
+    updateClashPinPositions(); fitAllModels();
+}
+function toggleCompareMode(on) { state.compareMode = on; }
+function highlightElementByGUID(guid) {
+    const elem = state.elements.find(e => e.guid === guid);
+    if (!elem) return;
+    state.selectedElement = elem;
+    document.getElementById('selElemName').innerText = elem.name;
+    document.getElementById('selElemGUID').innerText = `GUID: ${elem.guid}`;
+    document.getElementById('selElemDisc').innerText = elem.discipline;
+    document.getElementById('selElemFloor').innerText = elem.storey;
+    document.getElementById('selectedElementBar').classList.remove('hidden');
+    const box = new THREE.Box3().setFromObject(elem.mesh);
+    const center = new THREE.Vector3(); box.getCenter(center);
+    const size = new THREE.Vector3(); box.getSize(size);
+    const dist = Math.max(size.length() * 1.8, 5);
+    controls.target.copy(center);
+    camera.position.copy(center.clone().add(new THREE.Vector3(dist, dist * 0.7, dist)));
+    controls.update();
+}
+function isolateSelectedElement() {
+    if (!state.selectedElement) return;
+    const t = state.selectedElement;
+    state.elements.forEach(e => e.mesh.visible = (e === t));
+    showViewportStatus(`Isolado: ${t.name}`);
+}
+function hideSelectedElement() {
+    if (!state.selectedElement) return;
+    const t = state.selectedElement;
+    t.mesh.visible = false; t.hidden = true;
+    clearSelection(); updateClashPinPositions();
+}
+function showAllElements() {
+    state.elements.forEach(e => e.mesh.visible = !e.hidden);
+    updateClashPinPositions(); fitAllModels();
+}
+function toggleModelVisibility(modelId) {
+    const m = state.models.find(x => x.id === modelId);
+    if (!m) return;
+    m.visible = !m.visible;
+    state.elements.forEach(e => { if (e.modelId === modelId) { e.hidden = !m.visible; e.mesh.visible = m.visible; } });
+    updateModelsListUI(); updateClashPinPositions();
+}
+function pickElementAt(event) {
+    const rect = renderer.domElement.getBoundingClientRect();
+    mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+    mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+    raycaster.setFromCamera(mouse, camera);
+    // recursive = true para pegar meshes dentro dos grupos de modelo
+    const hits = raycaster.intersectObjects(modelGroup.children, true);
+    if (hits.length > 0 && hits[0].object.userData?.bimElement) {
+        const e = hits[0].object.userData.bimElement;
+        state.selectedElement = e;
+        document.getElementById('selElemName').innerText = e.name;
+        document.getElementById('selElemGUID').innerText = `GUID: ${e.guid}`;
+        document.getElementById('selElemDisc').innerText = e.discipline;
+        document.getElementById('selElemFloor').innerText = e.storey;
+        document.getElementById('selectedElementBar').classList.remove('hidden');
+    }
+}
+function clearSelection() {
+    state.selectedElement = null;
+    document.getElementById('selectedElementBar').classList.add('hidden');
+    if (!state.selectedClash) restoreElementMaterials();
+}
+function getDisciplineColorCSS(d) {
+    return { ARQUITETURA:'#cbd5e1', ESTRUTURA:'#64748b', HIDRAULICO:'#3b82f6', ELETRICO:'#eab308', HVAC:'#a855f7', INCENDIO:'#ef4444' }[d] || '#94a3b8';
+}
+function getDisciplineColorHex(d) {
+    return { ARQUITETURA:0xcbd5e1, ESTRUTURA:0x64748b, HIDRAULICO:0x3b82f6, ELETRICO:0xeab308, HVAC:0xa855f7, INCENDIO:0xef4444 }[d] || 0x94a3b8;
+}
+function getSeverityColorCSS(s) { return { CRITICAL:'#dc2626', HIGH:'#ea580c', MEDIUM:'#eab308', LOW:'#2563eb' }[s] || '#64748b'; }
+function getSeverityColorHex(s) { return { CRITICAL:0xdc2626, HIGH:0xea580c, MEDIUM:0xeab308, LOW:0x2563eb }[s] || 0x64748b; }
+function getSuggestedAssignee(a, b) {
+    if (a === 'ESTRUTURA' || b === 'ESTRUTURA') return 'Eng. Calculista Estrutural';
+    if (a === 'HIDRAULICO' || b === 'HIDRAULICO') return 'Eng. Hidrossanitário';
+    if (a === 'ELETRICO' || b === 'ELETRICO') return 'Eng. Eletricista';
+    if (a === 'HVAC' || b === 'HVAC') return 'Projetista HVAC';
+    return 'Coordenador BIM Generalista';
+}
+</script>
+</body>
+</html>

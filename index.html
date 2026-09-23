@@ -10,7 +10,6 @@
     <meta name="application-name" content="AP BIM">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="theme-color" content="#1e3a8a">
-    <meta name="description" content="AP BIM — Compatibilização e Clash Detection IFC • APAVAN Engenharia e Consultoria">
     <link rel="apple-touch-icon" sizes="180x180" href="data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%230b1e4a'/%3E%3Cstop offset='0.55' stop-color='%231e3a8a'/%3E%3Cstop offset='1' stop-color='%232563eb'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='180' height='180' rx='40' fill='url(%23g)'/%3E%3Ctext x='90' y='100' font-family='Helvetica,Arial,sans-serif' font-size='76' font-weight='900' fill='%23ffffff' text-anchor='middle' letter-spacing='-3'%3EAP%3C/text%3E%3Ctext x='90' y='128' font-family='Helvetica,Arial,sans-serif' font-size='20' font-weight='700' fill='%23ffffff' text-anchor='middle' letter-spacing='1.5'%3EBIM%3C/text%3E%3Ccircle cx='62' cy='148' r='3.5' fill='%23dbeafe'/%3E%3Ccircle cx='76' cy='148' r='3.5' fill='%23dbeafe'/%3E%3Ccircle cx='90' cy='148' r='3.5' fill='%23dbeafe'/%3E%3Ccircle cx='104' cy='148' r='3.5' fill='%23dbeafe'/%3E%3Ccircle cx='118' cy='148' r='3.5' fill='%23dbeafe'/%3E%3C/svg%3E">
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%230b1e4a'/%3E%3Cstop offset='0.55' stop-color='%231e3a8a'/%3E%3Cstop offset='1' stop-color='%232563eb'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='180' height='180' rx='40' fill='url(%23g)'/%3E%3Ctext x='90' y='100' font-family='Helvetica,Arial,sans-serif' font-size='76' font-weight='900' fill='%23ffffff' text-anchor='middle' letter-spacing='-3'%3EAP%3C/text%3E%3Ctext x='90' y='128' font-family='Helvetica,Arial,sans-serif' font-size='20' font-weight='700' fill='%23ffffff' text-anchor='middle' letter-spacing='1.5'%3EBIM%3C/text%3E%3Ccircle cx='62' cy='148' r='3.5' fill='%23dbeafe'/%3E%3Ccircle cx='76' cy='148' r='3.5' fill='%23dbeafe'/%3E%3Ccircle cx='90' cy='148' r='3.5' fill='%23dbeafe'/%3E%3Ccircle cx='104' cy='148' r='3.5' fill='%23dbeafe'/%3E%3Ccircle cx='118' cy='148' r='3.5' fill='%23dbeafe'/%3E%3C/svg%3E">
     <link rel="manifest" href="data:application/manifest+json;charset=utf-8,%7B%22name%22%3A%22AP%20BIM%22%2C%22short_name%22%3A%22AP%20BIM%22%2C%22start_url%22%3A%22.%2F%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%230f172a%22%2C%22theme_color%22%3A%22%231e3a8a%22%7D">
@@ -46,10 +45,36 @@
         .mobile-fab { position: fixed; z-index: 50; width: 52px; height: 52px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: rgba(15,23,42,0.92); border: 1px solid rgba(255,255,255,0.18); color: #e2e8f0; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); box-shadow: 0 4px 14px rgba(0,0,0,0.5); font-size: 18px; transition: transform 0.15s; }
         .mobile-fab:active { transform: scale(0.92); }
         .mobile-fab.primary { background: linear-gradient(135deg, #2563eb, #1d4ed8); border-color: rgba(96,165,250,0.4); }
-        .sidebar-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 55; display: none; }
-        .sidebar-backdrop.open { display: block; }
-        .actions-sheet-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.55); z-index: 70; display: none; opacity: 0; transition: opacity 0.2s ease; }
-        .actions-sheet-backdrop.open { display: block; opacity: 1; }
+
+        /* ============================================================
+           BACKDROPS — não podem bloquear cliques quando fechados
+           ============================================================ */
+        .sidebar-backdrop {
+            position: fixed; inset: 0;
+            background: rgba(0,0,0,0.6);
+            z-index: 55;
+            display: none;
+            pointer-events: none;
+        }
+        .sidebar-backdrop.open {
+            display: block;
+            pointer-events: auto;
+        }
+        .actions-sheet-backdrop {
+            position: fixed; inset: 0;
+            background: rgba(0,0,0,0.55);
+            z-index: 70;
+            display: none;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+            pointer-events: none;
+        }
+        .actions-sheet-backdrop.open {
+            display: block;
+            opacity: 1;
+            pointer-events: auto;
+        }
+
         .actions-sheet { position: fixed; left: 0; right: 0; bottom: 0; background: #0f172a; border-top-left-radius: 20px; border-top-right-radius: 20px; z-index: 75; padding: 8px 12px calc(env(safe-area-inset-bottom) + 16px); transform: translateY(110%); transition: transform 0.28s cubic-bezier(.4,0,.2,1); box-shadow: 0 -10px 40px rgba(0,0,0,0.6); border-top: 1px solid rgba(255,255,255,0.1); max-width: 500px; margin: 0 auto; max-height: 85vh; overflow-y: auto; }
         .actions-sheet.open { transform: translateY(0); }
         .actions-sheet-handle { width: 40px; height: 4px; background: #475569; border-radius: 2px; margin: 6px auto 14px; }
@@ -60,6 +85,8 @@
         .actions-grid .action-btn i { font-size: 22px; }
         .actions-grid .action-btn.primary { background: linear-gradient(135deg, #2563eb, #1d4ed8); border-color: rgba(96,165,250,0.4); }
         .actions-grid .action-btn.danger { background: linear-gradient(135deg, #dc2626, #b91c1c); border-color: rgba(248,113,113,0.4); }
+        .actions-grid .action-btn.immersive-active { background: linear-gradient(135deg, #7c3aed, #6d28d9) !important; border-color: rgba(167,139,250,0.4); }
+
         #selectedElementBar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 45; background: rgba(15,23,42,0.96); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-top: 1px solid rgba(96,165,250,0.35); padding: 8px 12px; padding-bottom: calc(env(safe-area-inset-bottom) + 8px); display: none; box-shadow: 0 -8px 24px rgba(0,0,0,0.5); }
         #selectedElementBar.show { display: flex; }
         @media (min-width: 901px) { #selectedElementBar { left: 320px; right: 384px; bottom: 24px; border-radius: 8px; border: 1px solid rgba(96,165,250,0.35); padding: 10px 14px; } }
@@ -87,10 +114,26 @@
         body.immersive .mobile-fab { display: flex !important; }
         body.immersive #selectedElementBar { display: none; }
         body.immersive #selectedElementBar.show { display: flex; }
+
+        /* ============================================================
+           CORREÇÃO: cortinas nunca bloqueiam cliques quando fechadas
+           (especialmente importante no Safari iOS)
+           ============================================================ */
+        body.immersive .actions-sheet-backdrop:not(.open),
+        body.immersive .sidebar-backdrop:not(.open) {
+            display: none !important;
+            pointer-events: none !important;
+        }
+        body.immersive .actions-sheet-backdrop.open,
+        body.immersive .sidebar-backdrop.open {
+            display: block !important;
+        }
+
         .fab-top-left { top: calc(env(safe-area-inset-top) + 10px); left: 10px; }
         .fab-top-right { top: calc(env(safe-area-inset-top) + 10px); right: 10px; }
         .fab-bottom-center { bottom: calc(env(safe-area-inset-bottom) + 14px); left: 50%; transform: translateX(-50%); }
         .fab-bottom-center:active { transform: translateX(-50%) scale(0.92); }
+
         .ifc-tree { font-size: 11px; font-family: 'Inter', system-ui, sans-serif; }
         .ifc-tree .tree-row { display: flex; align-items: center; gap: 4px; padding: 3px 4px; border-radius: 4px; cursor: pointer; user-select: none; min-height: 22px; }
         .ifc-tree .tree-row:hover { background: rgba(59,130,246,0.10); }
@@ -107,13 +150,16 @@
         .ifc-tree .tree-leaf .lbl-name { color: #cbd5e1; }
         .ifc-tree .tree-leaf:hover .lbl-name { color: #fff; }
         .ifc-tree .tree-leaf.hidden-elem { opacity: 0.4; }
+
         #axisCompass { position: absolute; bottom: 20px; right: 20px; width: 90px; height: 90px; pointer-events: none; z-index: 8; opacity: 0.85; }
         @media (max-width: 900px) { #axisCompass { width: 70px; height: 70px; bottom: calc(env(safe-area-inset-bottom) + 80px); right: 8px; } }
+
         .color-swatch { width: 100%; aspect-ratio: 1; border-radius: 6px; border: 1px solid rgba(255,255,255,0.15); cursor: pointer; transition: transform 0.1s; }
         .color-swatch:hover { transform: scale(1.1); border-color: #60a5fa; }
         .material-btn { padding: 8px 4px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); background: #1e293b; color: #cbd5e1; font-size: 10px; font-weight: 600; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 4px; transition: all 0.15s; }
         .material-btn:hover { background: #334155; border-color: #3b82f6; }
         .material-btn i { font-size: 16px; }
+
         .dim-card { background: #0f172a; border: 1px solid #1e293b; border-radius: 8px; padding: 10px; }
         .dim-label { font-size: 9px; text-transform: uppercase; color: #94a3b8; font-weight: 700; letter-spacing: 0.5px; }
         .dim-value { font-size: 15px; font-weight: 800; color: #e2e8f0; font-family: 'Courier New', monospace; }
@@ -125,6 +171,7 @@
         .dim-highlight { border-left: 3px solid #f59e0b; background: rgba(245,158,11,0.08); }
         .dim-green { border-left: 3px solid #22c55e; background: rgba(34,197,94,0.08); }
         .dim-purple { border-left: 3px solid #a855f7; background: rgba(168,85,247,0.08); }
+
         .confirm-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.75); z-index: 200; display: none; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
         .confirm-overlay.open { display: flex; }
         .confirm-box { background: #1e293b; border: 1px solid #334155; border-radius: 16px; padding: 20px; max-width: 340px; width: 100%; box-shadow: 0 20px 60px rgba(0,0,0,0.6); }
@@ -135,6 +182,7 @@
         .confirm-box button:active { opacity: 0.8; }
         .confirm-box .btn-cancel { background: #334155; color: #e2e8f0; }
         .confirm-box .btn-danger { background: #dc2626; color: white; }
+
         .license-overlay { position: fixed; inset: 0; background: radial-gradient(ellipse at center, rgba(15,23,42,0.98), rgba(2,6,23,0.99)); z-index: 9999; display: none; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
         .license-overlay.show { display: flex; }
         .license-box { background: linear-gradient(160deg, #0f172a 0%, #1e293b 100%); border: 1px solid #334155; border-radius: 20px; padding: 32px 24px; max-width: 400px; width: 100%; text-align: center; box-shadow: 0 30px 80px rgba(0,0,0,0.8), 0 0 0 1px rgba(59,130,246,0.15); }
@@ -150,40 +198,16 @@
         .license-msg.success { color: #34d399; }
         .license-contact { margin-top: 20px; padding-top: 16px; border-top: 1px solid #334155; font-size: 11px; color: #64748b; line-height: 1.6; }
         .license-contact p:first-child { color: #94a3b8; margin-bottom: 4px; }
+
         .trial-badge { padding: 3px 8px; border-radius: 6px; font-size: 10px; font-weight: 700; background: rgba(245,158,11,0.15); color: #fbbf24; border: 1px solid rgba(245,158,11,0.4); display: inline-flex; align-items: center; gap: 4px; }
         .trial-badge.hidden { display: none; }
         .trial-badge.urgent { background: rgba(239,68,68,0.15); color: #f87171; border-color: rgba(239,68,68,0.4); animation: pulse-warn 2s infinite; }
         @keyframes pulse-warn { 0%, 100% { opacity: 1; } 50% { opacity: 0.6; } }
 
-        /* ============================================================
-           PLANOS DE SEÇÃO (CORTE DINÂMICO)
-           ============================================================ */
-        #sectionPanel {
-            position: fixed;
-            top: 60px;
-            right: 12px;
-            z-index: 30;
-            width: 300px;
-            background: rgba(15,23,42,0.96);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(96,165,250,0.35);
-            border-radius: 12px;
-            padding: 14px;
-            display: none;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.7);
-        }
+        #sectionPanel { position: fixed; top: 60px; right: 12px; z-index: 30; width: 300px; background: rgba(15,23,42,0.96); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(96,165,250,0.35); border-radius: 12px; padding: 14px; display: none; box-shadow: 0 20px 60px rgba(0,0,0,0.7); }
         #sectionPanel.show { display: block; }
-        #sectionPanel h3 {
-            font-size: 12px; font-weight: 800; color: #e2e8f0;
-            margin: 0 0 12px 0; display: flex; align-items: center; gap: 6px;
-            padding-bottom: 10px; border-bottom: 1px solid #334155;
-        }
-        #sectionPanel h3 .close-btn {
-            margin-left: auto; cursor: pointer; color: #64748b;
-            padding: 2px 6px; border-radius: 4px;
-            background: none; border: none;
-        }
+        #sectionPanel h3 { font-size: 12px; font-weight: 800; color: #e2e8f0; margin: 0 0 12px 0; display: flex; align-items: center; gap: 6px; padding-bottom: 10px; border-bottom: 1px solid #334155; }
+        #sectionPanel h3 .close-btn { margin-left: auto; cursor: pointer; color: #64748b; padding: 2px 6px; border-radius: 4px; background: none; border: none; }
         #sectionPanel h3 .close-btn:hover { color: #f87171; background: rgba(248,113,113,0.1); }
         .section-axis { background: #020617; border: 1px solid #1e293b; border-radius: 8px; padding: 10px; margin-bottom: 10px; }
         .section-axis-header { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
@@ -197,7 +221,6 @@
         .section-axis-header .btn-flip:hover { background: #334155; color: #e2e8f0; }
         .section-axis-header .btn-flip.active { background: #3b82f6; color: white; border-color: #2563eb; }
         .section-slider { display: flex; align-items: center; gap: 8px; }
-        .section-slider input[type="range"] { flex: 1; }
         .section-slider .value { font-family: 'Courier New', monospace; font-size: 11px; color: #e2e8f0; min-width: 55px; text-align: right; }
         .section-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; padding-top: 10px; border-top: 1px solid #334155; }
         .section-actions button { padding: 8px; border-radius: 8px; font-size: 11px; font-weight: 700; cursor: pointer; border: 1px solid #334155; background: #1e293b; color: #cbd5e1; display: flex; align-items: center; justify-content: center; gap: 4px; }
@@ -229,7 +252,7 @@
         <div class="actions-grid">
             <button class="action-btn" onclick="closeActionsSheet(); fitAllModels()"><i class="fa-solid fa-crosshairs" style="color:#60a5fa"></i><span>Enquadrar</span></button>
             <button class="action-btn" onclick="closeActionsSheet(); toggleSectionPanel()"><i class="fa-solid fa-scissors" style="color:#f472b6"></i><span>Seção</span></button>
-            <button class="action-btn" onclick="closeActionsSheet(); toggleImmersive()"><i class="fa-solid fa-compress" style="color:#a78bfa"></i><span>Modo Janela</span></button>
+            <button class="action-btn" id="btnImmersiveToggle" onclick="toggleImmersive()"><i class="fa-solid fa-compress" style="color:#a78bfa"></i><span id="immersiveLabel">Modo Janela</span></button>
         </div>
         <h3>Exportar</h3>
         <div class="actions-grid">
@@ -281,13 +304,13 @@
             <div class="header-title-block">
                 <div class="flex items-center space-x-2">
                     <span class="font-extrabold tracking-wider text-base text-white">AP BIM</span>
-                    <span class="text-xs bg-blue-600/30 text-blue-400 px-2 py-0.5 rounded border border-blue-500/30 font-semibold">v5.3</span>
+                    <span class="text-xs bg-blue-600/30 text-blue-400 px-2 py-0.5 rounded border border-blue-500/30 font-semibold">v5.4</span>
                     <span id="trialBadge" class="trial-badge hidden" title="Período de teste">
                         <i class="fa-solid fa-hourglass-half"></i>
                         <span>Trial: <span id="trialDays">15</span>d</span>
                     </span>
                 </div>
-                <p class="text-[10px] text-slate-400 hidden md:block">APAVAN ENGENHARIA E CONSULTORIA </p>
+                <p class="text-[10px] text-slate-400 hidden md:block">APAVAN ENGENHARIA E CONSULTORIA • Ademilton Pavan CREA-SC 86959-8</p>
             </div>
         </div>
         <div class="flex items-center space-x-2">
@@ -446,7 +469,7 @@
                     </div>
                     <div id="dimContent" class="hidden space-y-2">
                         <div class="bg-blue-900/20 border border-blue-800/40 rounded p-2 text-[10px] text-slate-300 leading-relaxed">
-                            <b class="text-blue-300">Dimensões reais:</b> medidas pela geometria (PCA) e organizadas conforme o tipo do elemento (Laje, Parede, Pilar, Viga, etc.).
+                            <b class="text-blue-300">Dimensões reais:</b> medidas pela geometria (PCA) e organizadas conforme o tipo do elemento.
                         </div>
                         <div class="dim-grid">
                             <div class="dim-card dim-axis-x"><div class="dim-label">X · Comprimento</div><div><span class="dim-value" id="dimX">0.00</span><span class="dim-unit">m</span></div></div>
@@ -517,9 +540,7 @@
                 <button onclick="resetCameraView('front')" class="px-2 py-1 bg-slate-800 text-slate-200 rounded"><i class="fa-solid fa-square-full"></i> Frente</button>
                 <button onclick="resetCameraView('side')" class="px-2 py-1 bg-slate-800 text-slate-200 rounded"><i class="fa-solid fa-square-full fa-rotate-90"></i> Lado</button>
                 <div class="h-4 w-px bg-slate-700 mx-1"></div>
-                <button onclick="toggleSectionPanel()" id="btnSection" class="px-2 py-1 bg-slate-800 text-slate-200 rounded" title="Plano de Corte (Seção)">
-                    <i class="fa-solid fa-scissors"></i> Seção
-                </button>
+                <button onclick="toggleSectionPanel()" id="btnSection" class="px-2 py-1 bg-slate-800 text-slate-200 rounded" title="Plano de Corte (Seção)"><i class="fa-solid fa-scissors"></i> Seção</button>
                 <div class="h-4 w-px bg-slate-700 mx-1"></div>
                 <button onclick="toggleWireframe()" class="px-2 py-1 bg-slate-800 text-slate-200 rounded"><i class="fa-solid fa-border-all"></i></button>
                 <button onclick="toggleGhostMode()" class="px-2 py-1 bg-slate-800 text-slate-200 rounded"><i class="fa-solid fa-ghost"></i></button>
@@ -653,7 +674,7 @@ Insira uma chave de licença APAVAN para continuar.</p>
                 </button>
             </div>
             <div class="section-slider">
-                <input type="range" id="secX-pos" min="-30" max="30" step="0.1" value="0" oninput="onSectionSlider('X')">
+                <input type="range" id="secX-pos" min="-30" max="30" step="0.1" value="0" oninput="onSectionSlider('X')" class="flex-1">
                 <span class="value" id="secX-val">0.00 m</span>
             </div>
         </div>
@@ -670,7 +691,7 @@ Insira uma chave de licença APAVAN para continuar.</p>
                 </button>
             </div>
             <div class="section-slider">
-                <input type="range" id="secY-pos" min="-30" max="30" step="0.1" value="0" oninput="onSectionSlider('Y')">
+                <input type="range" id="secY-pos" min="-30" max="30" step="0.1" value="0" oninput="onSectionSlider('Y')" class="flex-1">
                 <span class="value" id="secY-val">0.00 m</span>
             </div>
         </div>
@@ -687,18 +708,14 @@ Insira uma chave de licença APAVAN para continuar.</p>
                 </button>
             </div>
             <div class="section-slider">
-                <input type="range" id="secZ-pos" min="-30" max="30" step="0.1" value="0" oninput="onSectionSlider('Z')">
+                <input type="range" id="secZ-pos" min="-30" max="30" step="0.1" value="0" oninput="onSectionSlider('Z')" class="flex-1">
                 <span class="value" id="secZ-val">0.00 m</span>
             </div>
         </div>
 
         <div class="section-actions">
-            <button class="primary" onclick="fitSectionRangeToModel()">
-                <i class="fa-solid fa-expand"></i> Ajustar ao Modelo
-            </button>
-            <button onclick="clearAllSections()">
-                <i class="fa-solid fa-rotate-left"></i> Limpar Cortes
-            </button>
+            <button class="primary" onclick="fitSectionRangeToModel()"><i class="fa-solid fa-expand"></i> Ajustar ao Modelo</button>
+            <button onclick="clearAllSections()"><i class="fa-solid fa-rotate-left"></i> Limpar Cortes</button>
         </div>
     </div>
 
@@ -818,18 +835,14 @@ const sectionState = {
     Y: { plane: null, enabled: false, position: 0, flipped: false, min: -30, max: 30 },
     Z: { plane: null, enabled: false, position: 0, flipped: false, min: -30, max: 30 }
 };
-
 function initSectionPlanes() {
     if (!renderer) return;
     renderer.localClippingEnabled = true;
     ['X', 'Y', 'Z'].forEach(axis => {
-        const normal = axis === 'X' ? new THREE.Vector3(1, 0, 0)
-                    : axis === 'Y' ? new THREE.Vector3(0, 1, 0)
-                    : new THREE.Vector3(0, 0, 1);
+        const normal = axis === 'X' ? new THREE.Vector3(1, 0, 0) : axis === 'Y' ? new THREE.Vector3(0, 1, 0) : new THREE.Vector3(0, 0, 1);
         sectionState[axis].plane = new THREE.Plane(normal, 0);
     });
 }
-
 function toggleSectionPanel() {
     const panel = document.getElementById('sectionPanel');
     const btn = document.getElementById('btnSection');
@@ -838,15 +851,12 @@ function toggleSectionPanel() {
         btn.classList.add('bg-blue-600', 'text-white');
         btn.classList.remove('bg-slate-800', 'text-slate-200');
         if (!sectionState.X.plane) initSectionPlanes();
-        if (state.elements.length && !sectionState.X.enabled && !sectionState.Y.enabled && !sectionState.Z.enabled) {
-            fitSectionRangeToModel(true);
-        }
+        if (state.elements.length && !sectionState.X.enabled && !sectionState.Y.enabled && !sectionState.Z.enabled) fitSectionRangeToModel(true);
     } else {
         btn.classList.remove('bg-blue-600', 'text-white');
         btn.classList.add('bg-slate-800', 'text-slate-200');
     }
 }
-
 function onSectionSlider(axis) {
     const val = parseFloat(document.getElementById(`sec${axis}-pos`).value);
     sectionState[axis].position = val;
@@ -854,13 +864,11 @@ function onSectionSlider(axis) {
     if (!sectionState[axis].enabled) document.getElementById(`sec${axis}-enabled`).checked = true;
     applySectionPlanes();
 }
-
 function flipSection(axis) {
     sectionState[axis].flipped = !sectionState[axis].flipped;
     document.getElementById(`sec${axis}-flip`).classList.toggle('active', sectionState[axis].flipped);
     applySectionPlanes();
 }
-
 function applySectionPlanes() {
     if (!renderer) return;
     renderer.localClippingEnabled = true;
@@ -869,16 +877,13 @@ function applySectionPlanes() {
         const s = sectionState[axis];
         const enabled = document.getElementById(`sec${axis}-enabled`).checked;
         s.enabled = enabled;
-        let nx = axis === 'X' ? 1 : 0;
-        let ny = axis === 'Y' ? 1 : 0;
-        let nz = axis === 'Z' ? 1 : 0;
+        let nx = axis === 'X' ? 1 : 0, ny = axis === 'Y' ? 1 : 0, nz = axis === 'Z' ? 1 : 0;
         if (s.flipped) { nx = -nx; ny = -ny; nz = -nz; }
         const d = s.flipped ? s.position : -s.position;
         s.plane.normal.set(nx, ny, nz);
         s.plane.constant = d;
         if (enabled) activePlanes.push(s.plane);
     });
-
     state.elements.forEach(elem => {
         if (!elem.mesh || !elem.mesh.material) return;
         const mats = Array.isArray(elem.mesh.material) ? elem.mesh.material : [elem.mesh.material];
@@ -888,7 +893,6 @@ function applySectionPlanes() {
             mat.needsUpdate = true;
         });
     });
-
     if (clashMarkersGroup) {
         clashMarkersGroup.children.forEach(marker => {
             if (!marker.material) return;
@@ -896,11 +900,8 @@ function applySectionPlanes() {
             mats.forEach(mat => { mat.clippingPlanes = activePlanes.length ? activePlanes : null; mat.needsUpdate = true; });
         });
     }
-
-    const msg = activePlanes.length === 0 ? 'Sem cortes ativos' : `Cortes ativos: ${activePlanes.length} plano(s)`;
-    showViewportStatus(msg);
+    showViewportStatus(activePlanes.length === 0 ? 'Sem cortes ativos' : `Cortes ativos: ${activePlanes.length} plano(s)`);
 }
-
 function clearAllSections() {
     ['X', 'Y', 'Z'].forEach(axis => {
         sectionState[axis].enabled = false;
@@ -914,7 +915,6 @@ function clearAllSections() {
     applySectionPlanes();
     showViewportStatus('Cortes removidos.');
 }
-
 function fitSectionRangeToModel(silent) {
     if (!state.elements.length) { if (!silent) alert('Nenhum modelo carregado.'); return; }
     const box = new THREE.Box3();
@@ -923,9 +923,7 @@ function fitSectionRangeToModel(silent) {
     const center = new THREE.Vector3(); box.getCenter(center);
     const size = new THREE.Vector3(); box.getSize(size);
     const pad = 0.2;
-    const rx = size.x / 2 * (1 + pad);
-    const ry = size.y / 2 * (1 + pad);
-    const rz = size.z / 2 * (1 + pad);
+    const rx = size.x / 2 * (1 + pad), ry = size.y / 2 * (1 + pad), rz = size.z / 2 * (1 + pad);
     ['X', 'Y', 'Z'].forEach(axis => {
         const range = axis === 'X' ? rx : axis === 'Y' ? ry : rz;
         const centerAxis = axis === 'X' ? center.x : axis === 'Y' ? center.y : center.z;
@@ -941,11 +939,7 @@ function fitSectionRangeToModel(silent) {
     applySectionPlanes();
     if (!silent) showViewportStatus('Range dos cortes ajustado ao modelo.');
 }
-
-function refreshSectionPlanes() {
-    if (!sectionState.X.plane) return;
-    applySectionPlanes();
-}
+function refreshSectionPlanes() { if (!sectionState.X.plane) return; applySectionPlanes(); }
 
 /* ============================================================
    WINDOW ONLOAD
@@ -957,9 +951,11 @@ window.onload = function() {
     initCharts();
     initColorSwatches();
     updateDashboardUI();
+    updateImmersiveButtonLabel();
     window.addEventListener('resize', onWindowResize);
     window.addEventListener('orientationchange', () => setTimeout(onWindowResize, 200));
     if (isMobile()) document.body.classList.add('immersive');
+    updateImmersiveButtonLabel();
     setInterval(applyLicenseGate, 60000);
 };
 
@@ -1320,13 +1316,87 @@ function makeAllTransparent() {
     refreshSectionPlanes();
     showViewportStatus("Todos translúcidos.");
 }
-function openActionsSheet() { document.getElementById('actionsSheet').classList.add('open'); document.getElementById('actionsBackdrop').classList.add('open'); }
-function closeActionsSheet() { document.getElementById('actionsSheet').classList.remove('open'); document.getElementById('actionsBackdrop').classList.remove('open'); }
-function triggerIfcImport() { setTimeout(() => document.getElementById('ifcFileInput').click(), 250); }
-function toggleImmersive() { document.body.classList.toggle('immersive'); }
-function toggleLeftSidebar() { const sb = document.querySelector('.left-sidebar'), o = document.querySelector('.right-sidebar'), bd = document.getElementById('sidebarBackdrop'); o.classList.remove('open'); sb.classList.toggle('open'); bd.classList.toggle('open', sb.classList.contains('open')); }
-function toggleRightSidebar() { const sb = document.querySelector('.right-sidebar'), o = document.querySelector('.left-sidebar'), bd = document.getElementById('sidebarBackdrop'); o.classList.remove('open'); sb.classList.toggle('open'); bd.classList.toggle('open', sb.classList.contains('open')); }
-function closeAllSidebars() { document.querySelectorAll('.left-sidebar, .right-sidebar').forEach(el => el.classList.remove('open')); document.getElementById('sidebarBackdrop').classList.remove('open'); }
+
+/* ============================================================
+   MODAL / SIDEBAR — CORRIGIDO PARA iOS
+   ============================================================ */
+function openActionsSheet() {
+    const backdrop = document.getElementById('actionsBackdrop');
+    if (backdrop) {
+        backdrop.style.display = '';
+        backdrop.classList.add('open');
+    }
+    document.getElementById('actionsSheet').classList.add('open');
+}
+function closeActionsSheet() {
+    const sheet = document.getElementById('actionsSheet');
+    const backdrop = document.getElementById('actionsBackdrop');
+    if (sheet) sheet.classList.remove('open');
+    if (backdrop) {
+        backdrop.classList.remove('open');
+        setTimeout(() => {
+            if (!backdrop.classList.contains('open')) backdrop.style.display = 'none';
+        }, 220);
+    }
+}
+function toggleImmersive() {
+    // Fecha TUDO antes de alternar
+    closeActionsSheet();
+    closeAllSidebars();
+
+    document.body.classList.toggle('immersive');
+
+    // Atualiza o label e a cor do botão
+    updateImmersiveButtonLabel();
+
+    // Recalcula o canvas após a transição
+    setTimeout(onWindowResize, 350);
+}
+function updateImmersiveButtonLabel() {
+    const btn = document.getElementById('btnImmersiveToggle');
+    const label = document.getElementById('immersiveLabel');
+    if (!btn || !label) return;
+    if (document.body.classList.contains('immersive')) {
+        label.innerText = 'Modo Janela';
+        btn.classList.add('immersive-active');
+    } else {
+        label.innerText = 'Modo Imersivo';
+        btn.classList.remove('immersive-active');
+    }
+}
+function triggerIfcImport() { closeActionsSheet(); setTimeout(() => document.getElementById('ifcFileInput').click(), 250); }
+function toggleLeftSidebar() {
+    const sb = document.querySelector('.left-sidebar');
+    const other = document.querySelector('.right-sidebar');
+    const bd = document.getElementById('sidebarBackdrop');
+    other.classList.remove('open');
+    sb.classList.toggle('open');
+    if (bd) {
+        bd.classList.toggle('open', sb.classList.contains('open'));
+        if (sb.classList.contains('open')) bd.style.display = 'block';
+        else setTimeout(() => { if (!bd.classList.contains('open')) bd.style.display = 'none'; }, 220);
+    }
+}
+function toggleRightSidebar() {
+    const sb = document.querySelector('.right-sidebar');
+    const other = document.querySelector('.left-sidebar');
+    const bd = document.getElementById('sidebarBackdrop');
+    other.classList.remove('open');
+    sb.classList.toggle('open');
+    if (bd) {
+        bd.classList.toggle('open', sb.classList.contains('open'));
+        if (sb.classList.contains('open')) bd.style.display = 'block';
+        else setTimeout(() => { if (!bd.classList.contains('open')) bd.style.display = 'none'; }, 220);
+    }
+}
+function closeAllSidebars() {
+    document.querySelectorAll('.left-sidebar, .right-sidebar').forEach(el => el.classList.remove('open'));
+    const bd = document.getElementById('sidebarBackdrop');
+    if (bd) {
+        bd.classList.remove('open');
+        setTimeout(() => { if (!bd.classList.contains('open')) bd.style.display = 'none'; }, 220);
+    }
+}
 
 /* 3D */
 function init3DScene() {

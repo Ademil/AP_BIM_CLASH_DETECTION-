@@ -154,6 +154,59 @@
         .trial-badge.hidden { display: none; }
         .trial-badge.urgent { background: rgba(239,68,68,0.15); color: #f87171; border-color: rgba(239,68,68,0.4); animation: pulse-warn 2s infinite; }
         @keyframes pulse-warn { 0%, 100% { opacity: 1; } 50% { opacity: 0.6; } }
+
+        /* ============================================================
+           PLANOS DE SEÇÃO (CORTE DINÂMICO)
+           ============================================================ */
+        #sectionPanel {
+            position: fixed;
+            top: 60px;
+            right: 12px;
+            z-index: 30;
+            width: 300px;
+            background: rgba(15,23,42,0.96);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(96,165,250,0.35);
+            border-radius: 12px;
+            padding: 14px;
+            display: none;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.7);
+        }
+        #sectionPanel.show { display: block; }
+        #sectionPanel h3 {
+            font-size: 12px; font-weight: 800; color: #e2e8f0;
+            margin: 0 0 12px 0; display: flex; align-items: center; gap: 6px;
+            padding-bottom: 10px; border-bottom: 1px solid #334155;
+        }
+        #sectionPanel h3 .close-btn {
+            margin-left: auto; cursor: pointer; color: #64748b;
+            padding: 2px 6px; border-radius: 4px;
+            background: none; border: none;
+        }
+        #sectionPanel h3 .close-btn:hover { color: #f87171; background: rgba(248,113,113,0.1); }
+        .section-axis { background: #020617; border: 1px solid #1e293b; border-radius: 8px; padding: 10px; margin-bottom: 10px; }
+        .section-axis-header { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+        .section-axis-header .axis-name { font-weight: 800; font-size: 13px; font-family: 'Courier New', monospace; width: 18px; }
+        .section-axis-header .axis-x { color: #ef4444; }
+        .section-axis-header .axis-y { color: #10b981; }
+        .section-axis-header .axis-z { color: #3b82f6; }
+        .section-axis-header label { font-size: 10px; color: #94a3b8; text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px; display: flex; align-items: center; gap: 6px; cursor: pointer; }
+        .section-axis-header input[type="checkbox"] { width: 16px; height: 16px; accent-color: #3b82f6; cursor: pointer; }
+        .section-axis-header .btn-flip { margin-left: auto; background: #1e293b; border: 1px solid #334155; color: #94a3b8; padding: 3px 8px; border-radius: 6px; cursor: pointer; font-size: 10px; }
+        .section-axis-header .btn-flip:hover { background: #334155; color: #e2e8f0; }
+        .section-axis-header .btn-flip.active { background: #3b82f6; color: white; border-color: #2563eb; }
+        .section-slider { display: flex; align-items: center; gap: 8px; }
+        .section-slider input[type="range"] { flex: 1; }
+        .section-slider .value { font-family: 'Courier New', monospace; font-size: 11px; color: #e2e8f0; min-width: 55px; text-align: right; }
+        .section-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; padding-top: 10px; border-top: 1px solid #334155; }
+        .section-actions button { padding: 8px; border-radius: 8px; font-size: 11px; font-weight: 700; cursor: pointer; border: 1px solid #334155; background: #1e293b; color: #cbd5e1; display: flex; align-items: center; justify-content: center; gap: 4px; }
+        .section-actions button:hover { background: #334155; }
+        .section-actions button.primary { background: linear-gradient(135deg, #2563eb, #1d4ed8); border-color: #3b82f6; color: white; }
+        @media (max-width: 900px) {
+            #sectionPanel { top: auto; bottom: calc(env(safe-area-inset-bottom) + 80px); right: 8px; left: 8px; width: auto; max-height: 70vh; overflow-y: auto; }
+            .section-axis-header label span.label-text { display: none; }
+        }
     </style>
 </head>
 <body class="h-screen w-screen flex flex-col overflow-hidden bg-slate-950 text-slate-100">
@@ -175,7 +228,7 @@
         <h3>Visualização</h3>
         <div class="actions-grid">
             <button class="action-btn" onclick="closeActionsSheet(); fitAllModels()"><i class="fa-solid fa-crosshairs" style="color:#60a5fa"></i><span>Enquadrar</span></button>
-            <button class="action-btn" onclick="closeActionsSheet(); showAllElements()"><i class="fa-solid fa-eye" style="color:#34d399"></i><span>Mostrar Todos</span></button>
+            <button class="action-btn" onclick="closeActionsSheet(); toggleSectionPanel()"><i class="fa-solid fa-scissors" style="color:#f472b6"></i><span>Seção</span></button>
             <button class="action-btn" onclick="closeActionsSheet(); toggleImmersive()"><i class="fa-solid fa-compress" style="color:#a78bfa"></i><span>Modo Janela</span></button>
         </div>
         <h3>Exportar</h3>
@@ -228,7 +281,7 @@
             <div class="header-title-block">
                 <div class="flex items-center space-x-2">
                     <span class="font-extrabold tracking-wider text-base text-white">AP BIM</span>
-                    <span class="text-xs bg-blue-600/30 text-blue-400 px-2 py-0.5 rounded border border-blue-500/30 font-semibold">v5.2</span>
+                    <span class="text-xs bg-blue-600/30 text-blue-400 px-2 py-0.5 rounded border border-blue-500/30 font-semibold">v5.3</span>
                     <span id="trialBadge" class="trial-badge hidden" title="Período de teste">
                         <i class="fa-solid fa-hourglass-half"></i>
                         <span>Trial: <span id="trialDays">15</span>d</span>
@@ -464,6 +517,10 @@
                 <button onclick="resetCameraView('front')" class="px-2 py-1 bg-slate-800 text-slate-200 rounded"><i class="fa-solid fa-square-full"></i> Frente</button>
                 <button onclick="resetCameraView('side')" class="px-2 py-1 bg-slate-800 text-slate-200 rounded"><i class="fa-solid fa-square-full fa-rotate-90"></i> Lado</button>
                 <div class="h-4 w-px bg-slate-700 mx-1"></div>
+                <button onclick="toggleSectionPanel()" id="btnSection" class="px-2 py-1 bg-slate-800 text-slate-200 rounded" title="Plano de Corte (Seção)">
+                    <i class="fa-solid fa-scissors"></i> Seção
+                </button>
+                <div class="h-4 w-px bg-slate-700 mx-1"></div>
                 <button onclick="toggleWireframe()" class="px-2 py-1 bg-slate-800 text-slate-200 rounded"><i class="fa-solid fa-border-all"></i></button>
                 <button onclick="toggleGhostMode()" class="px-2 py-1 bg-slate-800 text-slate-200 rounded"><i class="fa-solid fa-ghost"></i></button>
                 <button onclick="fitAllModels()" class="px-2 py-1 bg-slate-800 text-slate-200 rounded"><i class="fa-solid fa-expand"></i> Fit</button>
@@ -577,15 +634,81 @@ Insira uma chave de licença APAVAN para continuar.</p>
         </div>
     </div>
 
+    <div id="sectionPanel">
+        <h3>
+            <i class="fa-solid fa-scissors text-blue-400"></i>
+            Plano de Corte
+            <button class="close-btn" onclick="toggleSectionPanel()"><i class="fa-solid fa-xmark"></i></button>
+        </h3>
+
+        <div class="section-axis">
+            <div class="section-axis-header">
+                <span class="axis-name axis-x">X</span>
+                <label>
+                    <input type="checkbox" id="secX-enabled" onchange="applySectionPlanes()">
+                    <span class="label-text">Ativo</span>
+                </label>
+                <button class="btn-flip" id="secX-flip" onclick="flipSection('X')" title="Inverter direção">
+                    <i class="fa-solid fa-arrows-rotate"></i>
+                </button>
+            </div>
+            <div class="section-slider">
+                <input type="range" id="secX-pos" min="-30" max="30" step="0.1" value="0" oninput="onSectionSlider('X')">
+                <span class="value" id="secX-val">0.00 m</span>
+            </div>
+        </div>
+
+        <div class="section-axis">
+            <div class="section-axis-header">
+                <span class="axis-name axis-y">Y</span>
+                <label>
+                    <input type="checkbox" id="secY-enabled" onchange="applySectionPlanes()">
+                    <span class="label-text">Ativo</span>
+                </label>
+                <button class="btn-flip" id="secY-flip" onclick="flipSection('Y')" title="Inverter direção">
+                    <i class="fa-solid fa-arrows-rotate"></i>
+                </button>
+            </div>
+            <div class="section-slider">
+                <input type="range" id="secY-pos" min="-30" max="30" step="0.1" value="0" oninput="onSectionSlider('Y')">
+                <span class="value" id="secY-val">0.00 m</span>
+            </div>
+        </div>
+
+        <div class="section-axis">
+            <div class="section-axis-header">
+                <span class="axis-name axis-z">Z</span>
+                <label>
+                    <input type="checkbox" id="secZ-enabled" onchange="applySectionPlanes()">
+                    <span class="label-text">Ativo</span>
+                </label>
+                <button class="btn-flip" id="secZ-flip" onclick="flipSection('Z')" title="Inverter direção">
+                    <i class="fa-solid fa-arrows-rotate"></i>
+                </button>
+            </div>
+            <div class="section-slider">
+                <input type="range" id="secZ-pos" min="-30" max="30" step="0.1" value="0" oninput="onSectionSlider('Z')">
+                <span class="value" id="secZ-val">0.00 m</span>
+            </div>
+        </div>
+
+        <div class="section-actions">
+            <button class="primary" onclick="fitSectionRangeToModel()">
+                <i class="fa-solid fa-expand"></i> Ajustar ao Modelo
+            </button>
+            <button onclick="clearAllSections()">
+                <i class="fa-solid fa-rotate-left"></i> Limpar Cortes
+            </button>
+        </div>
+    </div>
+
 <script>
 /* ============================================================
-   SAFE STORAGE — contorna Tracking Prevention do Safari/iOS
-   Tenta: localStorage → sessionStorage → cookie → memória
+   SAFE STORAGE
    ============================================================ */
 const SafeStorage = (() => {
     let memoryStore = {};
     let backend = 'memory';
-
     function _testBackend(fn) {
         try {
             const k = '__test_' + Math.random();
@@ -595,142 +718,44 @@ const SafeStorage = (() => {
             return v === '1';
         } catch (e) { return false; }
     }
-
     const CookieStorage = {
-        setItem(k, v) {
-            const exp = new Date();
-            exp.setFullYear(exp.getFullYear() + 5);
-            document.cookie = `${encodeURIComponent(k)}=${encodeURIComponent(v)};expires=${exp.toUTCString()};path=/;SameSite=Lax`;
-        },
-        getItem(k) {
-            const name = encodeURIComponent(k) + '=';
-            const parts = document.cookie.split(';');
-            for (let p of parts) {
-                p = p.trim();
-                if (p.indexOf(name) === 0) return decodeURIComponent(p.substring(name.length));
-            }
-            return null;
-        },
-        removeItem(k) {
-            document.cookie = `${encodeURIComponent(k)}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/`;
-        }
+        setItem(k, v) { const exp = new Date(); exp.setFullYear(exp.getFullYear() + 5); document.cookie = `${encodeURIComponent(k)}=${encodeURIComponent(v)};expires=${exp.toUTCString()};path=/;SameSite=Lax`; },
+        getItem(k) { const name = encodeURIComponent(k) + '='; const parts = document.cookie.split(';'); for (let p of parts) { p = p.trim(); if (p.indexOf(name) === 0) return decodeURIComponent(p.substring(name.length)); } return null; },
+        removeItem(k) { document.cookie = `${encodeURIComponent(k)}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/`; }
     };
-
-    if (typeof localStorage !== 'undefined' && _testBackend(localStorage)) {
-        backend = 'localStorage';
-    } else if (typeof sessionStorage !== 'undefined' && _testBackend(sessionStorage)) {
-        backend = 'sessionStorage';
-    } else if (_testBackend(CookieStorage)) {
-        backend = 'cookie';
-    } else {
-        backend = 'memory';
-    }
-    console.log('[STORAGE] Backend em uso:', backend);
-
+    if (typeof localStorage !== 'undefined' && _testBackend(localStorage)) backend = 'localStorage';
+    else if (typeof sessionStorage !== 'undefined' && _testBackend(sessionStorage)) backend = 'sessionStorage';
+    else if (_testBackend(CookieStorage)) backend = 'cookie';
     const store = backend === 'localStorage' ? localStorage
                 : backend === 'sessionStorage' ? sessionStorage
                 : backend === 'cookie' ? CookieStorage
-                : {
-                    setItem: (k, v) => { memoryStore[k] = String(v); },
-                    getItem: (k) => memoryStore.hasOwnProperty(k) ? memoryStore[k] : null,
-                    removeItem: (k) => { delete memoryStore[k]; }
-                };
-
-    return {
-        get backend() { return backend; },
-        getItem(k)   { try { return store.getItem(k); } catch (e) { return null; } },
-        setItem(k, v) { try { store.setItem(k, v); } catch (e) {} },
-        removeItem(k) { try { store.removeItem(k); } catch (e) {} }
-    };
+                : { setItem: (k, v) => { memoryStore[k] = String(v); }, getItem: (k) => memoryStore.hasOwnProperty(k) ? memoryStore[k] : null, removeItem: (k) => { delete memoryStore[k]; } };
+    console.log('[STORAGE] Backend em uso:', backend);
+    return { get backend() { return backend; }, getItem(k) { try { return store.getItem(k); } catch (e) { return null; } }, setItem(k, v) { try { store.setItem(k, v); } catch (e) {} }, removeItem(k) { try { store.removeItem(k); } catch (e) {} } };
 })();
 
 /* ============================================================
-   SISTEMA DE LICENÇA — 15 dias de teste grátis
+   LICENÇA
    ============================================================ */
-const LICENSE = {
-    TRIAL_DAYS: 15,
-    KEY_FIRST_RUN: 'apbim_v1_first_run',
-    KEY_LICENSE:   'apbim_v1_license',
-    _SECRET: 'APAVAN-2024-BIM-AUTH-V1'
-};
-function _computeCheck(payload) {
-    const str = payload + LICENSE._SECRET;
-    let h = 0;
-    for (let i = 0; i < str.length; i++) h = ((h << 5) - h + str.charCodeAt(i)) | 0;
-    return Math.abs(h).toString(36).toUpperCase().padStart(4, '0').slice(-4);
-}
-function _isValidKey(key) {
-    if (typeof key !== 'string') return false;
-    const k = key.toUpperCase().trim();
-    const parts = k.split('-');
-    if (parts.length < 3) return false;
-    if (parts[0] !== 'APAVAN') return false;
-    const check = parts[parts.length - 1];
-    const payload = parts.slice(1, -1).join('-');
-    return _computeCheck(payload) === check;
-}
-window.generateLicenseKey = function(payload) {
-    const clean = String(payload).toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 12);
-    if (!clean) return null;
-    return `APAVAN-${clean}-${_computeCheck(clean)}`;
-};
-function _getFirstRun() {
-    let v = SafeStorage.getItem(LICENSE.KEY_FIRST_RUN);
-    if (!v) { v = Date.now().toString(); SafeStorage.setItem(LICENSE.KEY_FIRST_RUN, v); }
-    return parseInt(v, 10);
-}
-function _daysLeft() {
-    const elapsed = Math.floor((Date.now() - _getFirstRun()) / 86400000);
-    return Math.max(0, LICENSE.TRIAL_DAYS - elapsed);
-}
-function getLicenseState() {
-    const saved = SafeStorage.getItem(LICENSE.KEY_LICENSE);
-    if (saved && _isValidKey(saved)) return { licensed: true, daysLeft: Infinity, key: saved };
-    const daysLeft = _daysLeft();
-    return { licensed: false, daysLeft, valid: daysLeft > 0 };
-}
-function activateLicense(key) {
-    if (!_isValidKey(key)) return false;
-    SafeStorage.setItem(LICENSE.KEY_LICENSE, key.toUpperCase().trim());
-    return true;
-}
-function submitLicense() {
-    const input = document.getElementById('licenseInput');
-    const msg = document.getElementById('licenseMsg');
-    const key = (input.value || '').trim();
-    if (!key) { msg.innerText = 'Digite uma chave de licença.'; msg.className = 'license-msg error'; return; }
-    if (activateLicense(key)) {
-        msg.innerText = '✓ Licença ativada! Recarregando...';
-        msg.className = 'license-msg success';
-        setTimeout(() => location.reload(), 800);
-    } else {
-        msg.innerText = 'Chave inválida. Verifique e tente novamente.';
-        msg.className = 'license-msg error';
-        if (navigator.vibrate) navigator.vibrate([50, 30, 50]);
-    }
-}
-if (location.search.includes('reset-trial')) {
-    SafeStorage.removeItem(LICENSE.KEY_FIRST_RUN);
-    SafeStorage.removeItem(LICENSE.KEY_LICENSE);
-    console.log('[LICENSE] Trial resetado. Backend:', SafeStorage.backend);
-}
+const LICENSE = { TRIAL_DAYS: 15, KEY_FIRST_RUN: 'apbim_v1_first_run', KEY_LICENSE: 'apbim_v1_license', _SECRET: 'APAVAN-2024-BIM-AUTH-V1' };
+function _computeCheck(payload) { const str = payload + LICENSE._SECRET; let h = 0; for (let i = 0; i < str.length; i++) h = ((h << 5) - h + str.charCodeAt(i)) | 0; return Math.abs(h).toString(36).toUpperCase().padStart(4, '0').slice(-4); }
+function _isValidKey(key) { if (typeof key !== 'string') return false; const k = key.toUpperCase().trim(); const parts = k.split('-'); if (parts.length < 3) return false; if (parts[0] !== 'APAVAN') return false; const check = parts[parts.length - 1]; const payload = parts.slice(1, -1).join('-'); return _computeCheck(payload) === check; }
+window.generateLicenseKey = function(payload) { const clean = String(payload).toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 12); if (!clean) return null; return `APAVAN-${clean}-${_computeCheck(clean)}`; };
+function _getFirstRun() { let v = SafeStorage.getItem(LICENSE.KEY_FIRST_RUN); if (!v) { v = Date.now().toString(); SafeStorage.setItem(LICENSE.KEY_FIRST_RUN, v); } return parseInt(v, 10); }
+function _daysLeft() { const elapsed = Math.floor((Date.now() - _getFirstRun()) / 86400000); return Math.max(0, LICENSE.TRIAL_DAYS - elapsed); }
+function getLicenseState() { const saved = SafeStorage.getItem(LICENSE.KEY_LICENSE); if (saved && _isValidKey(saved)) return { licensed: true, daysLeft: Infinity, key: saved }; const daysLeft = _daysLeft(); return { licensed: false, daysLeft, valid: daysLeft > 0 }; }
+function activateLicense(key) { if (!_isValidKey(key)) return false; SafeStorage.setItem(LICENSE.KEY_LICENSE, key.toUpperCase().trim()); return true; }
+function submitLicense() { const input = document.getElementById('licenseInput'); const msg = document.getElementById('licenseMsg'); const key = (input.value || '').trim(); if (!key) { msg.innerText = 'Digite uma chave de licença.'; msg.className = 'license-msg error'; return; } if (activateLicense(key)) { msg.innerText = '✓ Licença ativada! Recarregando...'; msg.className = 'license-msg success'; setTimeout(() => location.reload(), 800); } else { msg.innerText = 'Chave inválida.'; msg.className = 'license-msg error'; if (navigator.vibrate) navigator.vibrate([50, 30, 50]); } }
+if (location.search.includes('reset-trial')) { SafeStorage.removeItem(LICENSE.KEY_FIRST_RUN); SafeStorage.removeItem(LICENSE.KEY_LICENSE); }
 function applyLicenseGate() {
     const st = getLicenseState();
     const overlay = document.getElementById('licenseOverlay');
     const badge = document.getElementById('trialBadge');
     const badgeDays = document.getElementById('trialDays');
-    if (st.licensed) {
-        if (overlay) overlay.classList.remove('show');
-        if (badge) badge.classList.add('hidden');
-        return true;
-    }
+    if (st.licensed) { if (overlay) overlay.classList.remove('show'); if (badge) badge.classList.add('hidden'); return true; }
     if (st.valid) {
         if (overlay) overlay.classList.remove('show');
-        if (badge && badgeDays) {
-            badge.classList.remove('hidden');
-            badgeDays.innerText = st.daysLeft;
-            if (st.daysLeft <= 3) badge.classList.add('urgent');
-        }
+        if (badge && badgeDays) { badge.classList.remove('hidden'); badgeDays.innerText = st.daysLeft; if (st.daysLeft <= 3) badge.classList.add('urgent'); }
         return true;
     }
     if (overlay) overlay.classList.add('show');
@@ -743,15 +768,8 @@ function showLicenseModal() {
     const title = overlay.querySelector('.license-title');
     const subtitle = overlay.querySelector('.license-subtitle');
     const icon = overlay.querySelector('.license-icon');
-    if (st.licensed) {
-        icon.innerText = '✓';
-        title.innerText = 'Licença Ativa';
-        subtitle.innerText = `Chave: ${st.key}\n\nObrigado por usar o AP BIM!`;
-    } else {
-        icon.innerText = '🔑';
-        title.innerText = 'Ativar Licença';
-        subtitle.innerText = `Trial: ${st.daysLeft} dia(s) restante(s).\nInsira uma chave APAVAN válida.`;
-    }
+    if (st.licensed) { icon.innerText = '✓'; title.innerText = 'Licença Ativa'; subtitle.innerText = `Chave: ${st.key}\n\nObrigado por usar o AP BIM!`; }
+    else { icon.innerText = '🔑'; title.innerText = 'Ativar Licença'; subtitle.innerText = `Trial: ${st.daysLeft} dia(s) restante(s).\nInsira uma chave APAVAN válida.`; }
     overlay.classList.add('show');
     setTimeout(() => document.getElementById('licenseInput').focus(), 100);
 }
@@ -792,6 +810,146 @@ let chartDiscInstance = null, chartFloorInstance = null;
 let pointerDownPos = null;
 let ifcApiInstance = null;
 
+/* ============================================================
+   PLANOS DE SEÇÃO
+   ============================================================ */
+const sectionState = {
+    X: { plane: null, enabled: false, position: 0, flipped: false, min: -30, max: 30 },
+    Y: { plane: null, enabled: false, position: 0, flipped: false, min: -30, max: 30 },
+    Z: { plane: null, enabled: false, position: 0, flipped: false, min: -30, max: 30 }
+};
+
+function initSectionPlanes() {
+    if (!renderer) return;
+    renderer.localClippingEnabled = true;
+    ['X', 'Y', 'Z'].forEach(axis => {
+        const normal = axis === 'X' ? new THREE.Vector3(1, 0, 0)
+                    : axis === 'Y' ? new THREE.Vector3(0, 1, 0)
+                    : new THREE.Vector3(0, 0, 1);
+        sectionState[axis].plane = new THREE.Plane(normal, 0);
+    });
+}
+
+function toggleSectionPanel() {
+    const panel = document.getElementById('sectionPanel');
+    const btn = document.getElementById('btnSection');
+    panel.classList.toggle('show');
+    if (panel.classList.contains('show')) {
+        btn.classList.add('bg-blue-600', 'text-white');
+        btn.classList.remove('bg-slate-800', 'text-slate-200');
+        if (!sectionState.X.plane) initSectionPlanes();
+        if (state.elements.length && !sectionState.X.enabled && !sectionState.Y.enabled && !sectionState.Z.enabled) {
+            fitSectionRangeToModel(true);
+        }
+    } else {
+        btn.classList.remove('bg-blue-600', 'text-white');
+        btn.classList.add('bg-slate-800', 'text-slate-200');
+    }
+}
+
+function onSectionSlider(axis) {
+    const val = parseFloat(document.getElementById(`sec${axis}-pos`).value);
+    sectionState[axis].position = val;
+    document.getElementById(`sec${axis}-val`).innerText = val.toFixed(2) + ' m';
+    if (!sectionState[axis].enabled) document.getElementById(`sec${axis}-enabled`).checked = true;
+    applySectionPlanes();
+}
+
+function flipSection(axis) {
+    sectionState[axis].flipped = !sectionState[axis].flipped;
+    document.getElementById(`sec${axis}-flip`).classList.toggle('active', sectionState[axis].flipped);
+    applySectionPlanes();
+}
+
+function applySectionPlanes() {
+    if (!renderer) return;
+    renderer.localClippingEnabled = true;
+    const activePlanes = [];
+    ['X', 'Y', 'Z'].forEach(axis => {
+        const s = sectionState[axis];
+        const enabled = document.getElementById(`sec${axis}-enabled`).checked;
+        s.enabled = enabled;
+        let nx = axis === 'X' ? 1 : 0;
+        let ny = axis === 'Y' ? 1 : 0;
+        let nz = axis === 'Z' ? 1 : 0;
+        if (s.flipped) { nx = -nx; ny = -ny; nz = -nz; }
+        const d = s.flipped ? s.position : -s.position;
+        s.plane.normal.set(nx, ny, nz);
+        s.plane.constant = d;
+        if (enabled) activePlanes.push(s.plane);
+    });
+
+    state.elements.forEach(elem => {
+        if (!elem.mesh || !elem.mesh.material) return;
+        const mats = Array.isArray(elem.mesh.material) ? elem.mesh.material : [elem.mesh.material];
+        mats.forEach(mat => {
+            mat.clippingPlanes = activePlanes.length ? activePlanes : null;
+            mat.clipShadows = activePlanes.length > 0;
+            mat.needsUpdate = true;
+        });
+    });
+
+    if (clashMarkersGroup) {
+        clashMarkersGroup.children.forEach(marker => {
+            if (!marker.material) return;
+            const mats = Array.isArray(marker.material) ? marker.material : [marker.material];
+            mats.forEach(mat => { mat.clippingPlanes = activePlanes.length ? activePlanes : null; mat.needsUpdate = true; });
+        });
+    }
+
+    const msg = activePlanes.length === 0 ? 'Sem cortes ativos' : `Cortes ativos: ${activePlanes.length} plano(s)`;
+    showViewportStatus(msg);
+}
+
+function clearAllSections() {
+    ['X', 'Y', 'Z'].forEach(axis => {
+        sectionState[axis].enabled = false;
+        sectionState[axis].position = 0;
+        sectionState[axis].flipped = false;
+        document.getElementById(`sec${axis}-enabled`).checked = false;
+        document.getElementById(`sec${axis}-pos`).value = 0;
+        document.getElementById(`sec${axis}-val`).innerText = '0.00 m';
+        document.getElementById(`sec${axis}-flip`).classList.remove('active');
+    });
+    applySectionPlanes();
+    showViewportStatus('Cortes removidos.');
+}
+
+function fitSectionRangeToModel(silent) {
+    if (!state.elements.length) { if (!silent) alert('Nenhum modelo carregado.'); return; }
+    const box = new THREE.Box3();
+    state.elements.forEach(e => { if (e.mesh.visible) box.expandByObject(e.mesh); });
+    if (box.isEmpty()) return;
+    const center = new THREE.Vector3(); box.getCenter(center);
+    const size = new THREE.Vector3(); box.getSize(size);
+    const pad = 0.2;
+    const rx = size.x / 2 * (1 + pad);
+    const ry = size.y / 2 * (1 + pad);
+    const rz = size.z / 2 * (1 + pad);
+    ['X', 'Y', 'Z'].forEach(axis => {
+        const range = axis === 'X' ? rx : axis === 'Y' ? ry : rz;
+        const centerAxis = axis === 'X' ? center.x : axis === 'Y' ? center.y : center.z;
+        const slider = document.getElementById(`sec${axis}-pos`);
+        slider.min = (centerAxis - range).toFixed(2);
+        slider.max = (centerAxis + range).toFixed(2);
+        sectionState[axis].min = parseFloat(slider.min);
+        sectionState[axis].max = parseFloat(slider.max);
+        sectionState[axis].position = centerAxis;
+        slider.value = centerAxis;
+        document.getElementById(`sec${axis}-val`).innerText = centerAxis.toFixed(2) + ' m';
+    });
+    applySectionPlanes();
+    if (!silent) showViewportStatus('Range dos cortes ajustado ao modelo.');
+}
+
+function refreshSectionPlanes() {
+    if (!sectionState.X.plane) return;
+    applySectionPlanes();
+}
+
+/* ============================================================
+   WINDOW ONLOAD
+   ============================================================ */
 window.onload = function() {
     if (!applyLicenseGate()) { setInterval(applyLicenseGate, 60000); return; }
     init3DScene();
@@ -820,7 +978,6 @@ function closeConfirm(result) {
     if (_confirmResolver) { _confirmResolver(result); _confirmResolver = null; }
 }
 
-/* EXCLUIR / ENQUADRAR MODELO */
 async function removeModel(modelId) {
     if (!modelId) return;
     const model = state.models.find(m => m.id === modelId);
@@ -850,6 +1007,7 @@ async function removeModel(modelId) {
     document.getElementById('clashMarkersContainer').innerHTML = '';
     state.clashes.forEach(c => create3DClashMarker(c));
     updateModelsListUI(); buildSpatialTreeUI(); updateClashListUI(); updateDashboardUI(); updateScopeUI();
+    refreshSectionPlanes();
     showViewportStatus(`Modelo "${model.name}" excluído.`);
 }
 async function confirmClearAll() {
@@ -872,7 +1030,7 @@ function zoomToModel(modelId) {
     showViewportStatus(`Focado: ${modelId}`);
 }
 
-/* DIMENSIONAMENTO — PCA + regra por tipo IFC */
+/* DIMENSIONAMENTO */
 function jacobiEigen3x3(cxx, cxy, cxz, cyy, cyz, czz) {
     const a = [[cxx, cxy, cxz],[cxy, cyy, cyz],[cxz, cyz, czz]];
     const v = [[1,0,0],[0,1,0],[0,0,1]];
@@ -903,10 +1061,7 @@ function jacobiEigen3x3(cxx, cxy, cxz, cyy, cyz, czz) {
             v[i][q] = s * vip + c * viq;
         }
     }
-    return {
-        values: [a[0][0], a[1][1], a[2][2]],
-        vectors: [[v[0][0], v[1][0], v[2][0]],[v[0][1], v[1][1], v[2][1]],[v[0][2], v[1][2], v[2][2]]]
-    };
+    return { values: [a[0][0], a[1][1], a[2][2]], vectors: [[v[0][0], v[1][0], v[2][0]],[v[0][1], v[1][1], v[2][1]],[v[0][2], v[1][2], v[2][2]]] };
 }
 function computeRealSize(geometry, groupScale, ifcClass) {
     if (!geometry || !geometry.attributes || !geometry.attributes.position) return new THREE.Vector3();
@@ -939,19 +1094,12 @@ function computeRealSize(geometry, groupScale, ifcClass) {
     const [big, mid, small] = s;
     const cls = (ifcClass || '').toLowerCase();
     let X, Y, Z;
-    if (cls.includes('slab') || cls.includes('roof') || cls.includes('plate') || cls.includes('covering') || cls.includes('footing')) {
-        X = big; Y = mid; Z = small;
-    } else if (cls.includes('wall')) {
-        X = big; Y = small; Z = mid;
-    } else if (cls.includes('column') || cls.includes('pile')) {
-        X = mid; Y = small; Z = big;
-    } else if (cls.includes('beam') || cls.includes('member')) {
-        X = big; Y = small; Z = mid;
-    } else if (cls.includes('pipe') || cls.includes('duct') || cls.includes('cable') || cls.includes('conduit')) {
-        X = big; Y = mid; Z = small;
-    } else {
-        X = big; Y = mid; Z = small;
-    }
+    if (cls.includes('slab') || cls.includes('roof') || cls.includes('plate') || cls.includes('covering') || cls.includes('footing')) { X = big; Y = mid; Z = small; }
+    else if (cls.includes('wall')) { X = big; Y = small; Z = mid; }
+    else if (cls.includes('column') || cls.includes('pile')) { X = mid; Y = small; Z = big; }
+    else if (cls.includes('beam') || cls.includes('member')) { X = big; Y = small; Z = mid; }
+    else if (cls.includes('pipe') || cls.includes('duct') || cls.includes('cable') || cls.includes('conduit')) { X = big; Y = mid; Z = small; }
+    else { X = big; Y = mid; Z = small; }
     return new THREE.Vector3(X, Y, Z).multiplyScalar(groupScale);
 }
 function computeElementMetrics(elem) {
@@ -994,13 +1142,9 @@ function computeElementMetrics(elem) {
     return {
         x: size.x, y: size.y, z: size.z,
         perimeter: 2 * (size.x + size.y),
-        areaBase: size.x * size.y,
-        areaXZ: size.x * size.z,
-        areaYZ: size.y * size.z,
+        areaBase: size.x * size.y, areaXZ: size.x * size.z, areaYZ: size.y * size.z,
         areaBox: 2 * (size.x * size.y + size.x * size.z + size.y * size.z),
-        areaMesh: meshArea,
-        volumeBox: size.x * size.y * size.z,
-        volumeMesh: meshVolume,
+        areaMesh: meshArea, volumeBox: size.x * size.y * size.z, volumeMesh: meshVolume,
         center: center
     };
 }
@@ -1136,6 +1280,7 @@ function applyColorFromUI() {
         elem.mesh.material.transparent = opacity < 1;
         elem.mesh.material.needsUpdate = true;
     });
+    refreshSectionPlanes();
     showViewportStatus(`Cor ${colorHex} aplicada em ${targets.length} elemento(s).`);
 }
 function applyMaterialPreset(name) {
@@ -1151,6 +1296,7 @@ function applyMaterialPreset(name) {
         elem.mesh.material.transparent = preset.opacity < 1;
         elem.mesh.material.needsUpdate = true;
     });
+    refreshSectionPlanes();
     showViewportStatus(`Material "${name}" aplicado.`);
 }
 function resetColors() {
@@ -1162,6 +1308,7 @@ function resetColors() {
         elem.mesh.material.opacity = 0.92; elem.mesh.material.transparent = true;
         elem.mesh.material.needsUpdate = true;
     });
+    refreshSectionPlanes();
     showViewportStatus("Cores restauradas.");
 }
 function makeAllTransparent() {
@@ -1170,6 +1317,7 @@ function makeAllTransparent() {
         if (!elem.mesh.userData._matCloned) { elem.mesh.material = elem.mesh.material.clone(); elem.mesh.userData._matCloned = true; }
         elem.mesh.material.opacity = 0.15; elem.mesh.material.transparent = true; elem.mesh.material.needsUpdate = true;
     });
+    refreshSectionPlanes();
     showViewportStatus("Todos translúcidos.");
 }
 function openActionsSheet() { document.getElementById('actionsSheet').classList.add('open'); document.getElementById('actionsBackdrop').classList.add('open'); }
@@ -1179,6 +1327,8 @@ function toggleImmersive() { document.body.classList.toggle('immersive'); }
 function toggleLeftSidebar() { const sb = document.querySelector('.left-sidebar'), o = document.querySelector('.right-sidebar'), bd = document.getElementById('sidebarBackdrop'); o.classList.remove('open'); sb.classList.toggle('open'); bd.classList.toggle('open', sb.classList.contains('open')); }
 function toggleRightSidebar() { const sb = document.querySelector('.right-sidebar'), o = document.querySelector('.left-sidebar'), bd = document.getElementById('sidebarBackdrop'); o.classList.remove('open'); sb.classList.toggle('open'); bd.classList.toggle('open', sb.classList.contains('open')); }
 function closeAllSidebars() { document.querySelectorAll('.left-sidebar, .right-sidebar').forEach(el => el.classList.remove('open')); document.getElementById('sidebarBackdrop').classList.remove('open'); }
+
+/* 3D */
 function init3DScene() {
     const container = document.getElementById('canvasWrapper');
     scene = new THREE.Scene();
@@ -1189,6 +1339,7 @@ function init3DScene() {
     renderer.setSize(container.clientWidth, container.clientHeight);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     renderer.shadowMap.enabled = false;
+    renderer.localClippingEnabled = true;
     controls = new THREE.OrbitControls(camera, renderer.domElement);
     controls.enableDamping = true; controls.dampingFactor = 0.05;
     controls.touches = { ONE: THREE.TOUCH.ROTATE, TWO: THREE.TOUCH.DOLLY_PAN };
@@ -1209,6 +1360,7 @@ function init3DScene() {
         pickElementAt(e);
     });
     initAxisCompass();
+    initSectionPlanes();
     animate();
 }
 function initAxisCompass() {
@@ -1306,6 +1458,7 @@ function loadDemoProject() {
     updateModelsListUI(); buildSpatialTreeUI();
     showViewportStatus("Demo carregada!");
     fitAllModels();
+    setTimeout(refreshSectionPlanes, 100);
 }
 async function getIfcApi() {
     if (ifcApiInstance) return ifcApiInstance;
@@ -1446,6 +1599,7 @@ async function parseIFCFile(fileName, arrayBuffer) {
         updateModelsListUI(); buildSpatialTreeUI(); fitAllModels();
         hideLoading();
         showViewportStatus(`IFC "${fileName}": ${imported} elementos (${disc}).`);
+        setTimeout(refreshSectionPlanes, 100);
     } catch (err) {
         hideLoading();
         try { ifcApi.CloseModel(modelID); } catch(e){}
@@ -1500,6 +1654,7 @@ function applyTransformFromUI() {
     group.rotation.set(THREE.MathUtils.degToRad(rx), THREE.MathUtils.degToRad(ry), THREE.MathUtils.degToRad(rz));
     group.position.set(px, py, pz); group.updateMatrixWorld(true);
     updateTransformInfo(group); updateClashPinPositions();
+    refreshSectionPlanes();
 }
 function onRotSlider(a) { const v = parseFloat(document.getElementById(`rot${a}`).value); document.getElementById(`rot${a}Num`).value = v.toFixed(1); document.getElementById(`rot${a}Val`).innerText = v.toFixed(1)+'°'; applyTransformFromUI(); }
 function onRotNum(a) { let v = parseFloat(document.getElementById(`rot${a}Num`).value); if (isNaN(v)) v = 0; document.getElementById(`rot${a}`).value = ((v+180)%360+360)%360-180; document.getElementById(`rot${a}Val`).innerText = v.toFixed(1)+'°'; applyTransformFromUI(); }
@@ -1513,6 +1668,7 @@ function alignBaseToGrid() {
     const box = new THREE.Box3().setFromObject(group); if (box.isEmpty()) return;
     group.position.z += -box.min.z; group.updateMatrixWorld(true);
     setPosUI('Z', group.position.z); updateTransformInfo(group); updateClashPinPositions();
+    refreshSectionPlanes();
     showViewportStatus("Base alinhada ao plano Z=0.");
 }
 function centerOnGrid() {
@@ -1524,6 +1680,7 @@ function centerOnGrid() {
     group.position.set(-c.x, -c.y, -box.min.z); group.updateMatrixWorld(true);
     setPosUI('X', group.position.x); setPosUI('Y', group.position.y); setPosUI('Z', group.position.z);
     updateTransformInfo(group); updateClashPinPositions();
+    refreshSectionPlanes();
     showViewportStatus("Modelo centralizado.");
 }
 function resetTransform() {
@@ -1532,6 +1689,7 @@ function resetTransform() {
     if (base) { group.position.copy(base.position); group.rotation.copy(base.rotation); group.scale.copy(base.scale); }
     else { group.position.set(0,0,0); group.rotation.set(0,0,0); }
     group.updateMatrixWorld(true); selectTransformModel(id); updateClashPinPositions();
+    refreshSectionPlanes();
     showViewportStatus("Transformação resetada.");
 }
 const IFC_TYPE_PT = {
@@ -1742,6 +1900,7 @@ function runClashDetection() {
     }
     updateClashListUI(); updateDashboardUI();
     if (isMobile()) toggleRightSidebar(); else switchRightTab('clashes');
+    refreshSectionPlanes();
     showViewportStatus(`Análise concluída! ${state.clashes.length} conflitos.`);
 }
 function boxDistance(a, b) {

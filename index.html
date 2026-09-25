@@ -183,9 +183,9 @@ footer{height:1.5rem;background:#020617;border-top:1px solid #1e293b;padding:0 1
 /* ============ PINS DE CONFLITO NO 3D ============ */
 .clash-pin-3d{position:absolute;transform:translate(-50%,-100%);pointer-events:auto;cursor:pointer;z-index:30;transition:transform .15s ease;user-select:none;font-family:-apple-system,system-ui,sans-serif}
 .clash-pin-3d:hover{transform:translate(-50%,-110%) scale(1.15);z-index:100}
-.clash-pin-3d.selected{z-index:90;transform:translate(-50%,-100%) scale(1.25)}
-.clash-pin-3d .pin-bubble{background:#ef4444;color:#fff;font-size:10px;font-weight:800;padding:3px 7px;border-radius:10px;white-space:nowrap;box-shadow:0 2px 8px rgba(0,0,0,.6),0 0 0 2px rgba(255,255,255,.3);letter-spacing:.3px;display:inline-flex;align-items:center;gap:4px;position:relative}
-.clash-pin-3d .pin-bubble::after{content:'';position:absolute;left:50%;bottom:-6px;transform:translateX(-50%);width:0;height:0;border-left:6px solid transparent;border-right:6px solid transparent;border-top:7px solid #ef4444}
+.clash-pin-3d.selected{z-index:90;transform:translate(-50%,-100%) scale(1.2)}
+.clash-pin-3d .pin-bubble{background:#ef4444;color:#fff;font-size:9px;font-weight:800;padding:2px 5px;border-radius:8px;white-space:nowrap;box-shadow:0 1px 4px rgba(0,0,0,.6),0 0 0 1px rgba(255,255,255,.35);letter-spacing:.2px;display:inline-flex;align-items:center;gap:3px;position:relative}
+.clash-pin-3d .pin-bubble::after{content:'';position:absolute;left:50%;bottom:-5px;transform:translateX(-50%);width:0;height:0;border-left:4px solid transparent;border-right:4px solid transparent;border-top:5px solid #ef4444}
 .clash-pin-3d.sev-CRITICAL .pin-bubble{background:#ef4444}
 .clash-pin-3d.sev-CRITICAL .pin-bubble::after{border-top-color:#ef4444}
 .clash-pin-3d.sev-HIGH .pin-bubble{background:#f97316}
@@ -195,8 +195,8 @@ footer{height:1.5rem;background:#020617;border-top:1px solid #1e293b;padding:0 1
 .clash-pin-3d.sev-LOW .pin-bubble{background:#3b82f6}
 .clash-pin-3d.sev-LOW .pin-bubble::after{border-top-color:#3b82f6}
 
-@keyframes clashPulse{0%,100%{transform:translate(-50%,-50%) scale(.6);opacity:1}50%{transform:translate(-50%,-50%) scale(1.4);opacity:.2}}
-.clash-pulse-ring{position:absolute;width:40px;height:40px;border-radius:50%;border:3px solid #ef4444;background:rgba(239,68,68,.15);transform:translate(-50%,-50%);pointer-events:none;z-index:25;animation:clashPulse 1.6s ease-in-out infinite}
+@keyframes clashPulse{0%,100%{transform:translate(-50%,-50%) scale(.5);opacity:1}50%{transform:translate(-50%,-50%) scale(1.1);opacity:.15}}
+.clash-pulse-ring{position:absolute;width:20px;height:20px;border-radius:50%;border:2px solid #ef4444;background:rgba(239,68,68,.15);transform:translate(-50%,-50%);pointer-events:none;z-index:25;animation:clashPulse 1.6s ease-in-out infinite}
 .clash-pulse-ring.sev-CRITICAL{border-color:#ef4444;background:rgba(239,68,68,.2)}
 .clash-pulse-ring.sev-HIGH{border-color:#f97316;background:rgba(249,115,22,.15)}
 .clash-pulse-ring.sev-MEDIUM{border-color:#eab308;background:rgba(234,179,8,.15)}
@@ -765,6 +765,7 @@ var DISCIPLINE_COLORS = { ARQUITETURA: '#60a5fa', ESTRUTURA: '#94a3b8', HIDRAULI
 var state = {
   models: [], elements: [], clashes: [], modelGroups: {}, modelTransforms: {},
   textures: [], selectedTextureId: null,
+clashDisplayMode: 'all',
   rules: [
     { id: 1, discA: 'HIDRAULICO', discB: 'ESTRUTURA', type: 'HARD', tolerance: 0, active: true },
     { id: 2, discA: 'ELETRICO', discB: 'ESTRUTURA', type: 'HARD', tolerance: 0, active: true },
@@ -1122,14 +1123,43 @@ function resetCameraView(view) { var box = new THREE.Box3(); if (state.elements.
 function fitAllModels() { if (!state.elements.length) { showViewportStatus('Nenhum modelo carregado.'); return; } var box = new THREE.Box3(); state.elements.forEach(function (e) { if (e.mesh.visible) box.expandByObject(e.mesh); }); if (box.isEmpty()) return; var c = new THREE.Vector3(); box.getCenter(c); var s = new THREE.Vector3(); box.getSize(s); var d = Math.max(s.x, s.y, s.z) * 1.5 + 6; camera.up.set(0, 0, 1); camera.position.set(c.x + d * 0.75, c.y - d * 0.75, c.z + d * 0.55); controls.target.copy(c); camera.far = Math.max(2000, d * 12); camera.updateProjectionMatrix(); controls.update(); showViewportStatus('Enquadrado.'); }
 function toggleWireframe() { state.wireframe = !state.wireframe; state.elements.forEach(function (e) { if (e.mesh.material) e.mesh.material.wireframe = state.wireframe; }); showViewportStatus(state.wireframe ? 'Wireframe ON' : 'Wireframe OFF'); }
 function toggleClashPins() {
-  state.showClashPins = !state.showClashPins;
+  var modes = ['all', 'selected', 'none'];
+  var labels = { all: 'Todos', selected: 'Um por vez', none: 'Nenhum' };
+  var icons  = { all: '📍', selected: '🎯', none: '❌' };
+  var colors = { all: '#334155', selected: '#2563eb', none: '#475569' };
+
+  var idx = modes.indexOf(state.clashDisplayMode);
+  idx = (idx + 1) % modes.length;
+  state.clashDisplayMode = modes[idx];
+
   var btn = document.getElementById('btnClashPins');
-  if (btn) btn.style.background = state.showClashPins ? '#334155' : '#475569';
-  if (clashMarkersContainer) clashMarkersContainer.style.display = state.showClashPins ? 'block' : 'none';
-  if (clashMarkersGroup) clashMarkersGroup.visible = state.showClashPins;
-  showViewportStatus(state.showClashPins ? 'Pins de conflito visíveis.' : 'Pins de conflito ocultos.');
+  if (btn) {
+    btn.style.background = colors[state.clashDisplayMode];
+    btn.innerHTML = '<i class="fa-solid fa-map-pin"></i> ' + icons[state.clashDisplayMode];
+    btn.title = 'Pins: ' + labels[state.clashDisplayMode] + ' (clique para alternar)';
+  }
+
+  updateClashPinsVisibility();
+  showViewportStatus('Pins de conflito: ' + labels[state.clashDisplayMode]);
 }
-function onPointerDown(e) { pointerDownPos = { x: e.clientX, y: e.clientY, t: Date.now() }; }
+
+function updateClashPinsVisibility() {
+  var mode = state.clashDisplayMode;
+  var selectedId = state.selectedClash ? state.selectedClash.id : null;
+
+  state.clashes.forEach(function (c) {
+    var show = false;
+    if (mode === 'all') show = true;
+    else if (mode === 'selected') show = (c.id === selectedId);
+    else show = false;
+
+    c._pinVisible = show;
+
+    if (c._htmlMarker) c._htmlMarker.style.display = show ? 'block' : 'none';
+    if (c._htmlRing) c._htmlRing.style.display = show ? 'block' : 'none';
+    if (c._sphere) c._sphere.visible = show;
+  });
+}function onPointerDown(e) { pointerDownPos = { x: e.clientX, y: e.clientY, t: Date.now() }; }
 function onPointerUp(e) { if (!pointerDownPos) return; var dx = Math.abs(e.clientX - pointerDownPos.x), dy = Math.abs(e.clientY - pointerDownPos.y), dt = Date.now() - pointerDownPos.t; pointerDownPos = null; if (dx > 6 || dy > 6 || dt > 500) return; pickElementAt(e.clientX, e.clientY); }
 function pickElementAt(cx, cy) {
   var rect = renderer.domElement.getBoundingClientRect();
@@ -1539,60 +1569,92 @@ function create3DClashMarker(clash) {
   if (!clash.center) return;
   if (!clashMarkersContainer) clashMarkersContainer = document.getElementById('clashMarkersContainer');
   var col = severityColor(clash.severity);
-  // Esfera 3D
-  var geo = new THREE.SphereGeometry(0.15, 12, 12);
+
+  // Esfera 3D pequena
+  var geo = new THREE.SphereGeometry(0.08, 8, 8);
   var mat = new THREE.MeshBasicMaterial({ color: col, transparent: true, opacity: 0.9, depthTest: false });
   var sphere = new THREE.Mesh(geo, mat);
   sphere.position.copy(clash.center);
   sphere.renderOrder = 999;
   sphere.userData.clashId = clash.id;
   clashMarkersGroup.add(sphere);
+  clash._sphere = sphere;
+
   // Pin HTML
   var pin = document.createElement('div');
   pin.className = 'clash-pin-3d sev-' + clash.severity;
   pin.dataset.clashId = clash.id;
   pin.title = 'Conflito ' + clash.id + ' — ' + clash.severity + '\nA: ' + clash.elemA.name + '\nB: ' + clash.elemB.name + '\nInterseção: ' + clash.overlap;
-  pin.innerHTML = '<div class="pin-bubble"><span style="font-size:9px">⚠</span> ' + clash.id + '</div>';
+  pin.innerHTML = '<div class="pin-bubble"><span style="font-size:8px">⚠</span> ' + clash.id + '</div>';
   pin.onclick = function (ev) { ev.stopPropagation(); focusClash(clash.id); };
   clashMarkersContainer.appendChild(pin);
   clash._htmlMarker = pin;
+
   // Anel pulsante
   var ring = document.createElement('div');
   ring.className = 'clash-pulse-ring sev-' + clash.severity;
   ring.dataset.clashId = clash.id;
   clashMarkersContainer.appendChild(ring);
   clash._htmlRing = ring;
-}
 
+  // Respeita o modo atual
+  clash._pinVisible = (state.clashDisplayMode === 'all');
+  if (!clash._pinVisible) {
+    pin.style.display = 'none';
+    ring.style.display = 'none';
+    sphere.visible = false;
+  }
+}
 function updateClashMarkersPosition() {
   if (!renderer || !camera || !clashMarkersContainer) return;
   var rect = renderer.domElement.getBoundingClientRect();
+
   state.clashes.forEach(function (c) {
     if (!c.center) return;
+    if (c._pinVisible === false) return;   // Modo "um por vez" ou "nenhum"
+
     var v = c.center.clone().project(camera);
     var x = (v.x * 0.5 + 0.5) * rect.width;
     var y = (-v.y * 0.5 + 0.5) * rect.height;
     var visible = v.z < 1 && v.z > -1;
-    if (c._htmlMarker) { c._htmlMarker.style.left = x + 'px'; c._htmlMarker.style.top = (y - 8) + 'px'; c._htmlMarker.style.display = visible ? 'block' : 'none'; }
-    if (c._htmlRing) { c._htmlRing.style.left = x + 'px'; c._htmlRing.style.top = y + 'px'; c._htmlRing.style.display = visible ? 'block' : 'none'; }
+
+    if (c._htmlMarker) {
+      c._htmlMarker.style.left = x + 'px';
+      c._htmlMarker.style.top = (y - 6) + 'px';
+      c._htmlMarker.style.display = visible ? 'block' : 'none';
+    }
+    if (c._htmlRing) {
+      c._htmlRing.style.left = x + 'px';
+      c._htmlRing.style.top = y + 'px';
+      c._htmlRing.style.display = visible ? 'block' : 'none';
+    }
   });
 }
-
 function focusClash(id) {
   var c = null;
   for (var i = 0; i < state.clashes.length; i++) if (state.clashes[i].id === id) { c = state.clashes[i]; break; }
   if (!c || !c.center) return;
+
+  state.selectedClash = c;
+
+  // Câmera voa até o ponto
   controls.target.copy(c.center);
   var dist = 4;
   camera.position.set(c.center.x + dist, c.center.y - dist, c.center.z + dist * 0.7);
   controls.update();
+
+  // Atualiza visibilidade (importante no modo "um por vez")
+  updateClashPinsVisibility();
+
+  // Marca pin e item da lista como selecionados
   document.querySelectorAll('.clash-pin-3d').forEach(function (p) { p.classList.toggle('selected', p.dataset.clashId === id); });
   document.querySelectorAll('.clash-item').forEach(function (it) { it.classList.toggle('selected', it.dataset.clashId === id); });
+
+  // Destaque dos elementos
   highlightClashElements(c);
-  state.selectedClash = c;
+
   showViewportStatus('Conflito ' + id + ' — ' + c.severity + ' (' + c.overlap + ')');
 }
-
 function highlightClashElements(clash) {
   clearClashHighlight();
   var elemA = findElementByGuid(clash.elemA.guid);

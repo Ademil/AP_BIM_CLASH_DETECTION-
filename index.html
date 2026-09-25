@@ -32,7 +32,6 @@ input[type="range"]::-moz-range-thumb{width:18px;height:18px;background:#3b82f6;
 input[type="color"]{padding:0;height:2.4rem;border-radius:.4rem;cursor:pointer}
 ::-webkit-scrollbar{width:6px;height:6px}::-webkit-scrollbar-track{background:#1e293b}::-webkit-scrollbar-thumb{background:#475569;border-radius:3px}
 canvas{touch-action:none;-webkit-user-select:none;-webkit-touch-callout:none}
-
 header{height:3.5rem;background:#0f172a;border-bottom:1px solid #1e293b;display:flex;align-items:center;justify-content:space-between;padding:0 1rem;z-index:20;flex-shrink:0;gap:.5rem}
 .logo{background:linear-gradient(135deg,#1d4ed8,#2563eb);padding:.5rem;border-radius:.5rem;color:#fff}
 .title{font-weight:800;letter-spacing:.05em}
@@ -45,14 +44,12 @@ header{height:3.5rem;background:#0f172a;border-bottom:1px solid #1e293b;display:
 .btn-danger{background:#dc2626;color:#fff}
 .btn-purple{background:linear-gradient(135deg,#7c3aed,#6d28d9);color:#fff}
 .btn-purple.active{box-shadow:0 0 0 2px rgba(167,139,250,.5)}
-
 .app-body{flex:1;display:flex;overflow:hidden;position:relative}
 main{flex:1;display:flex;flex-direction:column;position:relative;background:#020617;min-width:0}
 .canvas-wrap{position:relative;flex:1;overflow:hidden}
 #bimCanvas{display:block;width:100%;height:100%}
 #clashMarkersContainer{position:absolute;top:0;left:0;right:0;bottom:0;pointer-events:none;overflow:hidden;z-index:25}
 #axisCompass{position:absolute;bottom:14px;right:14px;width:80px;height:80px;pointer-events:none;opacity:.85;z-index:8}
-
 aside{background:#0f172a;border-right:1px solid #1e293b;display:flex;flex-direction:column;width:20rem;flex-shrink:0;z-index:10}
 aside.right{border-right:none;border-left:1px solid #1e293b;width:24rem}
 .tabs{display:flex;border-bottom:1px solid #1e293b;background:#020617;overflow-x:auto}
@@ -69,7 +66,6 @@ aside.right{border-right:none;border-left:1px solid #1e293b;width:24rem}
 .model-item .count{font-size:.6rem;color:#64748b}
 .icon-btn{background:transparent;padding:.35rem;font-size:.85rem;border-radius:.3rem;width:auto}
 .icon-btn:hover{background:#1e293b}
-
 .tree-children{margin-left:10px;border-left:1px solid #1e293b;padding-left:4px}
 .tree-children.collapsed{display:none}
 .tree-row{display:flex;align-items:center;gap:4px;padding:3px 4px;border-radius:4px;cursor:pointer;font-size:.7rem;min-height:22px}
@@ -78,14 +74,12 @@ aside.right{border-right:none;border-left:1px solid #1e293b;width:24rem}
 .tree-toggle{width:14px;text-align:center;color:#64748b;font-size:.55rem;flex-shrink:0}
 .count-badge{background:#1e293b;color:#94a3b8;border-radius:8px;padding:0 6px;font-size:.6rem;font-weight:700;flex-shrink:0}
 .tree-row input[type="checkbox"]{width:13px;height:13px;accent-color:#3b82f6;flex-shrink:0;padding:0}
-
 .clash-item{background:#020617;border:1px solid #1e293b;border-radius:.5rem;padding:.5rem;cursor:pointer;margin-bottom:.5rem;transition:border-color .15s}
 .clash-item:hover{border-color:#3b82f6}
 .clash-item.selected{border-color:#3b82f6;background:rgba(59,130,246,.1)}
 .clash-id{font-family:monospace;font-size:.65rem;font-weight:700;color:#cbd5e1}
 .clash-sev{font-size:.55rem;text-transform:uppercase;font-weight:800;padding:.1rem .35rem;border-radius:.25rem}
 .clash-elem{font-size:.65rem;color:#94a3b8;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-
 .kpi-grid{display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin-bottom:.75rem}
 .kpi{background:#020617;border:1px solid #1e293b;border-radius:.5rem;padding:.6rem;text-align:center}
 .kpi .label{font-size:.6rem;color:#94a3b8;text-transform:uppercase;font-weight:700;display:block;margin-bottom:.15rem}
@@ -93,21 +87,17 @@ aside.right{border-right:none;border-left:1px solid #1e293b;width:24rem}
 .chart-container{background:#020617;border:1px solid #1e293b;border-radius:.5rem;padding:.75rem;margin-bottom:.75rem}
 .chart-container h4{margin:0 0 .5rem;font-size:.7rem;font-weight:700;color:#cbd5e1}
 .chart-container .chart-box{height:160px;position:relative}
-
 .toolbar{position:absolute;top:.75rem;left:.75rem;z-index:10;display:flex;gap:.25rem;background:rgba(15,23,42,.9);backdrop-filter:blur(10px);padding:.35rem;border-radius:.5rem;border:1px solid rgba(255,255,255,.1);flex-wrap:wrap;max-width:calc(100% - 1.5rem)}
 .toolbar button{padding:.35rem .55rem;font-size:.7rem;display:inline-flex;align-items:center;gap:.3rem}
 .toolbar .divider{width:1px;background:#334155;margin:0 .2rem}
 .status-bar{position:absolute;top:.75rem;right:.75rem;z-index:10;background:rgba(15,23,42,.85);backdrop-filter:blur(8px);padding:.4rem .75rem;border-radius:.5rem;font-size:.7rem;display:flex;align-items:center;gap:.5rem;border:1px solid rgba(255,255,255,.1)}
 .status-dot{width:8px;height:8px;border-radius:50%;background:#10b981;animation:pulse 2s infinite}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
-
 .loading{position:absolute;top:0;left:0;right:0;bottom:0;display:flex;align-items:center;justify-content:center;background:rgba(15,23,42,.9);z-index:100}
 .loading.hidden{display:none}
 .spinner{width:44px;height:44px;border:4px solid rgba(59,130,246,.2);border-top-color:#3b82f6;border-radius:50%;animation:spin 1s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
-
 .mobile-fab{position:fixed;z-index:200;width:52px;height:52px;border-radius:50%;display:none;align-items:center;justify-content:center;background:rgba(15,23,42,.92);border:1px solid rgba(255,255,255,.18);color:#e2e8f0;backdrop-filter:blur(8px);box-shadow:0 4px 14px rgba(0,0,0,.5);font-size:18px;padding:0}
-.mobile-fab:hover{background:rgba(30,41,59,.95)}
 .mobile-fab:active{transform:scale(.92)}
 .mobile-fab.primary{background:linear-gradient(135deg,#2563eb,#1d4ed8);color:#fff}
 .mobile-fab.purple{background:linear-gradient(135deg,#7c3aed,#6d28d9);color:#fff}
@@ -116,7 +106,6 @@ aside.right{border-right:none;border-left:1px solid #1e293b;width:24rem}
 .mobile-fab.fab-bc{bottom:calc(env(safe-area-inset-bottom) + 14px);left:50%;transform:translateX(-50%)}
 .mobile-fab.fab-bc:active{transform:translateX(-50%) scale(.92)}
 .mobile-fab.fab-br{bottom:calc(env(safe-area-inset-bottom) + 80px);right:14px}
-
 .sidebar-backdrop{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.6);z-index:90;display:none}
 .sidebar-backdrop.open{display:block}
 .actions-backdrop{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.55);z-index:70;display:none;opacity:0;transition:opacity .2s}
@@ -127,14 +116,11 @@ aside.right{border-right:none;border-left:1px solid #1e293b;width:24rem}
 .actions-sheet h3{font-size:.7rem;color:#94a3b8;text-transform:uppercase;letter-spacing:1px;font-weight:700;margin:0 0 .5rem;padding:0 4px}
 .actions-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.5rem;margin-bottom:.75rem}
 .action-btn{background:#1e293b;border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:.75rem .5rem;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.4rem;color:#e2e8f0;font-size:.65rem;font-weight:600;text-align:center;cursor:pointer;min-height:60px}
-.action-btn:hover{background:#334155}
 .action-btn i{font-size:20px}
 .action-btn.primary{background:linear-gradient(135deg,#2563eb,#1d4ed8)}
 .action-btn.danger{background:linear-gradient(135deg,#dc2626,#b91c1c)}
-
 .selected-bar{position:fixed;left:0;right:0;bottom:0;z-index:45;background:rgba(15,23,42,.96);backdrop-filter:blur(12px);border-top:1px solid rgba(96,165,250,.35);padding:.5rem .75rem;display:none;padding-bottom:calc(env(safe-area-inset-bottom) + .5rem)}
 .selected-bar.show{display:flex;align-items:center;justify-content:space-between;gap:.5rem}
-
 .modal{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.8);z-index:200;display:none;align-items:center;justify-content:center;padding:1.25rem}
 .modal.show{display:flex}
 .modal-box{background:#1e293b;border:1px solid #334155;border-radius:1rem;padding:1.5rem;max-width:420px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,.6)}
@@ -143,7 +129,6 @@ aside.right{border-right:none;border-left:1px solid #1e293b;width:24rem}
 .modal-box input{width:100%;padding:.75rem;text-align:center;font-family:monospace;text-transform:uppercase;letter-spacing:1px}
 .modal-box .btn-full{width:100%;margin-top:.75rem;padding:.75rem;font-size:.85rem;font-weight:700;background:linear-gradient(135deg,#2563eb,#1d4ed8);color:#fff}
 .modal-box .contact{margin-top:1rem;padding-top:.75rem;border-top:1px solid #334155;font-size:.7rem;color:#64748b;text-align:center;line-height:1.6}
-
 .section-panel{position:fixed;top:60px;right:12px;z-index:60;width:300px;background:rgba(15,23,42,.98);backdrop-filter:blur(14px);border:1px solid rgba(96,165,250,.45);border-radius:.75rem;padding:.9rem;display:none;box-shadow:0 20px 60px rgba(0,0,0,.7)}
 .section-panel.show{display:block}
 .section-panel h3{font-size:.75rem;font-weight:800;margin:0 0 .75rem;display:flex;align-items:center;gap:.4rem;padding-bottom:.5rem;border-bottom:1px solid #334155;color:#e2e8f0}
@@ -162,12 +147,9 @@ aside.right{border-right:none;border-left:1px solid #1e293b;width:24rem}
 .section-actions{display:grid;grid-template-columns:1fr 1fr;gap:.4rem;margin-top:.5rem;padding-top:.5rem;border-top:1px solid #334155}
 .section-actions button{font-size:.65rem;font-weight:700;padding:.5rem;display:flex;align-items:center;justify-content:center;gap:.3rem}
 .section-actions button.primary{background:linear-gradient(135deg,#2563eb,#1d4ed8);color:#fff}
-
 footer{height:1.5rem;background:#020617;border-top:1px solid #1e293b;padding:0 1rem;display:flex;align-items:center;justify-content:space-between;font-size:.65rem;color:#64748b;z-index:20;flex-shrink:0}
-
 .quick-rot-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:.3rem;margin-top:.6rem}
 .quick-rot-grid button{font-size:.6rem;padding:.35rem .2rem}
-
 .texture-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.5rem;margin-bottom:.5rem}
 .texture-item{position:relative;background:#0f172a;border:2px solid #1e293b;border-radius:.5rem;overflow:hidden;aspect-ratio:1;cursor:pointer;transition:border-color .15s}
 .texture-item:hover{border-color:#3b82f6}
@@ -177,10 +159,9 @@ footer{height:1.5rem;background:#020617;border-top:1px solid #1e293b;padding:0 1
 .texture-item .tex-remove{position:absolute;top:2px;right:2px;background:rgba(220,38,38,.85);color:#fff;width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.65rem;padding:0;line-height:1;opacity:0;transition:opacity .15s}
 .texture-item:hover .tex-remove{opacity:1}
 .tex-upload-btn{width:100%;background:linear-gradient(135deg,#0891b2,#0e7490);color:#fff;padding:.6rem;font-weight:700;display:flex;align-items:center;justify-content:center;gap:.4rem;margin-bottom:.5rem}
-.tex-upload-btn:hover{filter:brightness(1.1)}
 .tex-empty{text-align:center;padding:1rem .5rem;color:#64748b;font-size:.7rem;border:1px dashed #1e293b;border-radius:.5rem;margin-bottom:.5rem}
 
-/* ============ PINS DE CONFLITO NO 3D ============ */
+/* ============ PINS DE CONFLITO NO 3D (VERSÃO REDUZIDA) ============ */
 .clash-pin-3d{position:absolute;transform:translate(-50%,-100%);pointer-events:auto;cursor:pointer;z-index:30;transition:transform .15s ease;user-select:none;font-family:-apple-system,system-ui,sans-serif}
 .clash-pin-3d:hover{transform:translate(-50%,-110%) scale(1.15);z-index:100}
 .clash-pin-3d.selected{z-index:90;transform:translate(-50%,-100%) scale(1.2)}
@@ -194,7 +175,6 @@ footer{height:1.5rem;background:#020617;border-top:1px solid #1e293b;padding:0 1
 .clash-pin-3d.sev-MEDIUM .pin-bubble::after{border-top-color:#eab308}
 .clash-pin-3d.sev-LOW .pin-bubble{background:#3b82f6}
 .clash-pin-3d.sev-LOW .pin-bubble::after{border-top-color:#3b82f6}
-
 @keyframes clashPulse{0%,100%{transform:translate(-50%,-50%) scale(.5);opacity:1}50%{transform:translate(-50%,-50%) scale(1.1);opacity:.15}}
 .clash-pulse-ring{position:absolute;width:20px;height:20px;border-radius:50%;border:2px solid #ef4444;background:rgba(239,68,68,.15);transform:translate(-50%,-50%);pointer-events:none;z-index:25;animation:clashPulse 1.6s ease-in-out infinite}
 .clash-pulse-ring.sev-CRITICAL{border-color:#ef4444;background:rgba(239,68,68,.2)}
@@ -244,7 +224,7 @@ footer{height:1.5rem;background:#020617;border-top:1px solid #1e293b;padding:0 1
   <div class="actions-grid">
     <button class="action-btn" onclick="closeActionsSheet();fitAllModels()"><i class="fa-solid fa-crosshairs" style="color:#60a5fa"></i><span>Enquadrar</span></button>
     <button class="action-btn" onclick="closeActionsSheet();toggleSectionPanel()"><i class="fa-solid fa-scissors" style="color:#a78bfa"></i><span>Seção</span></button>
-    <button class="action-btn" onclick="closeActionsSheet();toggleWireframe()"><i class="fa-solid fa-border-all" style="color:#f472b6"></i><span>Wireframe</span></button>
+    <button class="action-btn" onclick="closeActionsSheet();toggleClashPins()"><i class="fa-solid fa-map-pin" style="color:#fbbf24"></i><span>Pins</span></button>
   </div>
   <h3>Ajustar IFC</h3>
   <div class="actions-grid">
@@ -260,9 +240,7 @@ footer{height:1.5rem;background:#020617;border-top:1px solid #1e293b;padding:0 1
   </div>
   <h3>Zona de Perigo</h3>
   <div class="actions-grid" style="grid-template-columns:1fr">
-    <button class="action-btn danger" onclick="closeActionsSheet();clearAllModels()">
-      <i class="fa-solid fa-trash"></i><span>Limpar Todos os Modelos</span>
-    </button>
+    <button class="action-btn danger" onclick="closeActionsSheet();clearAllModels()"><i class="fa-solid fa-trash"></i><span>Limpar Todos os Modelos</span></button>
   </div>
 </div>
 
@@ -272,7 +250,7 @@ footer{height:1.5rem;background:#020617;border-top:1px solid #1e293b;padding:0 1
     <div>
       <div style="display:flex;align-items:center;gap:.4rem">
         <span class="title">AP BIM</span>
-        <span class="badge">v6.0</span>
+        <span class="badge">v6.1</span>
         <span id="licenseBadge" style="display:none;font-size:.6rem;padding:.1rem .4rem;border-radius:.25rem;font-weight:600"></span>
       </div>
       <div class="subtitle">APAVAN ENGENHARIA E CONSULTORIA</div>
@@ -291,7 +269,6 @@ footer{height:1.5rem;background:#020617;border-top:1px solid #1e293b;padding:0 1
 </header>
 
 <div class="app-body">
-
 <aside id="leftSidebar">
   <div class="tabs">
     <button id="tab-btn-models" class="active" onclick="switchLeftTab('models')" title="Modelos"><i class="fa-solid fa-cubes"></i></button>
@@ -301,37 +278,23 @@ footer{height:1.5rem;background:#020617;border-top:1px solid #1e293b;padding:0 1
     <button id="tab-btn-dimension" onclick="switchLeftTab('dimension')" title="Dimensões"><i class="fa-solid fa-ruler-combined"></i></button>
     <button id="tab-btn-rules" onclick="switchLeftTab('rules')" title="Regras"><i class="fa-solid fa-sliders"></i></button>
   </div>
-
   <div id="tab-content-models" class="tab-content active">
-    <div class="panel-title" style="justify-content:space-between">
-      <span><i class="fa-solid fa-cubes"></i> Modelos Carregados</span>
-      <span class="count-badge" id="modelCountBadge">0</span>
-    </div>
-    <div id="loadedModelsList">
-      <div style="text-align:center;padding:1.5rem;color:#64748b;font-size:.75rem;border:1px dashed #1e293b;border-radius:.5rem">Nenhum modelo importado.</div>
-    </div>
+    <div class="panel-title" style="justify-content:space-between"><span><i class="fa-solid fa-cubes"></i> Modelos Carregados</span><span class="count-badge" id="modelCountBadge">0</span></div>
+    <div id="loadedModelsList"><div style="text-align:center;padding:1.5rem;color:#64748b;font-size:.75rem;border:1px dashed #1e293b;border-radius:.5rem">Nenhum modelo importado.</div></div>
     <div class="panel" style="margin-top:.75rem">
       <div class="panel-title"><i class="fa-solid fa-layer-group"></i> Filtro por Pavimento</div>
       <select id="floorFilter" onchange="applyFloorFilter()"><option value="ALL">Todos os Pavimentos</option></select>
     </div>
   </div>
-
   <div id="tab-content-transform" class="tab-content">
-    <div class="panel">
-      <div class="panel-title"><i class="fa-solid fa-cubes"></i> Modelo para Ajustar</div>
-      <select id="transformModelSelect" onchange="selectTransformModel(this.value)"><option value="">— Selecione um modelo —</option></select>
-    </div>
+    <div class="panel"><div class="panel-title"><i class="fa-solid fa-cubes"></i> Modelo para Ajustar</div><select id="transformModelSelect" onchange="selectTransformModel(this.value)"><option value="">— Selecione um modelo —</option></select></div>
     <div id="transformControls" style="display:none">
-      <div class="panel">
-        <div class="panel-title"><i class="fa-solid fa-circle-info"></i> Informações</div>
+      <div class="panel"><div class="panel-title"><i class="fa-solid fa-circle-info"></i> Informações</div>
         <div style="display:flex;justify-content:space-between;font-size:.7rem;color:#94a3b8;margin-bottom:.25rem"><span>Dimensões:</span><span id="tInfoDims" style="font-family:monospace;color:#e2e8f0">-</span></div>
         <div style="display:flex;justify-content:space-between;font-size:.7rem;color:#94a3b8"><span>Centro:</span><span id="tInfoCenter" style="font-family:monospace;color:#e2e8f0">-</span></div>
       </div>
       <div class="panel">
-        <div class="panel-title" style="justify-content:space-between">
-          <span><i class="fa-solid fa-rotate" style="color:#60a5fa"></i> Rotação (graus)</span>
-          <button class="icon-btn" onclick="resetRotation()" title="Zerar"><i class="fa-solid fa-rotate-left"></i></button>
-        </div>
+        <div class="panel-title" style="justify-content:space-between"><span><i class="fa-solid fa-rotate" style="color:#60a5fa"></i> Rotação (graus)</span><button class="icon-btn" onclick="resetRotation()"><i class="fa-solid fa-rotate-left"></i></button></div>
         <div style="margin-bottom:.5rem"><div style="display:flex;justify-content:space-between;font-size:.65rem;color:#94a3b8;margin-bottom:.2rem"><label style="color:#ef4444;font-weight:700">Eixo X</label><span id="rotXVal" style="font-family:monospace;color:#60a5fa">0.0°</span></div><div style="display:flex;align-items:center;gap:.4rem"><input type="range" id="rotX" min="-180" max="180" step="1" value="0" oninput="onRotSlider('X')" style="flex:1"><input type="number" id="rotXNum" value="0" onchange="onRotNum('X')" style="width:60px;text-align:center;font-family:monospace"></div></div>
         <div style="margin-bottom:.5rem"><div style="display:flex;justify-content:space-between;font-size:.65rem;color:#94a3b8;margin-bottom:.2rem"><label style="color:#10b981;font-weight:700">Eixo Y</label><span id="rotYVal" style="font-family:monospace;color:#60a5fa">0.0°</span></div><div style="display:flex;align-items:center;gap:.4rem"><input type="range" id="rotY" min="-180" max="180" step="1" value="0" oninput="onRotSlider('Y')" style="flex:1"><input type="number" id="rotYNum" value="0" onchange="onRotNum('Y')" style="width:60px;text-align:center;font-family:monospace"></div></div>
         <div><div style="display:flex;justify-content:space-between;font-size:.65rem;color:#94a3b8;margin-bottom:.2rem"><label style="color:#3b82f6;font-weight:700">Eixo Z</label><span id="rotZVal" style="font-family:monospace;color:#60a5fa">0.0°</span></div><div style="display:flex;align-items:center;gap:.4rem"><input type="range" id="rotZ" min="-180" max="180" step="1" value="0" oninput="onRotSlider('Z')" style="flex:1"><input type="number" id="rotZNum" value="0" onchange="onRotNum('Z')" style="width:60px;text-align:center;font-family:monospace"></div></div>
@@ -342,10 +305,7 @@ footer{height:1.5rem;background:#020617;border-top:1px solid #1e293b;padding:0 1
         </div>
       </div>
       <div class="panel">
-        <div class="panel-title" style="justify-content:space-between">
-          <span><i class="fa-solid fa-arrows-up-down-left-right" style="color:#34d399"></i> Posição (m)</span>
-          <button class="icon-btn" onclick="resetPosition()" title="Zerar"><i class="fa-solid fa-rotate-left"></i></button>
-        </div>
+        <div class="panel-title" style="justify-content:space-between"><span><i class="fa-solid fa-arrows-up-down-left-right" style="color:#34d399"></i> Posição (m)</span><button class="icon-btn" onclick="resetPosition()"><i class="fa-solid fa-rotate-left"></i></button></div>
         <div style="margin-bottom:.5rem"><div style="display:flex;justify-content:space-between;font-size:.65rem;color:#94a3b8;margin-bottom:.2rem"><label style="color:#ef4444;font-weight:700">X</label><span id="posXVal" style="font-family:monospace;color:#34d399">0.00 m</span></div><div style="display:flex;align-items:center;gap:.4rem"><input type="range" id="posX" min="-100" max="100" step="0.1" value="0" oninput="onPosSlider('X')" style="flex:1"><input type="number" id="posXNum" step="0.1" value="0" onchange="onPosNum('X')" style="width:60px;text-align:center;font-family:monospace"></div></div>
         <div style="margin-bottom:.5rem"><div style="display:flex;justify-content:space-between;font-size:.65rem;color:#94a3b8;margin-bottom:.2rem"><label style="color:#10b981;font-weight:700">Y</label><span id="posYVal" style="font-family:monospace;color:#34d399">0.00 m</span></div><div style="display:flex;align-items:center;gap:.4rem"><input type="range" id="posY" min="-100" max="100" step="0.1" value="0" oninput="onPosSlider('Y')" style="flex:1"><input type="number" id="posYNum" step="0.1" value="0" onchange="onPosNum('Y')" style="width:60px;text-align:center;font-family:monospace"></div></div>
         <div><div style="display:flex;justify-content:space-between;font-size:.65rem;color:#94a3b8;margin-bottom:.2rem"><label style="color:#3b82f6;font-weight:700">Z</label><span id="posZVal" style="font-family:monospace;color:#34d399">0.00 m</span></div><div style="display:flex;align-items:center;gap:.4rem"><input type="range" id="posZ" min="-100" max="100" step="0.1" value="0" oninput="onPosSlider('Z')" style="flex:1"><input type="number" id="posZNum" step="0.1" value="0" onchange="onPosNum('Z')" style="width:60px;text-align:center;font-family:monospace"></div></div>
@@ -358,7 +318,6 @@ footer{height:1.5rem;background:#020617;border-top:1px solid #1e293b;padding:0 1
       </div>
     </div>
   </div>
-
   <div id="tab-content-tree" class="tab-content">
     <input type="text" id="treeSearch" placeholder="Filtrar por tipo, nome ou GUID..." oninput="filterTree()" style="margin-bottom:.5rem">
     <div style="display:flex;gap:.25rem;margin-bottom:.5rem">
@@ -367,49 +326,27 @@ footer{height:1.5rem;background:#020617;border-top:1px solid #1e293b;padding:0 1
     </div>
     <div id="ifcSpatialTree"></div>
   </div>
-
   <div id="tab-content-appearance" class="tab-content">
     <div class="panel">
-      <div class="panel-title" style="justify-content:space-between">
-        <span><i class="fa-solid fa-palette"></i> Cor</span>
-        <button class="icon-btn" onclick="applyRandomColor()"><i class="fa-solid fa-dice"></i></button>
-      </div>
-      <div style="display:flex;gap:.5rem;margin-bottom:.6rem">
-        <input type="color" id="colorPicker" value="#3b82f6" oninput="syncColorHex()" style="width:3.5rem;flex:none">
-        <input type="text" id="colorHex" value="#3B82F6" oninput="syncColorPicker()" style="flex:1;font-family:monospace">
-      </div>
+      <div class="panel-title" style="justify-content:space-between"><span><i class="fa-solid fa-palette"></i> Cor</span><button class="icon-btn" onclick="applyRandomColor()"><i class="fa-solid fa-dice"></i></button></div>
+      <div style="display:flex;gap:.5rem;margin-bottom:.6rem"><input type="color" id="colorPicker" value="#3b82f6" oninput="syncColorHex()" style="width:3.5rem;flex:none"><input type="text" id="colorHex" value="#3B82F6" oninput="syncColorPicker()" style="flex:1;font-family:monospace"></div>
       <div id="colorSwatches" style="display:grid;grid-template-columns:repeat(8,1fr);gap:.25rem;margin-bottom:.6rem"></div>
-      <div style="border-top:1px solid #1e293b;padding-top:.5rem">
-        <div style="display:flex;justify-content:space-between;font-size:.65rem;color:#94a3b8;margin-bottom:.25rem"><span>Opacidade</span><span id="opacityVal" style="font-family:monospace;color:#34d399">92%</span></div>
-        <input type="range" id="opacityRange" min="10" max="100" value="92" oninput="updateOpacityLabel()">
-      </div>
+      <div style="border-top:1px solid #1e293b;padding-top:.5rem"><div style="display:flex;justify-content:space-between;font-size:.65rem;color:#94a3b8;margin-bottom:.25rem"><span>Opacidade</span><span id="opacityVal" style="font-family:monospace;color:#34d399">92%</span></div><input type="range" id="opacityRange" min="10" max="100" value="92" oninput="updateOpacityLabel()"></div>
     </div>
     <div class="panel">
-      <div class="panel-title" style="justify-content:space-between">
-        <span><i class="fa-solid fa-image" style="color:#0891b2"></i> Texturas</span>
-        <span id="texCountBadge" class="count-badge">0</span>
-      </div>
+      <div class="panel-title" style="justify-content:space-between"><span><i class="fa-solid fa-image" style="color:#0891b2"></i> Texturas</span><span id="texCountBadge" class="count-badge">0</span></div>
       <button class="tex-upload-btn" onclick="document.getElementById('textureInput').click()"><i class="fa-solid fa-upload"></i> Importar Textura<input type="file" id="textureInput" accept="image/*" multiple style="display:none" onchange="handleTextureUpload(event)"></button>
       <div id="textureEmpty" class="tex-empty"><i class="fa-solid fa-image" style="font-size:1.5rem;display:block;margin-bottom:.3rem;opacity:.4"></i>Nenhuma textura importada.<br><span style="font-size:.6rem">Aceita JPG, PNG, WEBP</span></div>
       <div id="textureGrid" class="texture-grid"></div>
       <div id="textureControls" style="display:none;margin-top:.5rem;padding-top:.5rem;border-top:1px solid #1e293b">
-        <div style="display:flex;justify-content:space-between;font-size:.65rem;color:#94a3b8;margin-bottom:.25rem"><span>Repetição U</span><span id="texRepeatUVal" style="font-family:monospace;color:#22d3ee">1.0</span></div>
-        <input type="range" id="texRepeatU" min="0.1" max="20" step="0.1" value="1" oninput="updateTextureLabels()" style="margin-bottom:.5rem">
-        <div style="display:flex;justify-content:space-between;font-size:.65rem;color:#94a3b8;margin-bottom:.25rem"><span>Repetição V</span><span id="texRepeatVVal" style="font-family:monospace;color:#22d3ee">1.0</span></div>
-        <input type="range" id="texRepeatV" min="0.1" max="20" step="0.1" value="1" oninput="updateTextureLabels()" style="margin-bottom:.5rem">
-        <div style="display:flex;justify-content:space-between;font-size:.65rem;color:#94a3b8;margin-bottom:.25rem"><span>Rotação</span><span id="texRotationVal" style="font-family:monospace;color:#22d3ee">0°</span></div>
-        <input type="range" id="texRotation" min="0" max="360" step="1" value="0" oninput="updateTextureLabels()">
+        <div style="display:flex;justify-content:space-between;font-size:.65rem;color:#94a3b8;margin-bottom:.25rem"><span>Repetição U</span><span id="texRepeatUVal" style="font-family:monospace;color:#22d3ee">1.0</span></div><input type="range" id="texRepeatU" min="0.1" max="20" step="0.1" value="1" oninput="updateTextureLabels()" style="margin-bottom:.5rem">
+        <div style="display:flex;justify-content:space-between;font-size:.65rem;color:#94a3b8;margin-bottom:.25rem"><span>Repetição V</span><span id="texRepeatVVal" style="font-family:monospace;color:#22d3ee">1.0</span></div><input type="range" id="texRepeatV" min="0.1" max="20" step="0.1" value="1" oninput="updateTextureLabels()" style="margin-bottom:.5rem">
+        <div style="display:flex;justify-content:space-between;font-size:.65rem;color:#94a3b8;margin-bottom:.25rem"><span>Rotação</span><span id="texRotationVal" style="font-family:monospace;color:#22d3ee">0°</span></div><input type="range" id="texRotation" min="0" max="360" step="1" value="0" oninput="updateTextureLabels()">
       </div>
     </div>
     <div class="panel">
       <div class="panel-title"><i class="fa-solid fa-bullseye"></i> Aplicar a</div>
-      <select id="applyScope" onchange="updateScopeUI()" style="margin-bottom:.4rem">
-        <option value="selected">Elemento selecionado</option>
-        <option value="model">Modelo inteiro</option>
-        <option value="discipline">Por disciplina</option>
-        <option value="storey">Por pavimento</option>
-        <option value="type">Por tipo IFC</option>
-      </select>
+      <select id="applyScope" onchange="updateScopeUI()" style="margin-bottom:.4rem"><option value="selected">Elemento selecionado</option><option value="model">Modelo inteiro</option><option value="discipline">Por disciplina</option><option value="storey">Por pavimento</option><option value="type">Por tipo IFC</option></select>
       <div id="scopeExtra" style="display:none"><select id="scopeValue"><option value="">— Todos —</option></select></div>
     </div>
     <button onclick="applyColorFromUI()" style="width:100%;background:linear-gradient(135deg,#db2777,#c026d3);color:#fff;padding:.6rem;font-weight:700;margin-bottom:.4rem"><i class="fa-solid fa-paint-brush"></i> Aplicar Cor</button>
@@ -417,13 +354,9 @@ footer{height:1.5rem;background:#020617;border-top:1px solid #1e293b;padding:0 1
     <button onclick="removeTextureFromUI()" style="width:100%;background:#334155;color:#e2e8f0;padding:.5rem;font-weight:700;margin-bottom:.4rem"><i class="fa-solid fa-eraser"></i> Remover Textura</button>
     <button onclick="resetColors()" style="width:100%;color:#fbbf24;padding:.5rem;font-weight:700"><i class="fa-solid fa-rotate-left"></i> Restaurar Cores</button>
   </div>
-
   <div id="tab-content-dimension" class="tab-content">
     <div class="panel">
-      <div class="panel-title" style="justify-content:space-between">
-        <span><i class="fa-solid fa-ruler-combined"></i> Dimensões</span>
-        <span id="dimElemName" style="font-size:.65rem;color:#64748b">—</span>
-      </div>
+      <div class="panel-title" style="justify-content:space-between"><span><i class="fa-solid fa-ruler-combined"></i> Dimensões</span><span id="dimElemName" style="font-size:.65rem;color:#64748b">—</span></div>
       <div id="dimEmpty" style="text-align:center;padding:1rem;color:#64748b;font-size:.7rem">Selecione um elemento.</div>
       <div id="dimContent" style="display:none">
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:.375rem">
@@ -437,19 +370,15 @@ footer{height:1.5rem;background:#020617;border-top:1px solid #1e293b;padding:0 1
       </div>
     </div>
     <button onclick="measureWholeModel()" style="width:100%;background:#2563eb;color:#fff;padding:.6rem;font-weight:700;margin-bottom:.75rem"><i class="fa-solid fa-calculator"></i> Totalizar Modelo</button>
-    <div class="panel">
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:.5rem">
-        <div style="text-align:center"><div style="font-size:.6rem;color:#94a3b8;text-transform:uppercase;font-weight:700">Área Total</div><div><span id="totalArea" style="font-size:1rem;font-weight:800;font-family:monospace;color:#22c55e">—</span><span style="font-size:.6rem;color:#64748b"> m²</span></div></div>
-        <div style="text-align:center"><div style="font-size:.6rem;color:#94a3b8;text-transform:uppercase;font-weight:700">Volume Total</div><div><span id="totalVolume" style="font-size:1rem;font-weight:800;font-family:monospace;color:#a855f7">—</span><span style="font-size:.6rem;color:#64748b"> m³</span></div></div>
-      </div>
-    </div>
+    <div class="panel"><div style="display:grid;grid-template-columns:1fr 1fr;gap:.5rem">
+      <div style="text-align:center"><div style="font-size:.6rem;color:#94a3b8;text-transform:uppercase;font-weight:700">Área Total</div><div><span id="totalArea" style="font-size:1rem;font-weight:800;font-family:monospace;color:#22c55e">—</span><span style="font-size:.6rem;color:#64748b"> m²</span></div></div>
+      <div style="text-align:center"><div style="font-size:.6rem;color:#94a3b8;text-transform:uppercase;font-weight:700">Volume Total</div><div><span id="totalVolume" style="font-size:1rem;font-weight:800;font-family:monospace;color:#a855f7">—</span><span style="font-size:.6rem;color:#64748b"> m³</span></div></div>
+    </div></div>
     <div id="dimByDiscipline"></div>
     <button onclick="exportDimensionsCSV()" style="width:100%;background:linear-gradient(135deg,#ea580c,#d97706);color:#fff;padding:.6rem;font-weight:700;margin-top:.75rem"><i class="fa-solid fa-file-excel"></i> Exportar CSV</button>
   </div>
-
   <div id="tab-content-rules" class="tab-content">
-    <div class="panel">
-      <div class="panel-title"><i class="fa-solid fa-shield-halved"></i> Tolerâncias (mm)</div>
+    <div class="panel"><div class="panel-title"><i class="fa-solid fa-shield-halved"></i> Tolerâncias (mm)</div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:.5rem">
         <div><label style="color:#ef4444;display:block;font-size:.65rem;font-weight:700">Duro</label><input type="number" id="tolHard" value="0"></div>
         <div><label style="color:#fbbf24;display:block;font-size:.65rem;font-weight:700">Crítico</label><input type="number" id="tolCritical" value="25"></div>
@@ -475,18 +404,10 @@ footer{height:1.5rem;background:#020617;border-top:1px solid #1e293b;padding:0 1
       <button onclick="toggleSectionPanel()" id="btnSection" class="btn-purple"><i class="fa-solid fa-scissors"></i> Seção</button>
       <button onclick="toggleWireframe()"><i class="fa-solid fa-border-all"></i></button>
       <button onclick="showAllElements()"><i class="fa-solid fa-eye"></i></button>
-      <button onclick="toggleClashPins()" id="btnClashPins" title="Mostrar/esconder pins de conflito" style="background:#334155;color:#fbbf24"><i class="fa-solid fa-map-pin"></i></button>
+      <button onclick="toggleClashPins()" id="btnClashPins" title="Modo de exibição dos pins"><i class="fa-solid fa-map-pin"></i> 📍</button>
     </div>
-    <div class="status-bar">
-      <span class="status-dot"></span>
-      <span id="viewportStatusText">Motor 3D Ativo</span>
-    </div>
-    <div class="loading hidden" id="loadingOverlay">
-      <div style="display:flex;flex-direction:column;align-items:center;gap:.75rem">
-        <div class="spinner"></div>
-        <span id="loadingText" style="font-size:.75rem;color:#cbd5e1">Processando IFC...</span>
-      </div>
-    </div>
+    <div class="status-bar"><span class="status-dot"></span><span id="viewportStatusText">Motor 3D Ativo</span></div>
+    <div class="loading hidden" id="loadingOverlay"><div style="display:flex;flex-direction:column;align-items:center;gap:.75rem"><div class="spinner"></div><span id="loadingText" style="font-size:.75rem;color:#cbd5e1">Processando IFC...</span></div></div>
   </div>
 </main>
 
@@ -497,16 +418,10 @@ footer{height:1.5rem;background:#020617;border-top:1px solid #1e293b;padding:0 1
   </div>
   <div id="tab-content-clashes" class="tab-content active" style="padding:0">
     <div style="padding:.5rem;border-bottom:1px solid #1e293b;background:rgba(2,6,23,.4);display:flex;gap:.4rem">
-      <select id="clashSevFilter" onchange="updateClashListUI()" style="flex:1;font-size:.65rem">
-        <option value="ALL">Severidades</option><option value="CRITICAL">Crítico</option><option value="HIGH">Alto</option><option value="MEDIUM">Médio</option><option value="LOW">Baixo</option>
-      </select>
-      <select id="clashStatusFilter" onchange="updateClashListUI()" style="flex:1;font-size:.65rem">
-        <option value="ALL">Status</option><option value="Novo">Novo</option><option value="Resolvido">Resolvido</option>
-      </select>
+      <select id="clashSevFilter" onchange="updateClashListUI()" style="flex:1;font-size:.65rem"><option value="ALL">Severidades</option><option value="CRITICAL">Crítico</option><option value="HIGH">Alto</option><option value="MEDIUM">Médio</option><option value="LOW">Baixo</option></select>
+      <select id="clashStatusFilter" onchange="updateClashListUI()" style="flex:1;font-size:.65rem"><option value="ALL">Status</option><option value="Novo">Novo</option><option value="Resolvido">Resolvido</option></select>
     </div>
-    <div id="clashesList" style="flex:1;overflow-y:auto;padding:.5rem">
-      <div style="text-align:center;padding:2rem 1rem;color:#64748b;font-size:.75rem;border:1px dashed #1e293b;border-radius:.5rem">Nenhum teste executado.</div>
-    </div>
+    <div id="clashesList" style="flex:1;overflow-y:auto;padding:.5rem"><div style="text-align:center;padding:2rem 1rem;color:#64748b;font-size:.75rem;border:1px dashed #1e293b;border-radius:.5rem">Nenhum teste executado.</div></div>
   </div>
   <div id="tab-content-dash" class="tab-content">
     <div class="kpi-grid">
@@ -552,49 +467,26 @@ footer{height:1.5rem;background:#020617;border-top:1px solid #1e293b;padding:0 1
     <input type="text" id="licenseInput" placeholder="APAVAN-XXXXX-XXXXXXXX-XXXXXXXX" autocomplete="off" spellcheck="false">
     <button class="btn-full" onclick="submitLicense()"><i class="fa-solid fa-key"></i> Ativar Licença</button>
     <p id="licenseMsg" style="min-height:16px;font-size:.7rem;margin-top:.5rem"></p>
-    <div class="contact">
-      <div style="color:#94a3b8;margin-bottom:.25rem"><b>Para adquirir uma licença:</b></div>
-      <div>contato@apavan.com.br</div>
-      <div>APAVAN ENGENHARIA E CONSULTORIA</div>
-    </div>
+    <div class="contact"><div style="color:#94a3b8;margin-bottom:.25rem"><b>Para adquirir uma licença:</b></div><div>contato@apavan.com.br</div><div>APAVAN ENGENHARIA E CONSULTORIA</div></div>
   </div>
 </div>
 
 <div class="section-panel" id="sectionPanel">
   <h3><i class="fa-solid fa-scissors" style="color:#a78bfa"></i> Plano de Corte <button class="close-btn" onclick="toggleSectionPanel()"><i class="fa-solid fa-xmark"></i></button></h3>
-  <div class="section-axis">
-    <div class="section-axis-header"><span class="axis-name ax-x">X</span><label><input type="checkbox" id="secX-enabled" onchange="applySectionPlanes()"> Ativo</label><button class="flip-btn" id="secX-flip" onclick="flipSection('X')"><i class="fa-solid fa-arrows-rotate"></i></button></div>
-    <div class="section-slider"><input type="range" id="secX-pos" min="-30" max="30" step="0.1" value="0" oninput="onSectionSlider('X')"><span class="val" id="secX-val">0.00 m</span></div>
-  </div>
-  <div class="section-axis">
-    <div class="section-axis-header"><span class="axis-name ax-y">Y</span><label><input type="checkbox" id="secY-enabled" onchange="applySectionPlanes()"> Ativo</label><button class="flip-btn" id="secY-flip" onclick="flipSection('Y')"><i class="fa-solid fa-arrows-rotate"></i></button></div>
-    <div class="section-slider"><input type="range" id="secY-pos" min="-30" max="30" step="0.1" value="0" oninput="onSectionSlider('Y')"><span class="val" id="secY-val">0.00 m</span></div>
-  </div>
-  <div class="section-axis">
-    <div class="section-axis-header"><span class="axis-name ax-z">Z</span><label><input type="checkbox" id="secZ-enabled" onchange="applySectionPlanes()"> Ativo</label><button class="flip-btn" id="secZ-flip" onclick="flipSection('Z')"><i class="fa-solid fa-arrows-rotate"></i></button></div>
-    <div class="section-slider"><input type="range" id="secZ-pos" min="-30" max="30" step="0.1" value="0" oninput="onSectionSlider('Z')"><span class="val" id="secZ-val">0.00 m</span></div>
-  </div>
-  <div class="section-actions">
-    <button class="primary" onclick="fitSectionRangeToModel()"><i class="fa-solid fa-expand"></i> Ajustar</button>
-    <button onclick="clearAllSections()"><i class="fa-solid fa-rotate-left"></i> Limpar</button>
-  </div>
+  <div class="section-axis"><div class="section-axis-header"><span class="axis-name ax-x">X</span><label><input type="checkbox" id="secX-enabled" onchange="applySectionPlanes()"> Ativo</label><button class="flip-btn" id="secX-flip" onclick="flipSection('X')"><i class="fa-solid fa-arrows-rotate"></i></button></div><div class="section-slider"><input type="range" id="secX-pos" min="-30" max="30" step="0.1" value="0" oninput="onSectionSlider('X')"><span class="val" id="secX-val">0.00 m</span></div></div>
+  <div class="section-axis"><div class="section-axis-header"><span class="axis-name ax-y">Y</span><label><input type="checkbox" id="secY-enabled" onchange="applySectionPlanes()"> Ativo</label><button class="flip-btn" id="secY-flip" onclick="flipSection('Y')"><i class="fa-solid fa-arrows-rotate"></i></button></div><div class="section-slider"><input type="range" id="secY-pos" min="-30" max="30" step="0.1" value="0" oninput="onSectionSlider('Y')"><span class="val" id="secY-val">0.00 m</span></div></div>
+  <div class="section-axis"><div class="section-axis-header"><span class="axis-name ax-z">Z</span><label><input type="checkbox" id="secZ-enabled" onchange="applySectionPlanes()"> Ativo</label><button class="flip-btn" id="secZ-flip" onclick="flipSection('Z')"><i class="fa-solid fa-arrows-rotate"></i></button></div><div class="section-slider"><input type="range" id="secZ-pos" min="-30" max="30" step="0.1" value="0" oninput="onSectionSlider('Z')"><span class="val" id="secZ-val">0.00 m</span></div></div>
+  <div class="section-actions"><button class="primary" onclick="fitSectionRangeToModel()"><i class="fa-solid fa-expand"></i> Ajustar</button><button onclick="clearAllSections()"><i class="fa-solid fa-rotate-left"></i> Limpar</button></div>
 </div>
 
 <script>
-/* ============================================================
-   BLOQUEIO DE CONSOLE EM PRODUÇÃO (opcional)
-   ============================================================ */
+/* BLOQUEIO DE CONSOLE EM PRODUÇÃO */
 if (location.hostname === 'ademil.github.io') {
   var _noop = function () {};
-  console.log = _noop;
-  console.info = _noop;
-  console.debug = _noop;
-  console.trace = _noop;
+  console.log = _noop; console.info = _noop; console.debug = _noop; console.trace = _noop;
 }
 
-/* ============================================================
-   SAFE STORAGE
-   ============================================================ */
+/* SAFE STORAGE */
 var SafeStorage = (function () {
   var memoryStore = {}, backend = 'memory';
   function testBackend(fn) { try { var k = '__t_' + Math.random(); fn.setItem(k, '1'); var v = fn.getItem(k); fn.removeItem(k); return v === '1'; } catch (e) { return false; } }
@@ -611,48 +503,27 @@ var SafeStorage = (function () {
   else if (backend === 'sessionStorage') store = sessionStorage;
   else if (backend === 'cookie') store = CookieStorage;
   else store = { setItem: function (k, v) { memoryStore[k] = String(v); }, getItem: function (k) { return memoryStore.hasOwnProperty(k) ? memoryStore[k] : null; }, removeItem: function (k) { delete memoryStore[k]; } };
-  return {
-    getItem: function (k) { try { return store.getItem(k); } catch (e) { return null; } },
-    setItem: function (k, v) { try { store.setItem(k, v); } catch (e) {} },
-    removeItem: function (k) { try { store.removeItem(k); } catch (e) {} }
-  };
+  return { getItem: function (k) { try { return store.getItem(k); } catch (e) { return null; } }, setItem: function (k, v) { try { store.setItem(k, v); } catch (e) {} }, removeItem: function (k) { try { store.removeItem(k); } catch (e) {} } };
 })();
 
-/* ============================================================
-   LICENÇA v2 — Formato: APAVAN-CLIENTE-VALIDADE-ASSINATURA
-   ============================================================ */
-var LICENSE = {
-  TRIAL_DAYS: 15,
-  KEY_FIRST_RUN: 'apbim_v2_first_run',
-  KEY_LICENSE: 'apbim_v2_license',
-  _P1: 'APAVAN', _P2: '-BIM-', _P3: '2024',
-  _P4: '-SECRET-', _P5: 'V2-9F3B7D2E4A1C6E8B'
-};
+/* LICENÇA v2 */
+var LICENSE = { TRIAL_DAYS: 15, KEY_FIRST_RUN: 'apbim_v2_first_run', KEY_LICENSE: 'apbim_v2_license', _P1: 'APAVAN', _P2: '-BIM-', _P3: '2024', _P4: '-SECRET-', _P5: 'V2-9F3B7D2E4A1C6E8B' };
 function _getSecret() { return LICENSE._P1 + LICENSE._P2 + LICENSE._P3 + LICENSE._P4 + LICENSE._P5; }
 function _sign(payload) {
-  var s = payload + '|' + _getSecret();
-  var h1 = 0, h2 = 0, h3 = 0;
-  for (var i = 0; i < s.length; i++) {
-    var c = s.charCodeAt(i);
-    h1 = ((h1 << 5) - h1 + c + i * 3) | 0;
-    h2 = ((h2 << 7) - h2 + c * 31 + i) | 0;
-    h3 = ((h3 << 3) - h3 + c * 17 - i * 7) | 0;
-  }
+  var s = payload + '|' + _getSecret(), h1 = 0, h2 = 0, h3 = 0;
+  for (var i = 0; i < s.length; i++) { var c = s.charCodeAt(i); h1 = ((h1 << 5) - h1 + c + i * 3) | 0; h2 = ((h2 << 7) - h2 + c * 31 + i) | 0; h3 = ((h3 << 3) - h3 + c * 17 - i * 7) | 0; }
   var out = Math.abs(h1).toString(36) + Math.abs(h2).toString(36) + Math.abs(h3).toString(36);
   return out.toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 8).padStart(8, '0');
 }
 function parseLicenseKey(key) {
   if (typeof key !== 'string') return null;
-  var k = key.toUpperCase().trim();
-  var parts = k.split('-');
-  if (parts.length !== 4) return null;
-  if (parts[0] !== 'APAVAN') return null;
+  var k = key.toUpperCase().trim(), parts = k.split('-');
+  if (parts.length !== 4 || parts[0] !== 'APAVAN') return null;
   var client = parts[1], expiry = parts[2], sig = parts[3];
   if (!/^[A-Z0-9]{4,12}$/.test(client)) return null;
   if (expiry !== 'PERM' && !/^\d{8}$/.test(expiry)) return null;
   if (!/^[A-Z0-9]{8}$/.test(sig)) return null;
-  var expectedSig = _sign(client + '|' + expiry);
-  if (expectedSig !== sig) return null;
+  if (_sign(client + '|' + expiry) !== sig) return null;
   var result = { valid: true, client: client, expiry: expiry, permanent: expiry === 'PERM', expiryDate: null, key: k };
   if (expiry !== 'PERM') {
     var y = parseInt(expiry.slice(0, 4), 10), m = parseInt(expiry.slice(4, 6), 10), d = parseInt(expiry.slice(6, 8), 10);
@@ -662,110 +533,63 @@ function parseLicenseKey(key) {
   }
   return result;
 }
-function licenseFirstRun() {
-  var v = SafeStorage.getItem(LICENSE.KEY_FIRST_RUN);
-  if (!v) { v = Date.now().toString(); SafeStorage.setItem(LICENSE.KEY_FIRST_RUN, v); }
-  return parseInt(v, 10);
-}
+function licenseFirstRun() { var v = SafeStorage.getItem(LICENSE.KEY_FIRST_RUN); if (!v) { v = Date.now().toString(); SafeStorage.setItem(LICENSE.KEY_FIRST_RUN, v); } return parseInt(v, 10); }
 function licenseDaysLeft() { return Math.max(0, LICENSE.TRIAL_DAYS - Math.floor((Date.now() - licenseFirstRun()) / 86400000)); }
 function getLicenseState() {
   var saved = SafeStorage.getItem(LICENSE.KEY_LICENSE);
-  if (saved) {
-    var parsed = parseLicenseKey(saved);
-    if (parsed && parsed.valid) return { licensed: true, info: parsed, key: saved };
-    if (parsed && parsed.expired) return { licensed: false, expired: true, info: parsed, daysLeft: 0 };
-  }
-  var daysLeft = licenseDaysLeft();
-  return { licensed: false, daysLeft: daysLeft, valid: daysLeft > 0 };
+  if (saved) { var parsed = parseLicenseKey(saved); if (parsed && parsed.valid) return { licensed: true, info: parsed, key: saved }; if (parsed && parsed.expired) return { licensed: false, expired: true, info: parsed, daysLeft: 0 }; }
+  var d = licenseDaysLeft();
+  return { licensed: false, daysLeft: d, valid: d > 0 };
 }
-function activateLicense(key) {
-  var parsed = parseLicenseKey(key);
-  if (!parsed || !parsed.valid) return false;
-  SafeStorage.setItem(LICENSE.KEY_LICENSE, key.toUpperCase().trim());
-  return true;
-}
+function activateLicense(key) { var p = parseLicenseKey(key); if (!p || !p.valid) return false; SafeStorage.setItem(LICENSE.KEY_LICENSE, key.toUpperCase().trim()); return true; }
 function submitLicense() {
   var inp = document.getElementById('licenseInput'), msg = document.getElementById('licenseMsg');
   var key = (inp.value || '').trim();
   if (!key) { msg.innerText = 'Digite uma chave de licença.'; msg.style.color = '#f87171'; return; }
   var parsed = parseLicenseKey(key);
-  if (!parsed) { msg.innerText = 'Chave inválida. Verifique se digitou corretamente.'; msg.style.color = '#f87171'; return; }
-  if (parsed.expired) { msg.innerText = 'Esta chave expirou em ' + parsed.expiryDate.toLocaleDateString('pt-BR') + '.'; msg.style.color = '#f87171'; return; }
-  if (activateLicense(key)) { msg.innerText = '✓ Licença ativada para "' + parsed.client + '". Recarregando...'; msg.style.color = '#34d399'; setTimeout(function () { location.reload(); }, 1000); }
+  if (!parsed) { msg.innerText = 'Chave inválida.'; msg.style.color = '#f87171'; return; }
+  if (parsed.expired) { msg.innerText = 'Chave expirou em ' + parsed.expiryDate.toLocaleDateString('pt-BR') + '.'; msg.style.color = '#f87171'; return; }
+  if (activateLicense(key)) { msg.innerText = '✓ Licença ativada para "' + parsed.client + '".'; msg.style.color = '#34d399'; setTimeout(function () { location.reload(); }, 1000); }
   else { msg.innerText = 'Chave inválida.'; msg.style.color = '#f87171'; }
 }
-
-/* ============================================================
-   RESET PROTEGIDO — requer chave-mestra secreta
-   Uso: ?reset=APAVAN-MASTER-9F3B7D2E
-   ============================================================ */
+/* RESET PROTEGIDO */
 var MASTER_RESET_KEY = 'APAVAN-MASTER-9F3B7D2E';
 (function () {
   var m = location.search.match(/[?&]reset=([^&]+)/);
   if (!m) return;
-  var provided = decodeURIComponent(m[1]).toUpperCase();
-  if (provided === MASTER_RESET_KEY) {
-    SafeStorage.removeItem(LICENSE.KEY_FIRST_RUN);
-    SafeStorage.removeItem(LICENSE.KEY_LICENSE);
-    setTimeout(function () {
-      alert('✓ Trial resetado para 15 dias.');
-      location.href = location.pathname;
-    }, 300);
+  if (decodeURIComponent(m[1]).toUpperCase() === MASTER_RESET_KEY) {
+    SafeStorage.removeItem(LICENSE.KEY_FIRST_RUN); SafeStorage.removeItem(LICENSE.KEY_LICENSE);
+    setTimeout(function () { alert('✓ Trial resetado para 15 dias.'); location.href = location.pathname; }, 300);
   }
 })();
-
 function showLicenseModal() {
-  var st = getLicenseState();
-  var ov = document.getElementById('licenseOverlay');
-  var title = document.getElementById('licTitle');
-  var subtitle = document.getElementById('licSubtitle');
+  var st = getLicenseState(), ov = document.getElementById('licenseOverlay');
+  var title = document.getElementById('licTitle'), subtitle = document.getElementById('licSubtitle');
   if (st.licensed) { title.innerText = 'Licença Ativa'; subtitle.innerText = 'Cliente: ' + st.info.client + '\nValidade: ' + (st.info.permanent ? 'Permanente' : st.info.expiryDate.toLocaleDateString('pt-BR')); }
   else if (st.expired) { title.innerText = 'Licença Expirada'; subtitle.innerText = 'Cliente: ' + st.info.client + '\nExpirou em: ' + st.info.expiryDate.toLocaleDateString('pt-BR'); }
-  else { title.innerText = 'Ativar Licença'; subtitle.innerText = 'Trial: ' + st.daysLeft + ' dia(s) restante(s).\nInsira uma chave APAVAN.'; }
+  else { title.innerText = 'Ativar Licença'; subtitle.innerText = 'Trial: ' + st.daysLeft + ' dia(s) restante(s).'; }
   ov.classList.add('show');
 }
 function applyLicenseGate() {
-  var st = getLicenseState();
-  var ov = document.getElementById('licenseOverlay');
-  var badge = document.getElementById('licenseBadge');
-  var title = document.getElementById('licTitle');
-  var subtitle = document.getElementById('licSubtitle');
-  if (st.licensed) {
-    ov.classList.remove('show');
-    if (badge) { badge.style.display = 'inline'; badge.style.background = 'rgba(16,185,129,.15)'; badge.style.color = '#34d399'; badge.innerHTML = '<i class="fa-solid fa-certificate"></i> ' + st.info.client + (st.info.permanent ? '' : ' • até ' + st.info.expiryDate.toLocaleDateString('pt-BR')); }
-    return true;
-  }
-  if (st.expired) {
-    if (title) title.innerText = 'Licença Expirada';
-    if (subtitle) subtitle.innerText = 'Sua licença para "' + st.info.client + '" expirou em ' + st.info.expiryDate.toLocaleDateString('pt-BR') + '.\nInsira uma nova chave APAVAN.';
-    ov.classList.add('show');
-    if (badge) { badge.style.display = 'inline'; badge.style.background = 'rgba(239,68,68,.15)'; badge.style.color = '#f87171'; badge.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> Licença expirada'; }
-    return false;
-  }
-  if (st.valid) {
-    ov.classList.remove('show');
-    if (badge) { badge.style.display = 'inline'; badge.style.background = 'rgba(245,158,11,.15)'; badge.style.color = '#fbbf24'; badge.innerHTML = '<i class="fa-solid fa-hourglass-half"></i> Trial: ' + st.daysLeft + 'd'; }
-    return true;
-  }
+  var st = getLicenseState(), ov = document.getElementById('licenseOverlay'), badge = document.getElementById('licenseBadge');
+  var title = document.getElementById('licTitle'), subtitle = document.getElementById('licSubtitle');
+  if (st.licensed) { ov.classList.remove('show'); if (badge) { badge.style.display = 'inline'; badge.style.background = 'rgba(16,185,129,.15)'; badge.style.color = '#34d399'; badge.innerHTML = '<i class="fa-solid fa-certificate"></i> ' + st.info.client + (st.info.permanent ? '' : ' • até ' + st.info.expiryDate.toLocaleDateString('pt-BR')); } return true; }
+  if (st.expired) { if (title) title.innerText = 'Licença Expirada'; if (subtitle) subtitle.innerText = 'Sua licença para "' + st.info.client + '" expirou em ' + st.info.expiryDate.toLocaleDateString('pt-BR') + '.'; ov.classList.add('show'); if (badge) { badge.style.display = 'inline'; badge.style.background = 'rgba(239,68,68,.15)'; badge.style.color = '#f87171'; badge.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> Licença expirada'; } return false; }
+  if (st.valid) { ov.classList.remove('show'); if (badge) { badge.style.display = 'inline'; badge.style.background = 'rgba(245,158,11,.15)'; badge.style.color = '#fbbf24'; badge.innerHTML = '<i class="fa-solid fa-hourglass-half"></i> Trial: ' + st.daysLeft + 'd'; } return true; }
   if (title) title.innerText = 'Período de Teste Expirado';
-  if (subtitle) subtitle.innerText = 'Seu teste gratuito de 15 dias chegou ao fim.\nInsira uma chave de licença APAVAN.';
-  ov.classList.add('show');
-  if (badge) badge.style.display = 'none';
+  if (subtitle) subtitle.innerText = 'Seu teste gratuito de 15 dias chegou ao fim.';
+  ov.classList.add('show'); if (badge) badge.style.display = 'none';
   return false;
 }
 
-/* ============================================================
-   ESTADO GLOBAL
-   ============================================================ */
+/* ESTADO GLOBAL */
 var isMobile = function () { return window.matchMedia('(max-width: 900px)').matches; };
 var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
 var COLOR_SWATCHES = ['#ef4444','#f97316','#eab308','#22c55e','#10b981','#14b8a6','#06b6d4','#3b82f6','#6366f1','#8b5cf6','#a855f7','#ec4899','#f43f5e','#64748b','#94a3b8','#f8fafc'];
 var DISCIPLINE_COLORS = { ARQUITETURA: '#60a5fa', ESTRUTURA: '#94a3b8', HIDRAULICO: '#22d3ee', ELETRICO: '#fbbf24', HVAC: '#a855f7', INCENDIO: '#ef4444', OUTROS: '#64748b' };
-
 var state = {
-  models: [], elements: [], clashes: [], modelGroups: {}, modelTransforms: {},
-  textures: [], selectedTextureId: null,
-clashDisplayMode: 'all',
+  models: [], elements: [], clashes: [], modelGroups: {}, modelTransforms: {}, textures: [], selectedTextureId: null,
+  clashDisplayMode: 'all',
   rules: [
     { id: 1, discA: 'HIDRAULICO', discB: 'ESTRUTURA', type: 'HARD', tolerance: 0, active: true },
     { id: 2, discA: 'ELETRICO', discB: 'ESTRUTURA', type: 'HARD', tolerance: 0, active: true },
@@ -775,149 +599,49 @@ clashDisplayMode: 'all',
   ],
   selectedElement: null, selectedClash: null, wireframe: false, showClashPins: true
 };
-
 var scene, camera, renderer, controls, modelGroup, clashMarkersGroup, raycaster, mouse;
 var chartDiscInstance = null, chartFloorInstance = null;
 var pointerDownPos = null, ifcApiInstance = null;
-var clashMarkersContainer = null;
-var _pulseTimer = null;
+var clashMarkersContainer = null, _pulseTimer = null, _camTween = null;
 var _highlightA = null, _highlightB = null;
 
-/* ============================================================
-   SEÇÃO
-   ============================================================ */
-var sectionState = {
-  X: { plane: null, enabled: false, position: 0, flipped: false },
-  Y: { plane: null, enabled: false, position: 0, flipped: false },
-  Z: { plane: null, enabled: false, position: 0, flipped: false }
-};
-function initSectionPlanes() {
-  if (!renderer) return;
-  renderer.localClippingEnabled = true;
-  ['X', 'Y', 'Z'].forEach(function (axis) {
-    var n = axis === 'X' ? new THREE.Vector3(1, 0, 0) : axis === 'Y' ? new THREE.Vector3(0, 1, 0) : new THREE.Vector3(0, 0, 1);
-    sectionState[axis].plane = new THREE.Plane(n, 0);
-  });
-}
-function toggleSectionPanel() {
-  var panel = document.getElementById('sectionPanel');
-  var btn = document.getElementById('btnSection'), btnH = document.getElementById('btnSectionHeader');
-  var willShow = !panel.classList.contains('show');
-  panel.classList.toggle('show', willShow);
-  if (btn) btn.classList.toggle('active', willShow);
-  if (btnH) btnH.classList.toggle('active', willShow);
-  if (willShow) {
-    if (!sectionState.X.plane) initSectionPlanes();
-    if (state.elements.length && !sectionState.X.enabled && !sectionState.Y.enabled && !sectionState.Z.enabled) fitSectionRangeToModel(true);
-  }
-  if (isMobile()) closeAllSidebars();
-}
-function onSectionSlider(axis) {
-  var val = parseFloat(document.getElementById('sec' + axis + '-pos').value);
-  sectionState[axis].position = val;
-  document.getElementById('sec' + axis + '-val').innerText = val.toFixed(2) + ' m';
-  if (!document.getElementById('sec' + axis + '-enabled').checked) { document.getElementById('sec' + axis + '-enabled').checked = true; sectionState[axis].enabled = true; }
-  applySectionPlanes();
-}
-function flipSection(axis) {
-  sectionState[axis].flipped = !sectionState[axis].flipped;
-  var btn = document.getElementById('sec' + axis + '-flip');
-  if (btn) btn.classList.toggle('active', sectionState[axis].flipped);
-  applySectionPlanes();
-}
+/* SEÇÃO */
+var sectionState = { X: { plane: null, enabled: false, position: 0, flipped: false }, Y: { plane: null, enabled: false, position: 0, flipped: false }, Z: { plane: null, enabled: false, position: 0, flipped: false } };
+function initSectionPlanes() { if (!renderer) return; renderer.localClippingEnabled = true; ['X', 'Y', 'Z'].forEach(function (axis) { var n = axis === 'X' ? new THREE.Vector3(1, 0, 0) : axis === 'Y' ? new THREE.Vector3(0, 1, 0) : new THREE.Vector3(0, 0, 1); sectionState[axis].plane = new THREE.Plane(n, 0); }); }
+function toggleSectionPanel() { var panel = document.getElementById('sectionPanel'), btn = document.getElementById('btnSection'), btnH = document.getElementById('btnSectionHeader'); var willShow = !panel.classList.contains('show'); panel.classList.toggle('show', willShow); if (btn) btn.classList.toggle('active', willShow); if (btnH) btnH.classList.toggle('active', willShow); if (willShow) { if (!sectionState.X.plane) initSectionPlanes(); if (state.elements.length && !sectionState.X.enabled && !sectionState.Y.enabled && !sectionState.Z.enabled) fitSectionRangeToModel(true); } if (isMobile()) closeAllSidebars(); }
+function onSectionSlider(axis) { var val = parseFloat(document.getElementById('sec' + axis + '-pos').value); sectionState[axis].position = val; document.getElementById('sec' + axis + '-val').innerText = val.toFixed(2) + ' m'; if (!document.getElementById('sec' + axis + '-enabled').checked) { document.getElementById('sec' + axis + '-enabled').checked = true; sectionState[axis].enabled = true; } applySectionPlanes(); }
+function flipSection(axis) { sectionState[axis].flipped = !sectionState[axis].flipped; var btn = document.getElementById('sec' + axis + '-flip'); if (btn) btn.classList.toggle('active', sectionState[axis].flipped); applySectionPlanes(); }
 function applySectionPlanes() {
-  if (!renderer) return;
-  renderer.localClippingEnabled = true;
-  if (!sectionState.X.plane) initSectionPlanes();
+  if (!renderer) return; renderer.localClippingEnabled = true; if (!sectionState.X.plane) initSectionPlanes();
   var active = [];
-  ['X', 'Y', 'Z'].forEach(function (axis) {
-    var s = sectionState[axis];
-    var enabled = document.getElementById('sec' + axis + '-enabled').checked;
-    s.enabled = enabled;
-    var nx = axis === 'X' ? 1 : 0, ny = axis === 'Y' ? 1 : 0, nz = axis === 'Z' ? 1 : 0;
-    if (s.flipped) { nx = -nx; ny = -ny; nz = -nz; }
-    s.plane.normal.set(nx, ny, nz);
-    s.plane.constant = s.flipped ? s.position : -s.position;
-    if (enabled) active.push(s.plane);
-  });
-  state.elements.forEach(function (el) {
-    if (!el.mesh || !el.mesh.material) return;
-    var M = Array.isArray(el.mesh.material) ? el.mesh.material : [el.mesh.material];
-    M.forEach(function (m) { m.clippingPlanes = active.length ? active : null; m.needsUpdate = true; });
-  });
-  showViewportStatus(active.length ? active.length + ' plano(s) de corte ativo(s)' : 'Cortes desativados');
+  ['X', 'Y', 'Z'].forEach(function (axis) { var s = sectionState[axis]; var enabled = document.getElementById('sec' + axis + '-enabled').checked; s.enabled = enabled; var nx = axis === 'X' ? 1 : 0, ny = axis === 'Y' ? 1 : 0, nz = axis === 'Z' ? 1 : 0; if (s.flipped) { nx = -nx; ny = -ny; nz = -nz; } s.plane.normal.set(nx, ny, nz); s.plane.constant = s.flipped ? s.position : -s.position; if (enabled) active.push(s.plane); });
+  state.elements.forEach(function (el) { if (!el.mesh || !el.mesh.material) return; var M = Array.isArray(el.mesh.material) ? el.mesh.material : [el.mesh.material]; M.forEach(function (m) { m.clippingPlanes = active.length ? active : null; m.needsUpdate = true; }); });
+  showViewportStatus(active.length ? active.length + ' plano(s) ativo(s)' : 'Cortes desativados');
 }
-function clearAllSections() {
-  ['X', 'Y', 'Z'].forEach(function (axis) {
-    sectionState[axis].enabled = false; sectionState[axis].position = 0; sectionState[axis].flipped = false;
-    document.getElementById('sec' + axis + '-enabled').checked = false;
-    document.getElementById('sec' + axis + '-pos').value = 0;
-    document.getElementById('sec' + axis + '-val').innerText = '0.00 m';
-    document.getElementById('sec' + axis + '-flip').classList.remove('active');
-  });
-  applySectionPlanes();
-}
+function clearAllSections() { ['X', 'Y', 'Z'].forEach(function (axis) { sectionState[axis].enabled = false; sectionState[axis].position = 0; sectionState[axis].flipped = false; document.getElementById('sec' + axis + '-enabled').checked = false; document.getElementById('sec' + axis + '-pos').value = 0; document.getElementById('sec' + axis + '-val').innerText = '0.00 m'; document.getElementById('sec' + axis + '-flip').classList.remove('active'); }); applySectionPlanes(); }
 function fitSectionRangeToModel(silent) {
   if (!state.elements.length) { if (!silent) alert('Nenhum modelo carregado.'); return; }
-  var box = new THREE.Box3();
-  state.elements.forEach(function (e) { if (e.mesh.visible) box.expandByObject(e.mesh); });
+  var box = new THREE.Box3(); state.elements.forEach(function (e) { if (e.mesh.visible) box.expandByObject(e.mesh); });
   if (box.isEmpty()) return;
   var c = new THREE.Vector3(); box.getCenter(c);
   var s = new THREE.Vector3(); box.getSize(s);
-  var pad = 0.2;
-  var rx = s.x / 2 * (1 + pad), ry = s.y / 2 * (1 + pad), rz = s.z / 2 * (1 + pad);
-  ['X', 'Y', 'Z'].forEach(function (axis) {
-    var range = axis === 'X' ? rx : axis === 'Y' ? ry : rz;
-    var ca = axis === 'X' ? c.x : axis === 'Y' ? c.y : c.z;
-    var slider = document.getElementById('sec' + axis + '-pos');
-    slider.min = (ca - range).toFixed(2); slider.max = (ca + range).toFixed(2);
-    slider.value = ca; sectionState[axis].position = ca;
-    document.getElementById('sec' + axis + '-val').innerText = ca.toFixed(2) + ' m';
-  });
+  var pad = 0.2, rx = s.x / 2 * (1 + pad), ry = s.y / 2 * (1 + pad), rz = s.z / 2 * (1 + pad);
+  ['X', 'Y', 'Z'].forEach(function (axis) { var range = axis === 'X' ? rx : axis === 'Y' ? ry : rz; var ca = axis === 'X' ? c.x : axis === 'Y' ? c.y : c.z; var slider = document.getElementById('sec' + axis + '-pos'); slider.min = (ca - range).toFixed(2); slider.max = (ca + range).toFixed(2); slider.value = ca; sectionState[axis].position = ca; document.getElementById('sec' + axis + '-val').innerText = ca.toFixed(2) + ' m'; });
   applySectionPlanes();
 }
 
-/* ============================================================
-   TRANSFORMAÇÃO
-   ============================================================ */
+/* TRANSFORMAÇÃO */
 function selectTransformModel(modelId) {
-  var controls = document.getElementById('transformControls');
-  if (!modelId) { controls.style.display = 'none'; return; }
+  var controls = document.getElementById('transformControls'); if (!modelId) { controls.style.display = 'none'; return; }
   controls.style.display = 'block';
   if (!state.modelTransforms[modelId]) state.modelTransforms[modelId] = { rot: { x: 0, y: 0, z: 0 }, pos: { x: 0, y: 0, z: 0 } };
   var t = state.modelTransforms[modelId];
-  ['X', 'Y', 'Z'].forEach(function (ax) {
-    var lower = ax.toLowerCase();
-    var rot = t.rot[lower] || 0, pos = t.pos[lower] || 0;
-    var rEl = document.getElementById('rot' + ax); if (rEl) rEl.value = rot;
-    var rn = document.getElementById('rot' + ax + 'Num'); if (rn) rn.value = rot;
-    var rv = document.getElementById('rot' + ax + 'Val'); if (rv) rv.innerText = rot.toFixed(1) + '°';
-    var pEl = document.getElementById('pos' + ax); if (pEl) pEl.value = pos;
-    var pn = document.getElementById('pos' + ax + 'Num'); if (pn) pn.value = pos;
-    var pv = document.getElementById('pos' + ax + 'Val'); if (pv) pv.innerText = pos.toFixed(2) + ' m';
-  });
+  ['X', 'Y', 'Z'].forEach(function (ax) { var lower = ax.toLowerCase(); var rot = t.rot[lower] || 0, pos = t.pos[lower] || 0; var rEl = document.getElementById('rot' + ax); if (rEl) rEl.value = rot; var rn = document.getElementById('rot' + ax + 'Num'); if (rn) rn.value = rot; var rv = document.getElementById('rot' + ax + 'Val'); if (rv) rv.innerText = rot.toFixed(1) + '°'; var pEl = document.getElementById('pos' + ax); if (pEl) pEl.value = pos; var pn = document.getElementById('pos' + ax + 'Num'); if (pn) pn.value = pos; var pv = document.getElementById('pos' + ax + 'Val'); if (pv) pv.innerText = pos.toFixed(2) + ' m'; });
   var g = state.modelGroups[modelId];
-  if (g) {
-    g.updateMatrixWorld(true);
-    var box = new THREE.Box3().setFromObject(g);
-    if (!box.isEmpty()) {
-      var s = new THREE.Vector3(); box.getSize(s);
-      var c = new THREE.Vector3(); box.getCenter(c);
-      var dimsEl = document.getElementById('tInfoDims'), centEl = document.getElementById('tInfoCenter');
-      if (dimsEl) dimsEl.innerText = s.x.toFixed(2) + ' × ' + s.y.toFixed(2) + ' × ' + s.z.toFixed(2) + ' m';
-      if (centEl) centEl.innerText = c.x.toFixed(2) + ', ' + c.y.toFixed(2) + ', ' + c.z.toFixed(2);
-    }
-  }
+  if (g) { g.updateMatrixWorld(true); var box = new THREE.Box3().setFromObject(g); if (!box.isEmpty()) { var s = new THREE.Vector3(); box.getSize(s); var c = new THREE.Vector3(); box.getCenter(c); var dimsEl = document.getElementById('tInfoDims'), centEl = document.getElementById('tInfoCenter'); if (dimsEl) dimsEl.innerText = s.x.toFixed(2) + ' × ' + s.y.toFixed(2) + ' × ' + s.z.toFixed(2) + ' m'; if (centEl) centEl.innerText = c.x.toFixed(2) + ', ' + c.y.toFixed(2) + ', ' + c.z.toFixed(2); } }
 }
 function currentTransformModel() { return document.getElementById('transformModelSelect').value; }
-function applyTransform() {
-  var modelId = currentTransformModel(); if (!modelId) return;
-  var g = state.modelGroups[modelId]; if (!g) return;
-  var t = state.modelTransforms[modelId]; if (!t) return;
-  g.rotation.set(-Math.PI / 2 + THREE.MathUtils.degToRad(t.rot.x), THREE.MathUtils.degToRad(t.rot.y), THREE.MathUtils.degToRad(t.rot.z));
-  g.position.set(t.pos.x, t.pos.y, t.pos.z);
-  if (sectionState.X && sectionState.X.plane) applySectionPlanes();
-}
+function applyTransform() { var modelId = currentTransformModel(); if (!modelId) return; var g = state.modelGroups[modelId]; if (!g) return; var t = state.modelTransforms[modelId]; if (!t) return; g.rotation.set(-Math.PI / 2 + THREE.MathUtils.degToRad(t.rot.x), THREE.MathUtils.degToRad(t.rot.y), THREE.MathUtils.degToRad(t.rot.z)); g.position.set(t.pos.x, t.pos.y, t.pos.z); if (sectionState.X && sectionState.X.plane) applySectionPlanes(); }
 function onRotSlider(ax) { var id = currentTransformModel(); if (!id) return; var v = parseFloat(document.getElementById('rot' + ax).value); state.modelTransforms[id].rot[ax.toLowerCase()] = v; document.getElementById('rot' + ax + 'Num').value = v; document.getElementById('rot' + ax + 'Val').innerText = v.toFixed(1) + '°'; applyTransform(); }
 function onRotNum(ax) { var id = currentTransformModel(); if (!id) return; var v = parseFloat(document.getElementById('rot' + ax + 'Num').value) || 0; v = Math.max(-180, Math.min(180, v)); state.modelTransforms[id].rot[ax.toLowerCase()] = v; document.getElementById('rot' + ax).value = v; document.getElementById('rot' + ax + 'Val').innerText = v.toFixed(1) + '°'; applyTransform(); }
 function quickRotate(ax, deg) { var id = currentTransformModel(); if (!id) { alert('Selecione um modelo primeiro.'); return; } state.modelTransforms[id].rot[ax.toLowerCase()] = deg; document.getElementById('rot' + ax).value = deg; document.getElementById('rot' + ax + 'Num').value = deg; document.getElementById('rot' + ax + 'Val').innerText = deg.toFixed(1) + '°'; applyTransform(); showViewportStatus('Rotação ' + ax + ' → ' + deg + '°.'); }
@@ -926,17 +650,14 @@ function onPosNum(ax) { var id = currentTransformModel(); if (!id) return; var v
 function resetRotation() { var id = currentTransformModel(); if (!id) return; state.modelTransforms[id].rot = { x: 0, y: 0, z: 0 }; ['X', 'Y', 'Z'].forEach(function (ax) { document.getElementById('rot' + ax).value = 0; document.getElementById('rot' + ax + 'Num').value = 0; document.getElementById('rot' + ax + 'Val').innerText = '0.0°'; }); applyTransform(); }
 function resetPosition() { var id = currentTransformModel(); if (!id) return; state.modelTransforms[id].pos = { x: 0, y: 0, z: 0 }; ['X', 'Y', 'Z'].forEach(function (ax) { document.getElementById('pos' + ax).value = 0; document.getElementById('pos' + ax + 'Num').value = 0; document.getElementById('pos' + ax + 'Val').innerText = '0.00 m'; }); applyTransform(); }
 function resetTransform() { var id = currentTransformModel(); if (!id) return; if (!confirm('Resetar rotação e posição deste modelo?')) return; state.modelTransforms[id] = { rot: { x: 0, y: 0, z: 0 }, pos: { x: 0, y: 0, z: 0 } }; selectTransformModel(id); applyTransform(); }
-function alignBaseToGrid() { var id = currentTransformModel(); if (!id) return; var g = state.modelGroups[id]; if (!g) return; state.modelTransforms[id].pos.z = 0; applyTransform(); g.updateMatrixWorld(true); var box = new THREE.Box3().setFromObject(g); if (box.isEmpty()) return; var dz = -box.min.z; state.modelTransforms[id].pos.z = dz; document.getElementById('posZ').value = dz; document.getElementById('posZNum').value = dz.toFixed(2); document.getElementById('posZVal').innerText = dz.toFixed(2) + ' m'; applyTransform(); showViewportStatus('Base alinhada ao solo.'); }
+function alignBaseToGrid() { var id = currentTransformModel(); if (!id) return; var g = state.modelGroups[id]; if (!g) return; state.modelTransforms[id].pos.z = 0; applyTransform(); g.updateMatrixWorld(true); var box = new THREE.Box3().setFromObject(g); if (box.isEmpty()) return; var dz = -box.min.z; state.modelTransforms[id].pos.z = dz; document.getElementById('posZ').value = dz; document.getElementById('posZNum').value = dz.toFixed(2); document.getElementById('posZVal').innerText = dz.toFixed(2) + ' m'; applyTransform(); showViewportStatus('Base alinhada.'); }
 function centerOnGrid() { var id = currentTransformModel(); if (!id) return; var g = state.modelGroups[id]; if (!g) return; state.modelTransforms[id].pos.x = 0; state.modelTransforms[id].pos.y = 0; applyTransform(); g.updateMatrixWorld(true); var box = new THREE.Box3().setFromObject(g); if (box.isEmpty()) return; var c = new THREE.Vector3(); box.getCenter(c); var nx = -c.x, ny = -c.y; state.modelTransforms[id].pos.x = nx; state.modelTransforms[id].pos.y = ny; document.getElementById('posX').value = nx; document.getElementById('posXNum').value = nx.toFixed(2); document.getElementById('posXVal').innerText = nx.toFixed(2) + ' m'; document.getElementById('posY').value = ny; document.getElementById('posYNum').value = ny.toFixed(2); document.getElementById('posYVal').innerText = ny.toFixed(2) + ' m'; applyTransform(); }
 function refreshTransformModelSelect() { var sel = document.getElementById('transformModelSelect'); if (!sel) return; var current = sel.value; sel.innerHTML = '<option value="">— Selecione um modelo —</option>'; state.models.forEach(function (m) { var o = document.createElement('option'); o.value = m.id; o.textContent = m.name; sel.appendChild(o); }); if (current && state.models.some(function (m) { return m.id === current; })) sel.value = current; }
 
-/* ============================================================
-   TEXTURAS
-   ============================================================ */
+/* TEXTURAS */
 var textureLoader = new THREE.TextureLoader();
 function handleTextureUpload(event) {
-  var files = Array.prototype.slice.call(event.target.files || []);
-  if (!files.length) return;
+  var files = Array.prototype.slice.call(event.target.files || []); if (!files.length) return;
   var loaded = 0;
   files.forEach(function (file) {
     var reader = new FileReader();
@@ -953,10 +674,7 @@ function handleTextureUpload(event) {
   event.target.value = '';
 }
 function renderTextureGrid() {
-  var grid = document.getElementById('textureGrid');
-  var empty = document.getElementById('textureEmpty');
-  var badge = document.getElementById('texCountBadge');
-  var controls = document.getElementById('textureControls');
+  var grid = document.getElementById('textureGrid'), empty = document.getElementById('textureEmpty'), badge = document.getElementById('texCountBadge'), controls = document.getElementById('textureControls');
   badge.innerText = state.textures.length;
   if (!state.textures.length) { empty.style.display = 'block'; grid.innerHTML = ''; controls.style.display = 'none'; return; }
   empty.style.display = 'none'; controls.style.display = 'block'; grid.innerHTML = '';
@@ -973,37 +691,29 @@ function renderTextureGrid() {
     grid.appendChild(item);
   });
 }
-function selectTexture(texId) { state.selectedTextureId = texId; renderTextureGrid(); }
-function removeTextureFromLibrary(texId) { var idx = -1; for (var i = 0; i < state.textures.length; i++) if (state.textures[i].id === texId) { idx = i; break; } if (idx < 0) return; var tex = state.textures[idx]; if (tex.texture) try { tex.texture.dispose(); } catch (e) {} state.textures.splice(idx, 1); if (state.selectedTextureId === texId) state.selectedTextureId = state.textures.length ? state.textures[0].id : null; renderTextureGrid(); }
+function selectTexture(id) { state.selectedTextureId = id; renderTextureGrid(); }
+function removeTextureFromLibrary(id) { var idx = -1; for (var i = 0; i < state.textures.length; i++) if (state.textures[i].id === id) { idx = i; break; } if (idx < 0) return; var tex = state.textures[idx]; if (tex.texture) try { tex.texture.dispose(); } catch (e) {} state.textures.splice(idx, 1); if (state.selectedTextureId === id) state.selectedTextureId = state.textures.length ? state.textures[0].id : null; renderTextureGrid(); }
 function updateTextureLabels() { document.getElementById('texRepeatUVal').innerText = parseFloat(document.getElementById('texRepeatU').value).toFixed(1); document.getElementById('texRepeatVVal').innerText = parseFloat(document.getElementById('texRepeatV').value).toFixed(1); document.getElementById('texRotationVal').innerText = document.getElementById('texRotation').value + '°'; }
 function getSelectedTexture() { if (!state.selectedTextureId) return null; for (var i = 0; i < state.textures.length; i++) if (state.textures[i].id === state.selectedTextureId) return state.textures[i]; return null; }
 function applyTextureFromUI() {
-  var tex = getSelectedTexture();
-  if (!tex) { alert('Importe ou selecione uma textura primeiro.'); return; }
-  var targets = getTargetElements();
-  if (!targets.length) { alert('Nenhum elemento para aplicar textura.'); return; }
-  var repeatU = parseFloat(document.getElementById('texRepeatU').value) || 1;
-  var repeatV = parseFloat(document.getElementById('texRepeatV').value) || 1;
-  var rotation = parseInt(document.getElementById('texRotation').value) || 0;
-  var opacity = parseInt(document.getElementById('opacityRange').value) / 100;
+  var tex = getSelectedTexture(); if (!tex) { alert('Importe ou selecione uma textura primeiro.'); return; }
+  var targets = getTargetElements(); if (!targets.length) { alert('Nenhum elemento.'); return; }
+  var repeatU = parseFloat(document.getElementById('texRepeatU').value) || 1, repeatV = parseFloat(document.getElementById('texRepeatV').value) || 1;
+  var rotation = parseInt(document.getElementById('texRotation').value) || 0, opacity = parseInt(document.getElementById('opacityRange').value) / 100;
   targets.forEach(function (el) {
     if (!el.mesh.material) return;
     if (!el.mesh.userData._matCloned) { el.mesh.material = el.mesh.material.clone(); el.mesh.userData._matCloned = true; }
-    var clonedTex = tex.texture.clone();
-    clonedTex.needsUpdate = true; clonedTex.wrapS = THREE.RepeatWrapping; clonedTex.wrapT = THREE.RepeatWrapping;
-    clonedTex.repeat.set(repeatU, repeatV); clonedTex.center.set(0.5, 0.5);
-    clonedTex.rotation = THREE.MathUtils.degToRad(rotation); clonedTex.anisotropy = 4;
-    el.mesh.material.map = clonedTex; el.mesh.material.color.setHex(0xffffff);
-    el.mesh.material.opacity = opacity; el.mesh.material.transparent = opacity < 1;
-    el.mesh.material.roughness = 0.85; el.mesh.material.metalness = 0.05;
+    var clonedTex = tex.texture.clone(); clonedTex.needsUpdate = true; clonedTex.wrapS = THREE.RepeatWrapping; clonedTex.wrapT = THREE.RepeatWrapping;
+    clonedTex.repeat.set(repeatU, repeatV); clonedTex.center.set(0.5, 0.5); clonedTex.rotation = THREE.MathUtils.degToRad(rotation); clonedTex.anisotropy = 4;
+    el.mesh.material.map = clonedTex; el.mesh.material.color.setHex(0xffffff); el.mesh.material.opacity = opacity;
+    el.mesh.material.transparent = opacity < 1; el.mesh.material.roughness = 0.85; el.mesh.material.metalness = 0.05;
     el.mesh.material.needsUpdate = true; el.mesh.userData._hasTexture = true;
   });
   if (sectionState.X && sectionState.X.plane) applySectionPlanes();
   showViewportStatus('Textura aplicada em ' + targets.length + ' elemento(s).');
 }
 function removeTextureFromUI() {
-  var targets = getTargetElements();
-  if (!targets.length) { alert('Nenhum elemento selecionado.'); return; }
+  var targets = getTargetElements(); if (!targets.length) { alert('Nenhum elemento selecionado.'); return; }
   var removed = 0;
   targets.forEach(function (el) {
     if (!el.mesh.material) return;
@@ -1013,9 +723,7 @@ function removeTextureFromUI() {
   showViewportStatus(removed + ' textura(s) removida(s).');
 }
 
-/* ============================================================
-   IFC — EXTRAÇÃO
-   ============================================================ */
+/* IFC */
 function refToId(ref) { if (ref === null || ref === undefined) return null; if (typeof ref === 'number') return ref; if (typeof ref === 'object') { if (ref.value !== undefined) return ref.value; if (ref.expressID !== undefined) return ref.expressID; } return null; }
 function toArray(collection) { if (!collection) return []; if (Array.isArray(collection)) return collection; if (typeof collection.size === 'function') { var out = []; for (var i = 0; i < collection.size(); i++) out.push(collection.get(i)); return out; } if (typeof collection.length === 'number') return Array.prototype.slice.call(collection); return []; }
 function getIFCName(api, mid, id) { try { var l = api.GetLine(mid, id, false); if (!l) return null; if (l.Name) { var n = l.Name; if (typeof n === 'object' && n.value) return n.value; if (typeof n === 'string') return n; } if (l.ObjectType) { var ot = l.ObjectType; if (typeof ot === 'object' && ot.value) return ot.value; if (typeof ot === 'string') return ot; } if (l.LongName) { var ln = l.LongName; if (typeof ln === 'object' && ln.value) return ln.value; if (typeof ln === 'string') return ln; } } catch (e) {} return null; }
@@ -1042,20 +750,19 @@ function classifyDiscipline(ifcClass, name) {
   if (/(IFCDUCT|IFCAIR|DUCT|HVAC|AIRTERMINAL|VENT|CHILLER|BOILER|ARCOND)/.test(s)) return 'HVAC';
   if (/(IFCFIRE|SPRINK|FIRE|EXTINGUISH|ALARM|SMOKE|INCEN)/.test(s)) return 'INCENDIO';
   if (/(IFCWALL|IFCSLAB|IFCBEAM|IFCCOLUMN|IFCFOOTING|IFCPILE|IFCMEMBER|IFCPLATE|IFCREINFORC|IFCSTRUCT|IFCFOUNDATION|IFCRAMP|IFCSTAIR|VIGA|PILAR|LAJE|ESTRUT)/.test(s)) return 'ESTRUTURA';
-  if (/(IFCDOOR|IFCWINDOW|IFCSTAIR|IFCRAMP|IFCROOF|IFCCOVERING|IFCSPACE|IFCFURNITURE|IFCRAILING|IFCSLAB|IFCCURTAINWALL|IFCBUILDING|PAREDE|PORTA|JANELA|ARQUI)/.test(s)) return 'ARQUITETURA';
+  if (/(IFCDOOR|IFCWINDOW|IFCSTAIR|IFCRAMP|IFCROOF|IFCCOVERING|IFCSPACE|IFCFURNITURE|IFCRAILING|IFCCURTAINWALL|IFCBUILDING|PAREDE|PORTA|JANELA|ARQUI)/.test(s)) return 'ARQUITETURA';
   return 'OUTROS';
 }
 function getDisciplineColorHex(d) { return parseInt((DISCIPLINE_COLORS[d] || '#64748b').replace('#', ''), 16); }
 function getDisciplineColorCSS(d) { return DISCIPLINE_COLORS[d] || '#64748b'; }
 
-/* ============================================================
-   INICIALIZAÇÃO
-   ============================================================ */
+/* INIT */
 window.addEventListener('load', function () {
   if (!applyLicenseGate()) { setInterval(applyLicenseGate, 60000); return; }
   try { init3DScene(); } catch (e) { console.error('init3D:', e); }
   initRulesUI(); initCharts(); initColorSwatches(); updateDashboardUI();
   renderTextureGrid(); updateTextureLabels();
+  updateClashPinsButton();
   window.addEventListener('resize', onWindowResize);
   window.addEventListener('orientationchange', function () { setTimeout(onWindowResize, 300); });
   if (window.visualViewport) { window.visualViewport.addEventListener('resize', onWindowResize); window.visualViewport.addEventListener('scroll', onWindowResize); }
@@ -1073,11 +780,9 @@ function triggerIfcImport() { closeActionsSheet(); setTimeout(function () { docu
 /* 3D SCENE */
 function init3DScene() {
   var container = document.getElementById('canvasWrapper');
-  scene = new THREE.Scene();
-  scene.background = new THREE.Color(0x090d16);
+  scene = new THREE.Scene(); scene.background = new THREE.Color(0x090d16);
   camera = new THREE.PerspectiveCamera(45, container.clientWidth / Math.max(1, container.clientHeight), 0.1, 100000);
-  camera.up.set(0, 0, 1);
-  camera.position.set(25, -25, 25);
+  camera.up.set(0, 0, 1); camera.position.set(25, -25, 25);
   renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('bimCanvas'), antialias: false, alpha: false, powerPreference: 'high-performance', failIfMajorPerformanceCaveat: false });
   renderer.setSize(container.clientWidth, container.clientHeight, false);
   renderer.setPixelRatio(isIOS ? 1 : Math.min(window.devicePixelRatio, 2));
@@ -1091,9 +796,7 @@ function init3DScene() {
   var d1 = new THREE.DirectionalLight(0xffffff, 0.85); d1.position.set(60, -60, 90); scene.add(d1);
   var d2 = new THREE.DirectionalLight(0x93c5fd, 0.35); d2.position.set(-50, 50, -40); scene.add(d2);
   var grid = new THREE.GridHelper(200, 200, 0x1e3a8a, 0x1e293b);
-  grid.rotation.x = Math.PI / 2;
-  grid.material.opacity = 0.5; grid.material.transparent = true;
-  scene.add(grid);
+  grid.rotation.x = Math.PI / 2; grid.material.opacity = 0.5; grid.material.transparent = true; scene.add(grid);
   scene.add(new THREE.AxesHelper(8));
   modelGroup = new THREE.Group(); scene.add(modelGroup);
   clashMarkersGroup = new THREE.Group(); scene.add(clashMarkersGroup);
@@ -1103,12 +806,11 @@ function init3DScene() {
   cv.addEventListener('pointerdown', onPointerDown);
   cv.addEventListener('pointerup', onPointerUp);
   cv.addEventListener('contextmenu', function (e) { e.preventDefault(); });
-  initSectionPlanes();
-  buildAxisCompass();
-  animate();
+  initSectionPlanes(); buildAxisCompass(); animate();
 }
 function animate() {
   requestAnimationFrame(animate);
+  updateCameraTween();
   if (controls) controls.update();
   if (renderer && scene && camera) {
     try { renderer.render(scene, camera); } catch (e) {}
@@ -1118,48 +820,69 @@ function animate() {
 }
 function onWindowResize() { if (!renderer || !camera) return; var c = document.getElementById('canvasWrapper'); var w = c.clientWidth, h = c.clientHeight; if (w === 0 || h === 0) return; camera.aspect = w / h; camera.updateProjectionMatrix(); renderer.setSize(w, h, false); }
 function buildAxisCompass() { var el = document.getElementById('axisCompass'); el.innerHTML = '<svg viewBox="0 0 100 100" width="100%" height="100%"><circle cx="50" cy="50" r="45" fill="rgba(15,23,42,0.6)" stroke="rgba(255,255,255,0.1)"/><line id="axX" x1="50" y1="50" x2="50" y2="50" stroke="#ef4444" stroke-width="2.5" stroke-linecap="round"/><line id="axY" x1="50" y1="50" x2="50" y2="50" stroke="#10b981" stroke-width="2.5" stroke-linecap="round"/><line id="axZ" x1="50" y1="50" x2="50" y2="50" stroke="#3b82f6" stroke-width="2.5" stroke-linecap="round"/><text id="lblX" x="50" y="50" fill="#ef4444" font-size="10" font-weight="700" text-anchor="middle">X</text><text id="lblY" x="50" y="50" fill="#10b981" font-size="10" font-weight="700" text-anchor="middle">Y</text><text id="lblZ" x="50" y="50" fill="#3b82f6" font-size="10" font-weight="700" text-anchor="middle">Z</text></svg>'; }
-function updateAxisCompass() { if (!camera) return; var axes = [{ v: new THREE.Vector3(1, 0, 0), line: 'axX', lbl: 'lblX' },{ v: new THREE.Vector3(0, 1, 0), line: 'axY', lbl: 'lblY' },{ v: new THREE.Vector3(0, 0, 1), line: 'axZ', lbl: 'lblZ' }]; var m = camera.matrixWorldInverse; for (var i = 0; i < axes.length; i++) { var a = axes[i], v = a.v.clone().transformDirection(m); var x2 = 50 + v.x * 35, y2 = 50 - v.y * 35; var ln = document.getElementById(a.line), lb = document.getElementById(a.lbl); if (ln) { ln.setAttribute('x2', x2); ln.setAttribute('y2', y2); } if (lb) { lb.setAttribute('x', 50 + v.x * 42); lb.setAttribute('y', 50 - v.y * 42 + 3); } } }
-function resetCameraView(view) { var box = new THREE.Box3(); if (state.elements.length) { state.elements.forEach(function (e) { if (e.mesh.visible) box.expandByObject(e.mesh); }); } else { box.setFromCenterAndSize(new THREE.Vector3(0, 0, 0), new THREE.Vector3(20, 20, 20)); } if (box.isEmpty()) return; var c = new THREE.Vector3(); box.getCenter(c); var s = new THREE.Vector3(); box.getSize(s); var d = Math.max(s.x, s.y, s.z) * 1.6 + 6; controls.target.copy(c); camera.up.set(0, 0, 1); if (view === 'top') camera.position.set(c.x, c.y, c.z + d); else if (view === 'front') camera.position.set(c.x, c.y - d, c.z + d * 0.05); else if (view === 'side') camera.position.set(c.x + d, c.y, c.z + d * 0.05); else camera.position.set(c.x + d * 0.75, c.y - d * 0.75, c.z + d * 0.55); camera.far = Math.max(2000, d * 12); camera.updateProjectionMatrix(); controls.update(); }
-function fitAllModels() { if (!state.elements.length) { showViewportStatus('Nenhum modelo carregado.'); return; } var box = new THREE.Box3(); state.elements.forEach(function (e) { if (e.mesh.visible) box.expandByObject(e.mesh); }); if (box.isEmpty()) return; var c = new THREE.Vector3(); box.getCenter(c); var s = new THREE.Vector3(); box.getSize(s); var d = Math.max(s.x, s.y, s.z) * 1.5 + 6; camera.up.set(0, 0, 1); camera.position.set(c.x + d * 0.75, c.y - d * 0.75, c.z + d * 0.55); controls.target.copy(c); camera.far = Math.max(2000, d * 12); camera.updateProjectionMatrix(); controls.update(); showViewportStatus('Enquadrado.'); }
+function updateAxisCompass() { if (!camera) return; var axes = [{ v: new THREE.Vector3(1, 0, 0), line: 'axX', lbl: 'lblX' }, { v: new THREE.Vector3(0, 1, 0), line: 'axY', lbl: 'lblY' }, { v: new THREE.Vector3(0, 0, 1), line: 'axZ', lbl: 'lblZ' }]; var m = camera.matrixWorldInverse; for (var i = 0; i < axes.length; i++) { var a = axes[i], v = a.v.clone().transformDirection(m); var x2 = 50 + v.x * 35, y2 = 50 - v.y * 35; var ln = document.getElementById(a.line), lb = document.getElementById(a.lbl); if (ln) { ln.setAttribute('x2', x2); ln.setAttribute('y2', y2); } if (lb) { lb.setAttribute('x', 50 + v.x * 42); lb.setAttribute('y', 50 - v.y * 42 + 3); } } }
+
+/* CÂMERA */
+function resetCameraView(view) {
+  var box = new THREE.Box3();
+  if (state.elements.length) state.elements.forEach(function (e) { if (e.mesh.visible) box.expandByObject(e.mesh); });
+  else box.setFromCenterAndSize(new THREE.Vector3(0, 0, 0), new THREE.Vector3(20, 20, 20));
+  if (box.isEmpty()) return;
+  var c = new THREE.Vector3(); box.getCenter(c);
+  var s = new THREE.Vector3(); box.getSize(s);
+  var d = Math.max(s.x, s.y, s.z) * 1.6 + 6;
+  controls.target.copy(c); camera.up.set(0, 0, 1);
+  if (view === 'top') camera.position.set(c.x, c.y, c.z + d);
+  else if (view === 'front') camera.position.set(c.x, c.y - d, c.z + d * 0.05);
+  else if (view === 'side') camera.position.set(c.x + d, c.y, c.z + d * 0.05);
+  else camera.position.set(c.x + d * 0.75, c.y - d * 0.75, c.z + d * 0.55);
+  camera.far = Math.max(2000, d * 12); camera.updateProjectionMatrix(); controls.update();
+}
+function fitAllModels() {
+  if (!state.elements.length) { showViewportStatus('Nenhum modelo carregado.'); return; }
+  var box = new THREE.Box3(); state.elements.forEach(function (e) { if (e.mesh.visible) box.expandByObject(e.mesh); });
+  if (box.isEmpty()) return;
+  var c = new THREE.Vector3(); box.getCenter(c);
+  var s = new THREE.Vector3(); box.getSize(s);
+  var d = Math.max(s.x, s.y, s.z) * 1.5 + 6;
+  camera.up.set(0, 0, 1); camera.position.set(c.x + d * 0.75, c.y - d * 0.75, c.z + d * 0.55);
+  controls.target.copy(c); camera.far = Math.max(2000, d * 12); camera.updateProjectionMatrix(); controls.update();
+  showViewportStatus('Enquadrado.');
+}
 function toggleWireframe() { state.wireframe = !state.wireframe; state.elements.forEach(function (e) { if (e.mesh.material) e.mesh.material.wireframe = state.wireframe; }); showViewportStatus(state.wireframe ? 'Wireframe ON' : 'Wireframe OFF'); }
+
+/* PINS DE CONFLITO — 3 MODOS */
+function updateClashPinsButton() {
+  var btn = document.getElementById('btnClashPins'); if (!btn) return;
+  var labels = { all: '📍 Todos', selected: '🎯 Um por vez', none: '❌ Nenhum' };
+  var colors = { all: '#334155', selected: '#2563eb', none: '#475569' };
+  btn.style.background = colors[state.clashDisplayMode];
+  btn.title = 'Pins: ' + labels[state.clashDisplayMode];
+  btn.innerHTML = '<i class="fa-solid fa-map-pin"></i> ' + labels[state.clashDisplayMode];
+}
 function toggleClashPins() {
   var modes = ['all', 'selected', 'none'];
-  var labels = { all: 'Todos', selected: 'Um por vez', none: 'Nenhum' };
-  var icons  = { all: '📍', selected: '🎯', none: '❌' };
-  var colors = { all: '#334155', selected: '#2563eb', none: '#475569' };
-
   var idx = modes.indexOf(state.clashDisplayMode);
-  idx = (idx + 1) % modes.length;
-  state.clashDisplayMode = modes[idx];
-
-  var btn = document.getElementById('btnClashPins');
-  if (btn) {
-    btn.style.background = colors[state.clashDisplayMode];
-    btn.innerHTML = '<i class="fa-solid fa-map-pin"></i> ' + icons[state.clashDisplayMode];
-    btn.title = 'Pins: ' + labels[state.clashDisplayMode] + ' (clique para alternar)';
-  }
-
+  state.clashDisplayMode = modes[(idx + 1) % modes.length];
+  updateClashPinsButton();
   updateClashPinsVisibility();
-  showViewportStatus('Pins de conflito: ' + labels[state.clashDisplayMode]);
+  var labels = { all: 'Todos', selected: 'Um por vez', none: 'Nenhum' };
+  showViewportStatus('Pins: ' + labels[state.clashDisplayMode]);
 }
-
 function updateClashPinsVisibility() {
   var mode = state.clashDisplayMode;
   var selectedId = state.selectedClash ? state.selectedClash.id : null;
-
   state.clashes.forEach(function (c) {
-    var show = false;
-    if (mode === 'all') show = true;
-    else if (mode === 'selected') show = (c.id === selectedId);
-    else show = false;
-
+    var show = (mode === 'all') || (mode === 'selected' && c.id === selectedId);
     c._pinVisible = show;
-
     if (c._htmlMarker) c._htmlMarker.style.display = show ? 'block' : 'none';
     if (c._htmlRing) c._htmlRing.style.display = show ? 'block' : 'none';
     if (c._sphere) c._sphere.visible = show;
   });
-}function onPointerDown(e) { pointerDownPos = { x: e.clientX, y: e.clientY, t: Date.now() }; }
+}
+
+/* SELEÇÃO */
+function onPointerDown(e) { pointerDownPos = { x: e.clientX, y: e.clientY, t: Date.now() }; }
 function onPointerUp(e) { if (!pointerDownPos) return; var dx = Math.abs(e.clientX - pointerDownPos.x), dy = Math.abs(e.clientY - pointerDownPos.y), dt = Date.now() - pointerDownPos.t; pointerDownPos = null; if (dx > 6 || dy > 6 || dt > 500) return; pickElementAt(e.clientX, e.clientY); }
 function pickElementAt(cx, cy) {
   var rect = renderer.domElement.getBoundingClientRect();
@@ -1171,18 +894,8 @@ function pickElementAt(cx, cy) {
   var mesh = hits[0].object;
   for (var i = 0; i < state.elements.length; i++) if (state.elements[i].mesh === mesh) { selectElement(state.elements[i]); return; }
 }
-function selectElement(el) {
-  state.selectedElement = el;
-  state.elements.forEach(function (e) { if (e.mesh.material && e.mesh.material.emissive && !e.mesh.userData._clashHighlight) e.mesh.material.emissive.setHex(0); });
-  if (el.mesh.material && el.mesh.material.emissive) el.mesh.material.emissive.setHex(0x1e3a8a);
-  showSelectedElementBar(el); updateDimensionsUI();
-}
-function clearSelection() {
-  clearClashHighlight();
-  state.selectedElement = null;
-  state.elements.forEach(function (e) { if (e.mesh.material && e.mesh.material.emissive && !e.mesh.userData._clashHighlight) e.mesh.material.emissive.setHex(0); });
-  hideSelectedElementBar(); updateDimensionsUI();
-}
+function selectElement(el) { state.selectedElement = el; state.elements.forEach(function (e) { if (e.mesh.material && e.mesh.material.emissive && !e.mesh.userData._clashHighlight) e.mesh.material.emissive.setHex(0); }); if (el.mesh.material && el.mesh.material.emissive) el.mesh.material.emissive.setHex(0x1e3a8a); showSelectedElementBar(el); updateDimensionsUI(); }
+function clearSelection() { clearClashHighlight(); state.selectedElement = null; state.elements.forEach(function (e) { if (e.mesh.material && e.mesh.material.emissive && !e.mesh.userData._clashHighlight) e.mesh.material.emissive.setHex(0); }); hideSelectedElementBar(); updateDimensionsUI(); }
 function showSelectedElementBar(el) { document.getElementById('selElemName').innerText = el.name || '—'; document.getElementById('selElemDisc').innerText = el.discipline || '—'; document.getElementById('selElemGUID').innerText = 'GUID: ' + (el.guid || '-'); document.getElementById('selectedElementBar').classList.add('show'); }
 function hideSelectedElementBar() { document.getElementById('selectedElementBar').classList.remove('show'); }
 function isolateSelectedElement() { if (!state.selectedElement) return; state.elements.forEach(function (e) { e.mesh.visible = (e === state.selectedElement); }); buildSpatialTreeUI(); }
@@ -1194,23 +907,21 @@ function showViewportStatus(msg) { var el = document.getElementById('viewportSta
 
 /* IFC LOAD */
 function handleIFCUpload(event) {
-  var files = Array.prototype.slice.call(event.target.files || []);
-  if (!files.length) return;
+  var files = Array.prototype.slice.call(event.target.files || []); if (!files.length) return;
   showLoading(true, 'Inicializando motor IFC...');
-  if (typeof WebIFC === 'undefined') { alert('Biblioteca WebIFC não carregada.\n\nBaixe web-ifc-api-iife.js e web-ifc.wasm em:\nhttps://thatopen.github.io/engine_web-ifc/build.zip\n\nColoque os dois na mesma pasta e rode via servidor local.'); showLoading(false); event.target.value = ''; return; }
+  if (typeof WebIFC === 'undefined') { alert('Biblioteca WebIFC não carregada.\n\nBaixe web-ifc-api-iife.js e web-ifc.wasm em:\nhttps://thatopen.github.io/engine_web-ifc/build.zip\n\nColoque os dois na mesma pasta.'); showLoading(false); event.target.value = ''; return; }
   if (!ifcApiInstance) {
     ifcApiInstance = new WebIFC.IfcAPI();
     if (ifcApiInstance.SetWasmPath) ifcApiInstance.SetWasmPath('./');
-    ifcApiInstance.Init().then(function () { processIFCFiles(files); }).catch(function (err) { console.error('[IFC INIT]', err); alert('Erro ao inicializar WebIFC: ' + err.message); showLoading(false); });
-  } else { processIFCFiles(files); }
+    ifcApiInstance.Init().then(function () { processIFCFiles(files); }).catch(function (err) { console.error('[IFC INIT]', err); alert('Erro: ' + err.message); showLoading(false); });
+  } else processIFCFiles(files);
 }
 function processIFCFiles(files) {
   var i = 0;
   function next() {
     if (i >= files.length) { fitAllModels(); updateModelsListUI(); buildSpatialTreeUI(); updateScopeUI(); updateFloorFilterOptions(); refreshTransformModelSelect(); showLoading(false); showViewportStatus(files.length + ' IFC importado(s).'); return; }
-    var file = files[i++];
-    showLoading(true, 'Processando ' + file.name + '...');
-    loadIFCFile(ifcApiInstance, file).then(next).catch(function (err) { console.error('[IFC]', err); alert('Erro ao processar IFC: ' + (err.message || err)); next(); });
+    var file = files[i++]; showLoading(true, 'Processando ' + file.name + '...');
+    loadIFCFile(ifcApiInstance, file).then(next).catch(function (err) { console.error('[IFC]', err); alert('Erro: ' + (err.message || err)); next(); });
   }
   next();
 }
@@ -1219,15 +930,13 @@ function loadIFCFile(api, file) {
     var buf = new Uint8Array(buffer);
     var modelID = api.OpenModel(buf, { COORDINATE_TO_ORIGIN: true });
     var modelId = 'M' + modelID + '_' + Date.now();
-    var group = new THREE.Group();
-    group.userData.isModelRoot = true; group.rotation.x = -Math.PI / 2; group.name = file.name;
+    var group = new THREE.Group(); group.userData.isModelRoot = true; group.rotation.x = -Math.PI / 2; group.name = file.name;
     modelGroup.add(group); state.modelGroups[modelId] = group;
     state.modelTransforms[modelId] = { rot: { x: 0, y: 0, z: 0 }, pos: { x: 0, y: 0, z: 0 } };
-    var count = 0;
-    var MAX_IOS = isIOS ? 3000 : 999999;
+    var count = 0, MAX_IOS = isIOS ? 3000 : 999999;
     var flatMeshes = api.LoadAllGeometry(modelID);
     for (var i = 0; i < flatMeshes.size(); i++) {
-      if (count >= MAX_IOS) { console.warn('[iOS] Limite atingido'); break; }
+      if (count >= MAX_IOS) break;
       var flat = flatMeshes.get(i);
       var ifcType = getIFCTypeName(api, modelID, flat.expressID);
       var gs = flat.geometries;
@@ -1237,14 +946,8 @@ function loadIFCFile(api, file) {
         var verts = api.GetVertexArray(geo.GetVertexData(), geo.GetVertexDataSize());
         var idx = api.GetIndexArray(geo.GetIndexData(), geo.GetIndexDataSize());
         if (!verts.length || !idx.length) { try { geo.delete(); } catch (e) {} continue; }
-        var positions = new Float32Array(verts.length / 2 * 3);
-        var normals = new Float32Array(verts.length / 2 * 3);
-        var uvs = new Float32Array(verts.length / 2 * 2);
-        for (var k = 0, p = 0, n = 0, u = 0; k < verts.length; k += 6) {
-          positions[p++] = verts[k]; positions[p++] = verts[k + 1]; positions[p++] = verts[k + 2];
-          normals[n++] = verts[k + 3]; normals[n++] = verts[k + 4]; normals[n++] = verts[k + 5];
-          uvs[u++] = verts[k] * 0.5; uvs[u++] = verts[k + 1] * 0.5;
-        }
+        var positions = new Float32Array(verts.length / 2 * 3), normals = new Float32Array(verts.length / 2 * 3), uvs = new Float32Array(verts.length / 2 * 2);
+        for (var k = 0, p = 0, n = 0, u = 0; k < verts.length; k += 6) { positions[p++] = verts[k]; positions[p++] = verts[k + 1]; positions[p++] = verts[k + 2]; normals[n++] = verts[k + 3]; normals[n++] = verts[k + 4]; normals[n++] = verts[k + 5]; uvs[u++] = verts[k] * 0.5; uvs[u++] = verts[k + 1] * 0.5; }
         var geometry = new THREE.BufferGeometry();
         geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
         geometry.setAttribute('normal', new THREE.BufferAttribute(normals, 3));
@@ -1256,8 +959,7 @@ function loadIFCFile(api, file) {
         var color = (col && col.x !== undefined) ? new THREE.Color(col.x, col.y, col.z) : new THREE.Color(0x94a3b8);
         var opacity = (col && col.w !== undefined) ? col.w : 1;
         var material = new THREE.MeshStandardMaterial({ color: color, roughness: 0.7, metalness: 0.1, transparent: opacity < 1, opacity: opacity, side: THREE.DoubleSide });
-        var mesh = new THREE.Mesh(geometry, material);
-        mesh.applyMatrix4(mat4);
+        var mesh = new THREE.Mesh(geometry, material); mesh.applyMatrix4(mat4);
         var nm = getIFCName(api, modelID, flat.expressID) || ifcType;
         var disc = classifyDiscipline(ifcType, nm);
         var storey = getIFCStorey(api, modelID, flat.expressID) || 'Não classificado';
@@ -1334,10 +1036,7 @@ function updateModelsListUI() {
 }
 function removeModel(modelId) {
   if (!modelId) return; if (!confirm('Excluir este modelo?')) return;
-  state.elements.filter(function (e) { return e.modelId === modelId; }).forEach(function (e) {
-    try { if (e.mesh.geometry) e.mesh.geometry.dispose(); if (e.mesh.material) e.mesh.material.dispose(); if (e.mesh.parent) e.mesh.parent.remove(e.mesh); } catch (err) {}
-    var i = state.elements.indexOf(e); if (i >= 0) state.elements.splice(i, 1);
-  });
+  state.elements.filter(function (e) { return e.modelId === modelId; }).forEach(function (e) { try { if (e.mesh.geometry) e.mesh.geometry.dispose(); if (e.mesh.material) e.mesh.material.dispose(); if (e.mesh.parent) e.mesh.parent.remove(e.mesh); } catch (err) {} var i = state.elements.indexOf(e); if (i >= 0) state.elements.splice(i, 1); });
   var g = state.modelGroups[modelId]; if (g && g.parent) g.parent.remove(g);
   delete state.modelGroups[modelId]; delete state.modelTransforms[modelId];
   var mi = -1; for (var i = 0; i < state.models.length; i++) if (state.models[i].id === modelId) { mi = i; break; }
@@ -1364,9 +1063,8 @@ function zoomToModel(modelId) {
   var c = new THREE.Vector3(); box.getCenter(c);
   var s = new THREE.Vector3(); box.getSize(s);
   var d = Math.max(s.x, s.y, s.z) * 1.2 + 5;
-  controls.target.copy(c); camera.up.set(0, 0, 1);
-  camera.position.set(c.x + d * 0.7, c.y - d * 0.7, c.z + d * 0.5);
-  camera.far = Math.max(1000, d * 10); camera.updateProjectionMatrix(); controls.update();
+  tweenCamera(new THREE.Vector3(c.x + d * 0.7, c.y - d * 0.7, c.z + d * 0.5), c, 600);
+  camera.far = Math.max(1000, d * 10); camera.updateProjectionMatrix();
 }
 
 /* ÁRVORE */
@@ -1428,32 +1126,14 @@ function updateScopeUI() { var scope = document.getElementById('applyScope').val
 function uniqueValues(arr) { var seen = {}, out = []; arr.forEach(function (v) { if (!seen[v]) { seen[v] = true; out.push(v); } }); return out; }
 function getTargetElements() { var scope = document.getElementById('applyScope').value, val = document.getElementById('scopeValue').value; if (scope === 'selected') return state.selectedElement ? [state.selectedElement] : []; if (scope === 'model') return state.elements.filter(function (e) { return !val || e.modelId === val; }); if (scope === 'discipline') return state.elements.filter(function (e) { return !val || e.discipline === val; }); if (scope === 'storey') return state.elements.filter(function (e) { return !val || e.storey === val; }); if (scope === 'type') return state.elements.filter(function (e) { return !val || e.ifcClass === val; }); return []; }
 function applyColorFromUI() {
-  var hex = document.getElementById('colorPicker').value;
-  var opacity = parseInt(document.getElementById('opacityRange').value) / 100;
-  var targets = getTargetElements();
+  var hex = document.getElementById('colorPicker').value, opacity = parseInt(document.getElementById('opacityRange').value) / 100, targets = getTargetElements();
   if (!targets.length) { alert('Nenhum elemento para colorir.'); return; }
   var colorInt = parseInt(hex.replace('#', ''), 16);
-  targets.forEach(function (el) {
-    if (!el.mesh.material) return;
-    if (!el.mesh.userData._matCloned) { el.mesh.material = el.mesh.material.clone(); el.mesh.userData._matCloned = true; }
-    el.mesh.material.color.setHex(colorInt); el.mesh.material.opacity = opacity; el.mesh.material.transparent = opacity < 1;
-    if (el.mesh.material.map) { try { el.mesh.material.map.dispose(); } catch (e) {} el.mesh.material.map = null; el.mesh.userData._hasTexture = false; }
-    el.mesh.material.needsUpdate = true;
-  });
+  targets.forEach(function (el) { if (!el.mesh.material) return; if (!el.mesh.userData._matCloned) { el.mesh.material = el.mesh.material.clone(); el.mesh.userData._matCloned = true; } el.mesh.material.color.setHex(colorInt); el.mesh.material.opacity = opacity; el.mesh.material.transparent = opacity < 1; if (el.mesh.material.map) { try { el.mesh.material.map.dispose(); } catch (e) {} el.mesh.material.map = null; el.mesh.userData._hasTexture = false; } el.mesh.material.needsUpdate = true; });
   if (sectionState.X && sectionState.X.plane) applySectionPlanes();
   showViewportStatus('Cor aplicada em ' + targets.length + ' elemento(s).');
 }
-function resetColors() {
-  state.elements.forEach(function (el) {
-    if (!el.mesh.material) return;
-    if (!el.mesh.userData._matCloned) { el.mesh.material = el.mesh.material.clone(); el.mesh.userData._matCloned = true; }
-    if (el.mesh.material.map) { try { el.mesh.material.map.dispose(); } catch (e) {} el.mesh.material.map = null; }
-    el.mesh.material.color.setHex(getDisciplineColorHex(el.discipline)); el.mesh.material.roughness = 0.5; el.mesh.material.metalness = 0.15;
-    el.mesh.material.opacity = 0.92; el.mesh.material.transparent = true; el.mesh.material.needsUpdate = true;
-    el.mesh.userData._hasTexture = false;
-  });
-  showViewportStatus('Cores e texturas restauradas.');
-}
+function resetColors() { state.elements.forEach(function (el) { if (!el.mesh.material) return; if (!el.mesh.userData._matCloned) { el.mesh.material = el.mesh.material.clone(); el.mesh.userData._matCloned = true; } if (el.mesh.material.map) { try { el.mesh.material.map.dispose(); } catch (e) {} el.mesh.material.map = null; } el.mesh.material.color.setHex(getDisciplineColorHex(el.discipline)); el.mesh.material.roughness = 0.5; el.mesh.material.metalness = 0.15; el.mesh.material.opacity = 0.92; el.mesh.material.transparent = true; el.mesh.material.needsUpdate = true; el.mesh.userData._hasTexture = false; }); showViewportStatus('Cores restauradas.'); }
 
 /* DIMENSIONAMENTO */
 function fmt(v, d) { if (v === undefined || v === null || isNaN(v)) return '0.00'; return Number(v).toFixed(d === undefined ? 2 : d); }
@@ -1473,8 +1153,7 @@ function computeElementMetrics(elem) {
   return { x: size.x, y: size.y, z: size.z, perimeter: 2 * (size.x + size.y), areaBase: size.x * size.y, areaMesh: meshArea, volumeMesh: meshVolume, center: center };
 }
 function updateDimensionsUI() {
-  var el = state.selectedElement;
-  var empty = document.getElementById('dimEmpty'), content = document.getElementById('dimContent'), nameEl = document.getElementById('dimElemName');
+  var el = state.selectedElement, empty = document.getElementById('dimEmpty'), content = document.getElementById('dimContent'), nameEl = document.getElementById('dimElemName');
   if (!el) { empty.style.display = 'block'; content.style.display = 'none'; nameEl.innerText = '—'; return; }
   empty.style.display = 'none'; content.style.display = 'block';
   nameEl.innerText = (el.name || '—').substring(0, 30);
@@ -1488,29 +1167,18 @@ function measureWholeModel() {
   state.elements.forEach(function (el) { var m = computeElementMetrics(el); totalArea += m.areaMesh; totalVolume += m.volumeMesh; if (!byDisc[el.discipline]) byDisc[el.discipline] = { count: 0, area: 0, volume: 0 }; byDisc[el.discipline].count++; byDisc[el.discipline].area += m.areaMesh; byDisc[el.discipline].volume += m.volumeMesh; });
   document.getElementById('totalArea').innerText = fmt(totalArea); document.getElementById('totalVolume').innerText = fmt(totalVolume);
   var d = document.getElementById('dimByDiscipline'); d.innerHTML = '';
-  Object.keys(byDisc).sort().forEach(function (k) {
-    var info = byDisc[k], color = getDisciplineColorCSS(k);
-    var row = document.createElement('div');
-    row.style.cssText = 'background:#0f172a;border:1px solid #1e293b;border-radius:.375rem;padding:.5rem;margin-bottom:.375rem;display:flex;justify-content:space-between;align-items:center;font-size:.7rem';
-    row.innerHTML = '<div style="display:flex;align-items:center;gap:.4rem;min-width:0"><span style="width:10px;height:10px;border-radius:50%;background:' + color + ';flex-shrink:0"></span><div style="min-width:0"><div style="color:#e2e8f0;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">' + k + '</div><div style="color:#64748b;font-size:.55rem">' + info.count + ' elem.</div></div></div><div style="text-align:right;flex-shrink:0"><div style="color:#34d399;font-family:monospace;font-size:.7rem">' + fmt(info.area) + ' m²</div><div style="color:#c084fc;font-family:monospace;font-size:.6rem">' + fmt(info.volume) + ' m³</div></div>';
-    d.appendChild(row);
-  });
+  Object.keys(byDisc).sort().forEach(function (k) { var info = byDisc[k], color = getDisciplineColorCSS(k); var row = document.createElement('div'); row.style.cssText = 'background:#0f172a;border:1px solid #1e293b;border-radius:.375rem;padding:.5rem;margin-bottom:.375rem;display:flex;justify-content:space-between;align-items:center;font-size:.7rem'; row.innerHTML = '<div style="display:flex;align-items:center;gap:.4rem;min-width:0"><span style="width:10px;height:10px;border-radius:50%;background:' + color + ';flex-shrink:0"></span><div style="min-width:0"><div style="color:#e2e8f0;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">' + k + '</div><div style="color:#64748b;font-size:.55rem">' + info.count + ' elem.</div></div></div><div style="text-align:right;flex-shrink:0"><div style="color:#34d399;font-family:monospace;font-size:.7rem">' + fmt(info.area) + ' m²</div><div style="color:#c084fc;font-family:monospace;font-size:.6rem">' + fmt(info.volume) + ' m³</div></div>'; d.appendChild(row); });
   showViewportStatus('Total: ' + fmt(totalArea) + ' m² | ' + fmt(totalVolume) + ' m³');
 }
 function exportDimensionsCSV() {
   if (!state.elements.length) { alert('Nenhum modelo carregado.'); return; }
   var csv = 'Tipo;Nome;GUID;Disciplina;Pavimento;X(m);Y(m);Z(m);Area(m2);Volume(m3);Textura\n';
-  state.elements.forEach(function (e) {
-    var m = computeElementMetrics(e);
-    var hasTex = e.mesh.userData._hasTexture ? 'Sim' : 'Não';
-    csv += e.ifcClass + ';"' + (e.name || '').replace(/"/g, '""') + '";' + e.guid + ';' + e.discipline + ';' + e.storey + ';' + fmt(m.x, 3) + ';' + fmt(m.y, 3) + ';' + fmt(m.z, 3) + ';' + fmt(m.areaMesh, 3) + ';' + fmt(m.volumeMesh, 3) + ';' + hasTex + '\n';
-  });
+  state.elements.forEach(function (e) { var m = computeElementMetrics(e); var hasTex = e.mesh.userData._hasTexture ? 'Sim' : 'Não'; csv += e.ifcClass + ';"' + (e.name || '').replace(/"/g, '""') + '";' + e.guid + ';' + e.discipline + ';' + e.storey + ';' + fmt(m.x, 3) + ';' + fmt(m.y, 3) + ';' + fmt(m.z, 3) + ';' + fmt(m.areaMesh, 3) + ';' + fmt(m.volumeMesh, 3) + ';' + hasTex + '\n'; });
   downloadFile('\uFEFF' + csv, 'Dimensionamento_APAVAN_' + Date.now() + '.csv', 'text/csv;charset=utf-8;');
 }
 
 /* CLASH */
 function severityColor(s) { return s === 'CRITICAL' ? '#ef4444' : s === 'HIGH' ? '#f97316' : s === 'MEDIUM' ? '#eab308' : '#3b82f6'; }
-
 function runClashDetection() {
   if (state.elements.length < 2) { alert('Carregue pelo menos dois elementos.'); return; }
   showLoading(true, 'Analisando conflitos...');
@@ -1558,102 +1226,106 @@ function runClashDetection() {
       clearClashHighlight();
       state.clashes.forEach(function (c) { create3DClashMarker(c); });
       updateClashListUI(); updateDashboardUI();
+      updateClashPinsVisibility();
       showViewportStatus(state.clashes.length + ' conflito(s) detectado(s).');
       if (state.clashes.length && isMobile()) toggleRightSidebar();
     } catch (e) { console.error(e); alert('Erro: ' + e.message); }
     finally { showLoading(false); }
   }, 40);
 }
-
 function create3DClashMarker(clash) {
   if (!clash.center) return;
   if (!clashMarkersContainer) clashMarkersContainer = document.getElementById('clashMarkersContainer');
   var col = severityColor(clash.severity);
-
-  // Esfera 3D pequena
   var geo = new THREE.SphereGeometry(0.08, 8, 8);
   var mat = new THREE.MeshBasicMaterial({ color: col, transparent: true, opacity: 0.9, depthTest: false });
-  var sphere = new THREE.Mesh(geo, mat);
-  sphere.position.copy(clash.center);
-  sphere.renderOrder = 999;
-  sphere.userData.clashId = clash.id;
-  clashMarkersGroup.add(sphere);
-  clash._sphere = sphere;
-
-  // Pin HTML
+  var sphere = new THREE.Mesh(geo, mat); sphere.position.copy(clash.center);
+  sphere.renderOrder = 999; sphere.userData.clashId = clash.id;
+  clashMarkersGroup.add(sphere); clash._sphere = sphere;
   var pin = document.createElement('div');
-  pin.className = 'clash-pin-3d sev-' + clash.severity;
-  pin.dataset.clashId = clash.id;
+  pin.className = 'clash-pin-3d sev-' + clash.severity; pin.dataset.clashId = clash.id;
   pin.title = 'Conflito ' + clash.id + ' — ' + clash.severity + '\nA: ' + clash.elemA.name + '\nB: ' + clash.elemB.name + '\nInterseção: ' + clash.overlap;
   pin.innerHTML = '<div class="pin-bubble"><span style="font-size:8px">⚠</span> ' + clash.id + '</div>';
   pin.onclick = function (ev) { ev.stopPropagation(); focusClash(clash.id); };
-  clashMarkersContainer.appendChild(pin);
-  clash._htmlMarker = pin;
-
-  // Anel pulsante
+  clashMarkersContainer.appendChild(pin); clash._htmlMarker = pin;
   var ring = document.createElement('div');
-  ring.className = 'clash-pulse-ring sev-' + clash.severity;
-  ring.dataset.clashId = clash.id;
-  clashMarkersContainer.appendChild(ring);
-  clash._htmlRing = ring;
-
-  // Respeita o modo atual
+  ring.className = 'clash-pulse-ring sev-' + clash.severity; ring.dataset.clashId = clash.id;
+  clashMarkersContainer.appendChild(ring); clash._htmlRing = ring;
   clash._pinVisible = (state.clashDisplayMode === 'all');
-  if (!clash._pinVisible) {
-    pin.style.display = 'none';
-    ring.style.display = 'none';
-    sphere.visible = false;
-  }
+  if (!clash._pinVisible) { pin.style.display = 'none'; ring.style.display = 'none'; sphere.visible = false; }
 }
 function updateClashMarkersPosition() {
   if (!renderer || !camera || !clashMarkersContainer) return;
   var rect = renderer.domElement.getBoundingClientRect();
-
   state.clashes.forEach(function (c) {
     if (!c.center) return;
-    if (c._pinVisible === false) return;   // Modo "um por vez" ou "nenhum"
-
+    if (c._pinVisible === false) return;
     var v = c.center.clone().project(camera);
     var x = (v.x * 0.5 + 0.5) * rect.width;
     var y = (-v.y * 0.5 + 0.5) * rect.height;
     var visible = v.z < 1 && v.z > -1;
-
-    if (c._htmlMarker) {
-      c._htmlMarker.style.left = x + 'px';
-      c._htmlMarker.style.top = (y - 6) + 'px';
-      c._htmlMarker.style.display = visible ? 'block' : 'none';
-    }
-    if (c._htmlRing) {
-      c._htmlRing.style.left = x + 'px';
-      c._htmlRing.style.top = y + 'px';
-      c._htmlRing.style.display = visible ? 'block' : 'none';
-    }
+    if (c._htmlMarker) { c._htmlMarker.style.left = x + 'px'; c._htmlMarker.style.top = (y - 6) + 'px'; c._htmlMarker.style.display = visible ? 'block' : 'none'; }
+    if (c._htmlRing) { c._htmlRing.style.left = x + 'px'; c._htmlRing.style.top = y + 'px'; c._htmlRing.style.display = visible ? 'block' : 'none'; }
   });
 }
+/* ============================================================
+   FOCO NO CONFLITO — Enquadramento automático dos dois elementos
+   ============================================================ */
 function focusClash(id) {
   var c = null;
   for (var i = 0; i < state.clashes.length; i++) if (state.clashes[i].id === id) { c = state.clashes[i]; break; }
-  if (!c || !c.center) return;
-
+  if (!c) return;
   state.selectedClash = c;
 
-  // Câmera voa até o ponto
-  controls.target.copy(c.center);
-  var dist = 4;
-  camera.position.set(c.center.x + dist, c.center.y - dist, c.center.z + dist * 0.7);
-  controls.update();
+  var elemA = findElementByGuid(c.elemA.guid);
+  var elemB = findElementByGuid(c.elemB.guid);
 
-  // Atualiza visibilidade (importante no modo "um por vez")
+  var box = new THREE.Box3();
+  if (elemA && elemA.mesh) box.expandByObject(elemA.mesh);
+  if (elemB && elemB.mesh) box.expandByObject(elemB.mesh);
+  if (box.isEmpty()) box.setFromCenterAndSize(c.center.clone(), new THREE.Vector3(2, 2, 2));
+
+  var center = new THREE.Vector3(); box.getCenter(center);
+  var size = new THREE.Vector3(); box.getSize(size);
+
+  var maxDim = Math.max(size.x, size.y, size.z, 0.5);
+  var fovRad = camera.fov * Math.PI / 180;
+  var dist = (maxDim / 2) / Math.tan(fovRad / 2) * 2.2;
+  dist = Math.max(dist, 1.5);
+  dist = Math.min(dist, 100);
+
+  var camDir = new THREE.Vector3().subVectors(camera.position, controls.target).normalize();
+  if (camDir.lengthSq() < 0.001) camDir.set(0.6, -0.6, 0.5).normalize();
+
+  var targetCamPos = center.clone().add(camDir.multiplyScalar(dist));
+  tweenCamera(targetCamPos, center, 600);
+
   updateClashPinsVisibility();
 
-  // Marca pin e item da lista como selecionados
   document.querySelectorAll('.clash-pin-3d').forEach(function (p) { p.classList.toggle('selected', p.dataset.clashId === id); });
   document.querySelectorAll('.clash-item').forEach(function (it) { it.classList.toggle('selected', it.dataset.clashId === id); });
 
-  // Destaque dos elementos
   highlightClashElements(c);
-
   showViewportStatus('Conflito ' + id + ' — ' + c.severity + ' (' + c.overlap + ')');
+}
+function tweenCamera(targetPos, targetLook, duration) {
+  _camTween = {
+    startPos: camera.position.clone(),
+    endPos: targetPos.clone(),
+    startLook: controls.target.clone(),
+    endLook: targetLook.clone(),
+    start: performance.now(),
+    duration: duration || 600
+  };
+}
+function updateCameraTween() {
+  if (!_camTween) return false;
+  var t = Math.min(1, (performance.now() - _camTween.start) / _camTween.duration);
+  var eased = 1 - Math.pow(1 - t, 3);
+  camera.position.lerpVectors(_camTween.startPos, _camTween.endPos, eased);
+  controls.target.lerpVectors(_camTween.startLook, _camTween.endLook, eased);
+  if (t >= 1) _camTween = null;
+  return true;
 }
 function highlightClashElements(clash) {
   clearClashHighlight();
@@ -1679,7 +1351,6 @@ function highlightClashElements(clash) {
     });
   }, 400);
 }
-
 function clearClashHighlight() {
   if (_pulseTimer) { clearInterval(_pulseTimer); _pulseTimer = null; }
   state.elements.forEach(function (el) {
@@ -1693,7 +1364,6 @@ function clearClashHighlight() {
   });
   _highlightA = null; _highlightB = null;
 }
-
 function updateClashListUI() {
   var list = document.getElementById('clashesList');
   document.getElementById('clashCountBadge').innerText = state.clashes.length;
@@ -1703,8 +1373,7 @@ function updateClashListUI() {
   if (!filtered.length) { list.innerHTML = '<div style="text-align:center;padding:2rem 1rem;color:#64748b;font-size:.75rem;border:1px dashed #1e293b;border-radius:.5rem">' + (state.clashes.length ? 'Nenhum conflito com filtros.' : 'Nenhum teste executado.') + '</div>'; return; }
   filtered.forEach(function (c) {
     var item = document.createElement('div');
-    item.className = 'clash-item';
-    item.dataset.clashId = c.id;
+    item.className = 'clash-item'; item.dataset.clashId = c.id;
     var col = severityColor(c.severity);
     item.innerHTML = '<div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.25rem"><span style="width:8px;height:8px;border-radius:50%;background:' + col + '"></span><span class="clash-id">' + c.id + '</span><span class="clash-sev" style="background:' + col + '22;color:' + col + ';margin-left:auto">' + c.severity + '</span></div><div class="clash-elem">A: <b>' + c.elemA.disc + '</b> — ' + c.elemA.name + '</div><div class="clash-elem">B: <b>' + c.elemB.disc + '</b> — ' + c.elemB.name + '</div><div style="font-size:.6rem;color:#64748b;margin-top:.25rem">' + c.floor + ' • ' + c.overlap + '</div>';
     item.onclick = function () { focusClash(c.id); };
@@ -1727,32 +1396,20 @@ function updateDashboardUI() {
 }
 function initRulesUI() {
   var c = document.getElementById('rulesContainer'); c.innerHTML = '';
-  state.rules.forEach(function (r) {
-    var d = document.createElement('div');
-    d.style.cssText = 'background:#020617;border:1px solid #1e293b;border-radius:.375rem;padding:.5rem;margin-bottom:.375rem;font-size:.7rem';
-    d.innerHTML = '<div style="display:flex;align-items:center;gap:.5rem"><input type="checkbox" ' + (r.active ? 'checked' : '') + ' style="width:14px;height:14px;padding:0"><span style="color:#cbd5e1;font-weight:600;flex:1">' + r.discA + ' × ' + r.discB + '</span><span style="color:#64748b;font-size:.55rem;text-transform:uppercase">' + r.type + '</span></div><div style="color:#64748b;font-size:.6rem;margin-top:.25rem">Tolerância: ' + r.tolerance + ' mm</div>';
-    var cb = d.querySelector('input'); cb.onchange = function () { r.active = cb.checked; };
-    c.appendChild(d);
-  });
+  state.rules.forEach(function (r) { var d = document.createElement('div'); d.style.cssText = 'background:#020617;border:1px solid #1e293b;border-radius:.375rem;padding:.5rem;margin-bottom:.375rem;font-size:.7rem'; d.innerHTML = '<div style="display:flex;align-items:center;gap:.5rem"><input type="checkbox" ' + (r.active ? 'checked' : '') + ' style="width:14px;height:14px;padding:0"><span style="color:#cbd5e1;font-weight:600;flex:1">' + r.discA + ' × ' + r.discB + '</span><span style="color:#64748b;font-size:.55rem;text-transform:uppercase">' + r.type + '</span></div><div style="color:#64748b;font-size:.6rem;margin-top:.25rem">Tolerância: ' + r.tolerance + ' mm</div>'; var cb = d.querySelector('input'); cb.onchange = function () { r.active = cb.checked; }; c.appendChild(d); });
 }
 function applyFloorFilter() { var val = document.getElementById('floorFilter').value; state.elements.forEach(function (e) { e.mesh.visible = (val === 'ALL') || (e.storey === val); }); buildSpatialTreeUI(); showViewportStatus(val === 'ALL' ? 'Todos os pavimentos.' : 'Filtrando: ' + val); }
 function updateFloorFilterOptions() { var sel = document.getElementById('floorFilter'); var floors = uniqueValues(state.elements.map(function (e) { return e.storey; })).sort(); sel.innerHTML = '<option value="ALL">Todos os Pavimentos</option>'; floors.forEach(function (f) { var o = document.createElement('option'); o.value = f; o.textContent = f; sel.appendChild(o); }); }
 
 /* ABAS */
 function switchLeftTab(tab) {
-  ['models', 'transform', 'tree', 'appearance', 'dimension', 'rules'].forEach(function (t) {
-    var content = document.getElementById('tab-content-' + t); if (content) content.classList.toggle('active', t === tab);
-    var btn = document.getElementById('tab-btn-' + t); if (btn) btn.classList.toggle('active', t === tab);
-  });
+  ['models', 'transform', 'tree', 'appearance', 'dimension', 'rules'].forEach(function (t) { var content = document.getElementById('tab-content-' + t); if (content) content.classList.toggle('active', t === tab); var btn = document.getElementById('tab-btn-' + t); if (btn) btn.classList.toggle('active', t === tab); });
   if (tab === 'dimension') updateDimensionsUI();
   if (tab === 'transform') refreshTransformModelSelect();
   if (isMobile()) closeAllSidebars();
 }
 function switchRightTab(tab) {
-  ['clashes', 'dash'].forEach(function (t) {
-    var content = document.getElementById('tab-content-' + t); if (content) content.classList.toggle('active', t === tab);
-    var btn = document.getElementById('tab-btn-' + t); if (btn) btn.classList.toggle('active', t === tab);
-  });
+  ['clashes', 'dash'].forEach(function (t) { var content = document.getElementById('tab-content-' + t); if (content) content.classList.toggle('active', t === tab); var btn = document.getElementById('tab-btn-' + t); if (btn) btn.classList.toggle('active', t === tab); });
   if (tab === 'dash') updateDashboardUI();
   if (isMobile()) closeAllSidebars();
 }
@@ -1760,44 +1417,16 @@ function switchRightTab(tab) {
 /* EXPORTAÇÃO */
 function escapeXml(s) { return String(s).replace(/[<>&"']/g, function (c) { return { '<': '&lt;', '>': '&gt;', '&': '&amp;', '"': '&quot;', "'": '&apos;' }[c]; }); }
 function downloadFile(content, name, mime) { var blob = content instanceof Blob ? content : new Blob([content], { type: mime || 'text/plain' }); var url = URL.createObjectURL(blob); var a = document.createElement('a'); a.href = url; a.download = name; a.click(); setTimeout(function () { URL.revokeObjectURL(url); }, 1000); }
-
 function exportPDFReport() {
   var win = window.open('', 'APBIM_Report');
-  if (!win) { alert('Bloqueador de pop-up ativo.\n\nPermita pop-ups para este site e tente novamente.'); return; }
+  if (!win) { alert('Bloqueador de pop-up ativo.'); return; }
   var total = state.clashes.length;
   var crit = state.clashes.filter(function (c) { return c.severity === 'CRITICAL'; }).length;
   var resolved = state.clashes.filter(function (c) { return c.status === 'Resolvido'; }).length;
-  var rows = state.clashes.map(function (c) {
-    return '<tr><td><b>' + c.id + '</b></td><td style="color:' + severityColor(c.severity) + '"><b>' + c.severity + '</b></td><td>' + c.status + '</td><td>' + c.floor + '</td><td>' + escapeXml(c.elemA.disc) + ' — ' + escapeXml(c.elemA.name) + '</td><td>' + escapeXml(c.elemB.disc) + ' — ' + escapeXml(c.elemB.name) + '</td><td>' + c.overlap + '</td></tr>';
-  }).join('');
+  var rows = state.clashes.map(function (c) { return '<tr><td><b>' + c.id + '</b></td><td style="color:' + severityColor(c.severity) + '"><b>' + c.severity + '</b></td><td>' + c.status + '</td><td>' + c.floor + '</td><td>' + escapeXml(c.elemA.disc) + ' — ' + escapeXml(c.elemA.name) + '</td><td>' + escapeXml(c.elemB.disc) + ' — ' + escapeXml(c.elemB.name) + '</td><td>' + c.overlap + '</td></tr>'; }).join('');
   var appUrl = location.origin + location.pathname;
-  var html =
-    '<!DOCTYPE html><html lang="pt-BR"><head><meta charset="utf-8"><title>Relatório AP BIM — ' + new Date().toLocaleDateString('pt-BR') + '</title><style>' +
-    '*{box-sizing:border-box}body{font-family:Arial,sans-serif;padding:24px;color:#0f172a;margin:0;background:#f8fafc}' +
-    'h1{color:#1e3a8a;margin:0 0 4px}.sub{color:#64748b;font-size:12px;margin-bottom:20px}' +
-    '.kpi{display:flex;gap:12px;margin-bottom:20px}.kpi div{flex:1;border:1px solid #cbd5e1;border-radius:8px;padding:10px;text-align:center;background:#fff}.kpi b{display:block;font-size:22px;color:#1e3a8a}.kpi span{font-size:11px;color:#64748b;text-transform:uppercase;font-weight:700}' +
-    'table{width:100%;border-collapse:collapse;font-size:11px;background:#fff}th,td{border:1px solid #cbd5e1;padding:6px;text-align:left;vertical-align:top}th{background:#1e3a8a;color:#fff}footer{margin-top:20px;font-size:10px;color:#64748b;text-align:center}' +
-    '.toolbar{position:sticky;top:0;left:0;right:0;background:#0f172a;color:#fff;padding:10px 16px;display:flex;gap:10px;align-items:center;justify-content:space-between;box-shadow:0 4px 12px rgba(0,0,0,.15);z-index:100;margin:-24px -24px 20px}' +
-    '.toolbar h2{margin:0;font-size:14px;font-weight:700;display:flex;align-items:center;gap:8px}.toolbar .btns{display:flex;gap:8px}' +
-    '.btn{padding:9px 16px;border:none;border-radius:6px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;display:inline-flex;align-items:center;gap:6px}' +
-    '.btn:hover{filter:brightness(1.15)}.btn-print{background:linear-gradient(135deg,#2563eb,#1d4ed8);color:#fff}.btn-back{background:#334155;color:#e2e8f0}.btn-back:hover{background:#475569}' +
-    '@media print{body{padding:0;background:#fff}.toolbar{display:none!important}h1{margin-top:0}@page{margin:15mm}}' +
-    '</style></head><body>' +
-    '<div class="toolbar"><h2>📄 Relatório de Conflitos — AP BIM</h2><div class="btns">' +
-    '<button class="btn btn-print" onclick="window.print()">🖨️ Imprimir / Salvar PDF</button>' +
-    '<button class="btn btn-back" onclick="voltarAoApp()">✕ Voltar ao AP BIM</button></div></div>' +
-    '<h1>AP BIM — Relatório de Conflitos</h1>' +
-    '<div class="sub">APAVAN ENGENHARIA E CONSULTORIA • ' + new Date().toLocaleString('pt-BR') + '</div>' +
-    '<div class="kpi"><div><b>' + total + '</b><span>Total</span></div><div><b style="color:#dc2626">' + crit + '</b><span style="color:#dc2626">Críticos</span></div><div><b style="color:#059669">' + resolved + '</b><span style="color:#059669">Resolvidos</span></div><div><b>' + state.elements.length + '</b><span>Elementos IFC</span></div></div>' +
-    '<table><thead><tr><th>ID</th><th>Sev.</th><th>Status</th><th>Pavimento</th><th>Elemento A</th><th>Elemento B</th><th>Interseção</th></tr></thead><tbody>' +
-    (rows || '<tr><td colspan="7" style="text-align:center;padding:20px;color:#64748b">Nenhum conflito detectado.</td></tr>') +
-    '</tbody></table><footer>Documento gerado automaticamente pelo AP BIM v6.0 — ' + new Date().toLocaleString('pt-BR') + '</footer>' +
-    '<script>function voltarAoApp(){try{window.close();}catch(e){}if(!window.closed){if(window.opener&&!window.opener.closed){window.opener.focus();window.close();}else{window.location.href="' + appUrl + '";}}}document.addEventListener("keydown",function(e){if(e.key==="Escape"){voltarAoApp();}});<\/script>' +
-    '</body></html>';
-  win.document.open();
-  win.document.write(html);
-  win.document.close();
-  win.focus();
+  var html = '<!DOCTYPE html><html lang="pt-BR"><head><meta charset="utf-8"><title>Relatório AP BIM — ' + new Date().toLocaleDateString('pt-BR') + '</title><style>*{box-sizing:border-box}body{font-family:Arial,sans-serif;padding:24px;color:#0f172a;margin:0;background:#f8fafc}h1{color:#1e3a8a;margin:0 0 4px}.sub{color:#64748b;font-size:12px;margin-bottom:20px}.kpi{display:flex;gap:12px;margin-bottom:20px}.kpi div{flex:1;border:1px solid #cbd5e1;border-radius:8px;padding:10px;text-align:center;background:#fff}.kpi b{display:block;font-size:22px;color:#1e3a8a}.kpi span{font-size:11px;color:#64748b;text-transform:uppercase;font-weight:700}table{width:100%;border-collapse:collapse;font-size:11px;background:#fff}th,td{border:1px solid #cbd5e1;padding:6px;text-align:left;vertical-align:top}th{background:#1e3a8a;color:#fff}footer{margin-top:20px;font-size:10px;color:#64748b;text-align:center}.toolbar{position:sticky;top:0;left:0;right:0;background:#0f172a;color:#fff;padding:10px 16px;display:flex;gap:10px;align-items:center;justify-content:space-between;z-index:100;margin:-24px -24px 20px}.toolbar h2{margin:0;font-size:14px;font-weight:700}.toolbar .btns{display:flex;gap:8px}.btn{padding:9px 16px;border:none;border-radius:6px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit}.btn-print{background:linear-gradient(135deg,#2563eb,#1d4ed8);color:#fff}.btn-back{background:#334155;color:#e2e8f0}@media print{body{padding:0;background:#fff}.toolbar{display:none!important}@page{margin:15mm}}</style></head><body><div class="toolbar"><h2>📄 Relatório de Conflitos — AP BIM</h2><div class="btns"><button class="btn btn-print" onclick="window.print()">🖨️ Imprimir / Salvar PDF</button><button class="btn btn-back" onclick="voltarAoApp()">✕ Voltar ao AP BIM</button></div></div><h1>AP BIM — Relatório de Conflitos</h1><div class="sub">APAVAN ENGENHARIA E CONSULTORIA • ' + new Date().toLocaleString('pt-BR') + '</div><div class="kpi"><div><b>' + total + '</b><span>Total</span></div><div><b style="color:#dc2626">' + crit + '</b><span style="color:#dc2626">Críticos</span></div><div><b style="color:#059669">' + resolved + '</b><span style="color:#059669">Resolvidos</span></div><div><b>' + state.elements.length + '</b><span>Elementos IFC</span></div></div><table><thead><tr><th>ID</th><th>Sev.</th><th>Status</th><th>Pavimento</th><th>Elemento A</th><th>Elemento B</th><th>Interseção</th></tr></thead><tbody>' + (rows || '<tr><td colspan="7" style="text-align:center;padding:20px;color:#64748b">Nenhum conflito detectado.</td></tr>') + '</tbody></table><footer>Documento gerado automaticamente pelo AP BIM v6.1 — ' + new Date().toLocaleString('pt-BR') + '</footer><script>function voltarAoApp(){try{window.close();}catch(e){}if(!window.closed){if(window.opener&&!window.opener.closed){window.opener.focus();window.close();}else{window.location.href="' + appUrl + '";}}}document.addEventListener("keydown",function(e){if(e.key==="Escape"){voltarAoApp();}});<\/script></body></html>';
+  win.document.open(); win.document.write(html); win.document.close(); win.focus();
 }
 </script>
 </body>

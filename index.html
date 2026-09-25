@@ -9,16 +9,7 @@
 <meta name="apple-mobile-web-app-title" content="AP BIM">
 <title>AP BIM — APAVAN Engenharia e Consultoria</title>
 <meta name="theme-color" content="#1e3a8a">
-<!-- Favicon (desktop) -->
-<link rel="icon" type="image/png" sizes="32x32" href="./favicon-32.png">
-<link rel="icon" type="image/png" sizes="180x180" href="./apple-touch-icon.png">
-<!-- iOS (iPhone/iPad) -->
-<link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon.png">
-<link rel="apple-touch-icon" sizes="152x152" href="./apple-touch-icon.png">
-<link rel="apple-touch-icon" sizes="120x120" href="./apple-touch-icon.png">
-<!-- Android / PWA -->
-<link rel="manifest" href="./manifest.json">
-<meta name="theme-color" content="#1e3a8a">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxODAgMTgwIj48cmVjdCB3aWR0aD0iMTgwIiBoZWlnaHQ9IjE4MCIgcng9IjQwIiBmaWxsPSIjMWUzYThhIi8+PHRleHQgeD0iOTAiIHk9IjEwMCIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9Ijc2IiBmb250LXdlaWdodD0iOTAwIiBmaWxsPSIjZmZmZmZmIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5BUDwvdGV4dD48dGV4dCB4PSI5MCIgeT0iMTI4IiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMjAiIGZvbnQtd2VpZ2h0PSI3MDAiIGZpbGw9IiNmZmZmZmYiIHRleHQtYW5jaG9yPSJtaWRkbGUiPkJJTTwvdGV4dD48L3N2Zz4=">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
@@ -59,8 +50,8 @@ header{height:3.5rem;background:#0f172a;border-bottom:1px solid #1e293b;display:
 main{flex:1;display:flex;flex-direction:column;position:relative;background:#020617;min-width:0}
 .canvas-wrap{position:relative;flex:1;overflow:hidden}
 #bimCanvas{display:block;width:100%;height:100%}
-#clashMarkersContainer{position:absolute;top:0;left:0;right:0;bottom:0;pointer-events:none;overflow:hidden}
-#axisCompass{position:absolute;bottom:14px;right:14px;width:80px;height:80px;pointer-events:none;opacity:.85}
+#clashMarkersContainer{position:absolute;top:0;left:0;right:0;bottom:0;pointer-events:none;overflow:hidden;z-index:25}
+#axisCompass{position:absolute;bottom:14px;right:14px;width:80px;height:80px;pointer-events:none;opacity:.85;z-index:8}
 
 aside{background:#0f172a;border-right:1px solid #1e293b;display:flex;flex-direction:column;width:20rem;flex-shrink:0;z-index:10}
 aside.right{border-right:none;border-left:1px solid #1e293b;width:24rem}
@@ -90,6 +81,7 @@ aside.right{border-right:none;border-left:1px solid #1e293b;width:24rem}
 
 .clash-item{background:#020617;border:1px solid #1e293b;border-radius:.5rem;padding:.5rem;cursor:pointer;margin-bottom:.5rem;transition:border-color .15s}
 .clash-item:hover{border-color:#3b82f6}
+.clash-item.selected{border-color:#3b82f6;background:rgba(59,130,246,.1)}
 .clash-id{font-family:monospace;font-size:.65rem;font-weight:700;color:#cbd5e1}
 .clash-sev{font-size:.55rem;text-transform:uppercase;font-weight:800;padding:.1rem .35rem;border-radius:.25rem}
 .clash-elem{font-size:.65rem;color:#94a3b8;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
@@ -187,6 +179,28 @@ footer{height:1.5rem;background:#020617;border-top:1px solid #1e293b;padding:0 1
 .tex-upload-btn{width:100%;background:linear-gradient(135deg,#0891b2,#0e7490);color:#fff;padding:.6rem;font-weight:700;display:flex;align-items:center;justify-content:center;gap:.4rem;margin-bottom:.5rem}
 .tex-upload-btn:hover{filter:brightness(1.1)}
 .tex-empty{text-align:center;padding:1rem .5rem;color:#64748b;font-size:.7rem;border:1px dashed #1e293b;border-radius:.5rem;margin-bottom:.5rem}
+
+/* ============ PINS DE CONFLITO NO 3D ============ */
+.clash-pin-3d{position:absolute;transform:translate(-50%,-100%);pointer-events:auto;cursor:pointer;z-index:30;transition:transform .15s ease;user-select:none;font-family:-apple-system,system-ui,sans-serif}
+.clash-pin-3d:hover{transform:translate(-50%,-110%) scale(1.15);z-index:100}
+.clash-pin-3d.selected{z-index:90;transform:translate(-50%,-100%) scale(1.25)}
+.clash-pin-3d .pin-bubble{background:#ef4444;color:#fff;font-size:10px;font-weight:800;padding:3px 7px;border-radius:10px;white-space:nowrap;box-shadow:0 2px 8px rgba(0,0,0,.6),0 0 0 2px rgba(255,255,255,.3);letter-spacing:.3px;display:inline-flex;align-items:center;gap:4px;position:relative}
+.clash-pin-3d .pin-bubble::after{content:'';position:absolute;left:50%;bottom:-6px;transform:translateX(-50%);width:0;height:0;border-left:6px solid transparent;border-right:6px solid transparent;border-top:7px solid #ef4444}
+.clash-pin-3d.sev-CRITICAL .pin-bubble{background:#ef4444}
+.clash-pin-3d.sev-CRITICAL .pin-bubble::after{border-top-color:#ef4444}
+.clash-pin-3d.sev-HIGH .pin-bubble{background:#f97316}
+.clash-pin-3d.sev-HIGH .pin-bubble::after{border-top-color:#f97316}
+.clash-pin-3d.sev-MEDIUM .pin-bubble{background:#eab308;color:#1e293b}
+.clash-pin-3d.sev-MEDIUM .pin-bubble::after{border-top-color:#eab308}
+.clash-pin-3d.sev-LOW .pin-bubble{background:#3b82f6}
+.clash-pin-3d.sev-LOW .pin-bubble::after{border-top-color:#3b82f6}
+
+@keyframes clashPulse{0%,100%{transform:translate(-50%,-50%) scale(.6);opacity:1}50%{transform:translate(-50%,-50%) scale(1.4);opacity:.2}}
+.clash-pulse-ring{position:absolute;width:40px;height:40px;border-radius:50%;border:3px solid #ef4444;background:rgba(239,68,68,.15);transform:translate(-50%,-50%);pointer-events:none;z-index:25;animation:clashPulse 1.6s ease-in-out infinite}
+.clash-pulse-ring.sev-CRITICAL{border-color:#ef4444;background:rgba(239,68,68,.2)}
+.clash-pulse-ring.sev-HIGH{border-color:#f97316;background:rgba(249,115,22,.15)}
+.clash-pulse-ring.sev-MEDIUM{border-color:#eab308;background:rgba(234,179,8,.15)}
+.clash-pulse-ring.sev-LOW{border-color:#3b82f6;background:rgba(59,130,246,.15)}
 
 @media (max-width:900px){
   .mobile-fab{display:flex}
@@ -298,18 +312,14 @@ footer{height:1.5rem;background:#020617;border-top:1px solid #1e293b;padding:0 1
     </div>
     <div class="panel" style="margin-top:.75rem">
       <div class="panel-title"><i class="fa-solid fa-layer-group"></i> Filtro por Pavimento</div>
-      <select id="floorFilter" onchange="applyFloorFilter()">
-        <option value="ALL">Todos os Pavimentos</option>
-      </select>
+      <select id="floorFilter" onchange="applyFloorFilter()"><option value="ALL">Todos os Pavimentos</option></select>
     </div>
   </div>
 
   <div id="tab-content-transform" class="tab-content">
     <div class="panel">
       <div class="panel-title"><i class="fa-solid fa-cubes"></i> Modelo para Ajustar</div>
-      <select id="transformModelSelect" onchange="selectTransformModel(this.value)">
-        <option value="">— Selecione um modelo —</option>
-      </select>
+      <select id="transformModelSelect" onchange="selectTransformModel(this.value)"><option value="">— Selecione um modelo —</option></select>
     </div>
     <div id="transformControls" style="display:none">
       <div class="panel">
@@ -322,18 +332,9 @@ footer{height:1.5rem;background:#020617;border-top:1px solid #1e293b;padding:0 1
           <span><i class="fa-solid fa-rotate" style="color:#60a5fa"></i> Rotação (graus)</span>
           <button class="icon-btn" onclick="resetRotation()" title="Zerar"><i class="fa-solid fa-rotate-left"></i></button>
         </div>
-        <div style="margin-bottom:.5rem">
-          <div style="display:flex;justify-content:space-between;font-size:.65rem;color:#94a3b8;margin-bottom:.2rem"><label style="color:#ef4444;font-weight:700">Eixo X</label><span id="rotXVal" style="font-family:monospace;color:#60a5fa">0.0°</span></div>
-          <div style="display:flex;align-items:center;gap:.4rem"><input type="range" id="rotX" min="-180" max="180" step="1" value="0" oninput="onRotSlider('X')" style="flex:1"><input type="number" id="rotXNum" value="0" onchange="onRotNum('X')" style="width:60px;text-align:center;font-family:monospace"></div>
-        </div>
-        <div style="margin-bottom:.5rem">
-          <div style="display:flex;justify-content:space-between;font-size:.65rem;color:#94a3b8;margin-bottom:.2rem"><label style="color:#10b981;font-weight:700">Eixo Y</label><span id="rotYVal" style="font-family:monospace;color:#60a5fa">0.0°</span></div>
-          <div style="display:flex;align-items:center;gap:.4rem"><input type="range" id="rotY" min="-180" max="180" step="1" value="0" oninput="onRotSlider('Y')" style="flex:1"><input type="number" id="rotYNum" value="0" onchange="onRotNum('Y')" style="width:60px;text-align:center;font-family:monospace"></div>
-        </div>
-        <div>
-          <div style="display:flex;justify-content:space-between;font-size:.65rem;color:#94a3b8;margin-bottom:.2rem"><label style="color:#3b82f6;font-weight:700">Eixo Z</label><span id="rotZVal" style="font-family:monospace;color:#60a5fa">0.0°</span></div>
-          <div style="display:flex;align-items:center;gap:.4rem"><input type="range" id="rotZ" min="-180" max="180" step="1" value="0" oninput="onRotSlider('Z')" style="flex:1"><input type="number" id="rotZNum" value="0" onchange="onRotNum('Z')" style="width:60px;text-align:center;font-family:monospace"></div>
-        </div>
+        <div style="margin-bottom:.5rem"><div style="display:flex;justify-content:space-between;font-size:.65rem;color:#94a3b8;margin-bottom:.2rem"><label style="color:#ef4444;font-weight:700">Eixo X</label><span id="rotXVal" style="font-family:monospace;color:#60a5fa">0.0°</span></div><div style="display:flex;align-items:center;gap:.4rem"><input type="range" id="rotX" min="-180" max="180" step="1" value="0" oninput="onRotSlider('X')" style="flex:1"><input type="number" id="rotXNum" value="0" onchange="onRotNum('X')" style="width:60px;text-align:center;font-family:monospace"></div></div>
+        <div style="margin-bottom:.5rem"><div style="display:flex;justify-content:space-between;font-size:.65rem;color:#94a3b8;margin-bottom:.2rem"><label style="color:#10b981;font-weight:700">Eixo Y</label><span id="rotYVal" style="font-family:monospace;color:#60a5fa">0.0°</span></div><div style="display:flex;align-items:center;gap:.4rem"><input type="range" id="rotY" min="-180" max="180" step="1" value="0" oninput="onRotSlider('Y')" style="flex:1"><input type="number" id="rotYNum" value="0" onchange="onRotNum('Y')" style="width:60px;text-align:center;font-family:monospace"></div></div>
+        <div><div style="display:flex;justify-content:space-between;font-size:.65rem;color:#94a3b8;margin-bottom:.2rem"><label style="color:#3b82f6;font-weight:700">Eixo Z</label><span id="rotZVal" style="font-family:monospace;color:#60a5fa">0.0°</span></div><div style="display:flex;align-items:center;gap:.4rem"><input type="range" id="rotZ" min="-180" max="180" step="1" value="0" oninput="onRotSlider('Z')" style="flex:1"><input type="number" id="rotZNum" value="0" onchange="onRotNum('Z')" style="width:60px;text-align:center;font-family:monospace"></div></div>
         <div class="quick-rot-grid">
           <button onclick="quickRotate('X',-90)">X -90°</button><button onclick="quickRotate('X',90)">X +90°</button><button onclick="quickRotate('X',180)">X 180°</button><button onclick="quickRotate('X',0)" style="color:#fbbf24">X 0°</button>
           <button onclick="quickRotate('Y',-90)">Y -90°</button><button onclick="quickRotate('Y',90)">Y +90°</button><button onclick="quickRotate('Y',180)">Y 180°</button><button onclick="quickRotate('Y',0)" style="color:#fbbf24">Y 0°</button>
@@ -345,18 +346,9 @@ footer{height:1.5rem;background:#020617;border-top:1px solid #1e293b;padding:0 1
           <span><i class="fa-solid fa-arrows-up-down-left-right" style="color:#34d399"></i> Posição (m)</span>
           <button class="icon-btn" onclick="resetPosition()" title="Zerar"><i class="fa-solid fa-rotate-left"></i></button>
         </div>
-        <div style="margin-bottom:.5rem">
-          <div style="display:flex;justify-content:space-between;font-size:.65rem;color:#94a3b8;margin-bottom:.2rem"><label style="color:#ef4444;font-weight:700">X</label><span id="posXVal" style="font-family:monospace;color:#34d399">0.00 m</span></div>
-          <div style="display:flex;align-items:center;gap:.4rem"><input type="range" id="posX" min="-100" max="100" step="0.1" value="0" oninput="onPosSlider('X')" style="flex:1"><input type="number" id="posXNum" step="0.1" value="0" onchange="onPosNum('X')" style="width:60px;text-align:center;font-family:monospace"></div>
-        </div>
-        <div style="margin-bottom:.5rem">
-          <div style="display:flex;justify-content:space-between;font-size:.65rem;color:#94a3b8;margin-bottom:.2rem"><label style="color:#10b981;font-weight:700">Y</label><span id="posYVal" style="font-family:monospace;color:#34d399">0.00 m</span></div>
-          <div style="display:flex;align-items:center;gap:.4rem"><input type="range" id="posY" min="-100" max="100" step="0.1" value="0" oninput="onPosSlider('Y')" style="flex:1"><input type="number" id="posYNum" step="0.1" value="0" onchange="onPosNum('Y')" style="width:60px;text-align:center;font-family:monospace"></div>
-        </div>
-        <div>
-          <div style="display:flex;justify-content:space-between;font-size:.65rem;color:#94a3b8;margin-bottom:.2rem"><label style="color:#3b82f6;font-weight:700">Z</label><span id="posZVal" style="font-family:monospace;color:#34d399">0.00 m</span></div>
-          <div style="display:flex;align-items:center;gap:.4rem"><input type="range" id="posZ" min="-100" max="100" step="0.1" value="0" oninput="onPosSlider('Z')" style="flex:1"><input type="number" id="posZNum" step="0.1" value="0" onchange="onPosNum('Z')" style="width:60px;text-align:center;font-family:monospace"></div>
-        </div>
+        <div style="margin-bottom:.5rem"><div style="display:flex;justify-content:space-between;font-size:.65rem;color:#94a3b8;margin-bottom:.2rem"><label style="color:#ef4444;font-weight:700">X</label><span id="posXVal" style="font-family:monospace;color:#34d399">0.00 m</span></div><div style="display:flex;align-items:center;gap:.4rem"><input type="range" id="posX" min="-100" max="100" step="0.1" value="0" oninput="onPosSlider('X')" style="flex:1"><input type="number" id="posXNum" step="0.1" value="0" onchange="onPosNum('X')" style="width:60px;text-align:center;font-family:monospace"></div></div>
+        <div style="margin-bottom:.5rem"><div style="display:flex;justify-content:space-between;font-size:.65rem;color:#94a3b8;margin-bottom:.2rem"><label style="color:#10b981;font-weight:700">Y</label><span id="posYVal" style="font-family:monospace;color:#34d399">0.00 m</span></div><div style="display:flex;align-items:center;gap:.4rem"><input type="range" id="posY" min="-100" max="100" step="0.1" value="0" oninput="onPosSlider('Y')" style="flex:1"><input type="number" id="posYNum" step="0.1" value="0" onchange="onPosNum('Y')" style="width:60px;text-align:center;font-family:monospace"></div></div>
+        <div><div style="display:flex;justify-content:space-between;font-size:.65rem;color:#94a3b8;margin-bottom:.2rem"><label style="color:#3b82f6;font-weight:700">Z</label><span id="posZVal" style="font-family:monospace;color:#34d399">0.00 m</span></div><div style="display:flex;align-items:center;gap:.4rem"><input type="range" id="posZ" min="-100" max="100" step="0.1" value="0" oninput="onPosSlider('Z')" style="flex:1"><input type="number" id="posZNum" step="0.1" value="0" onchange="onPosNum('Z')" style="width:60px;text-align:center;font-family:monospace"></div></div>
       </div>
       <div class="panel">
         <div class="panel-title"><i class="fa-solid fa-bolt"></i> Ações Rápidas</div>
@@ -397,10 +389,7 @@ footer{height:1.5rem;background:#020617;border-top:1px solid #1e293b;padding:0 1
         <span><i class="fa-solid fa-image" style="color:#0891b2"></i> Texturas</span>
         <span id="texCountBadge" class="count-badge">0</span>
       </div>
-      <button class="tex-upload-btn" onclick="document.getElementById('textureInput').click()">
-        <i class="fa-solid fa-upload"></i> Importar Textura
-        <input type="file" id="textureInput" accept="image/*" multiple style="display:none" onchange="handleTextureUpload(event)">
-      </button>
+      <button class="tex-upload-btn" onclick="document.getElementById('textureInput').click()"><i class="fa-solid fa-upload"></i> Importar Textura<input type="file" id="textureInput" accept="image/*" multiple style="display:none" onchange="handleTextureUpload(event)"></button>
       <div id="textureEmpty" class="tex-empty"><i class="fa-solid fa-image" style="font-size:1.5rem;display:block;margin-bottom:.3rem;opacity:.4"></i>Nenhuma textura importada.<br><span style="font-size:.6rem">Aceita JPG, PNG, WEBP</span></div>
       <div id="textureGrid" class="texture-grid"></div>
       <div id="textureControls" style="display:none;margin-top:.5rem;padding-top:.5rem;border-top:1px solid #1e293b">
@@ -486,6 +475,7 @@ footer{height:1.5rem;background:#020617;border-top:1px solid #1e293b;padding:0 1
       <button onclick="toggleSectionPanel()" id="btnSection" class="btn-purple"><i class="fa-solid fa-scissors"></i> Seção</button>
       <button onclick="toggleWireframe()"><i class="fa-solid fa-border-all"></i></button>
       <button onclick="showAllElements()"><i class="fa-solid fa-eye"></i></button>
+      <button onclick="toggleClashPins()" id="btnClashPins" title="Mostrar/esconder pins de conflito" style="background:#334155;color:#fbbf24"><i class="fa-solid fa-map-pin"></i></button>
     </div>
     <div class="status-bar">
       <span class="status-dot"></span>
@@ -545,12 +535,12 @@ footer{height:1.5rem;background:#020617;border-top:1px solid #1e293b;padding:0 1
     <div style="font-size:.6rem;color:#64748b;margin-top:.1rem" id="selElemGUID">GUID: -</div>
   </div>
   <div style="display:flex;gap:.2rem;flex-shrink:0">
-    <button class="icon-btn" onclick="switchLeftTab('dimension')" title="Dimensões"><i class="fa-solid fa-ruler-combined" style="color:#fb923c"></i></button>
-    <button class="icon-btn" onclick="switchLeftTab('appearance')" title="Cor/Textura"><i class="fa-solid fa-palette" style="color:#ec4899"></i></button>
-    <button class="icon-btn" onclick="isolateSelectedElement()" title="Isolar"><i class="fa-solid fa-filter" style="color:#fbbf24"></i></button>
-    <button class="icon-btn" onclick="hideSelectedElement()" title="Ocultar"><i class="fa-solid fa-eye-slash" style="color:#f87171"></i></button>
-    <button class="icon-btn" onclick="showAllElements()" title="Mostrar tudo"><i class="fa-solid fa-eye" style="color:#34d399"></i></button>
-    <button class="icon-btn" onclick="clearSelection()" title="Fechar"><i class="fa-solid fa-xmark"></i></button>
+    <button class="icon-btn" onclick="switchLeftTab('dimension')"><i class="fa-solid fa-ruler-combined" style="color:#fb923c"></i></button>
+    <button class="icon-btn" onclick="switchLeftTab('appearance')"><i class="fa-solid fa-palette" style="color:#ec4899"></i></button>
+    <button class="icon-btn" onclick="isolateSelectedElement()"><i class="fa-solid fa-filter" style="color:#fbbf24"></i></button>
+    <button class="icon-btn" onclick="hideSelectedElement()"><i class="fa-solid fa-eye-slash" style="color:#f87171"></i></button>
+    <button class="icon-btn" onclick="showAllElements()"><i class="fa-solid fa-eye" style="color:#34d399"></i></button>
+    <button class="icon-btn" onclick="clearSelection()"><i class="fa-solid fa-xmark"></i></button>
   </div>
 </div>
 
@@ -591,18 +581,15 @@ footer{height:1.5rem;background:#020617;border-top:1px solid #1e293b;padding:0 1
 </div>
 
 <script>
-
-// Bloqueio básico de console em produção
+/* ============================================================
+   BLOQUEIO DE CONSOLE EM PRODUÇÃO (opcional)
+   ============================================================ */
 if (location.hostname === 'ademil.github.io') {
   var _noop = function () {};
-  var _origWarn = console.warn;
-  var _origError = console.error;
   console.log = _noop;
   console.info = _noop;
   console.debug = _noop;
   console.trace = _noop;
-  // Mantém warn/error para debug do usuário
-  // NÃO bloqueia console.log em desenvolvimento local
 }
 
 /* ============================================================
@@ -675,28 +662,12 @@ function parseLicenseKey(key) {
   }
   return result;
 }
-function getDeviceFingerprint() {
-  var parts = [
-    navigator.userAgent,
-    navigator.language,
-    screen.width + 'x' + screen.height,
-    screen.colorDepth,
-    new Date().getTimezoneOffset(),
-    navigator.hardwareConcurrency || 0,
-    navigator.deviceMemory || 0
-  ];
-  var s = parts.join('|');
-  var h = 0;
-  for (var i = 0; i < s.length; i++) h = ((h << 5) - h + s.charCodeAt(i)) | 0;
-  return Math.abs(h).toString(36).toUpperCase();
-}
 function licenseFirstRun() {
-  var fp = getDeviceFingerprint();
-  var key = LICENSE.KEY_FIRST_RUN + '_' + fp;
-  var v = SafeStorage.getItem(key);
-  if (!v) { v = Date.now().toString(); SafeStorage.setItem(key, v); }
+  var v = SafeStorage.getItem(LICENSE.KEY_FIRST_RUN);
+  if (!v) { v = Date.now().toString(); SafeStorage.setItem(LICENSE.KEY_FIRST_RUN, v); }
   return parseInt(v, 10);
-}function licenseDaysLeft() { return Math.max(0, LICENSE.TRIAL_DAYS - Math.floor((Date.now() - licenseFirstRun()) / 86400000)); }
+}
+function licenseDaysLeft() { return Math.max(0, LICENSE.TRIAL_DAYS - Math.floor((Date.now() - licenseFirstRun()) / 86400000)); }
 function getLicenseState() {
   var saved = SafeStorage.getItem(LICENSE.KEY_LICENSE);
   if (saved) {
@@ -720,16 +691,13 @@ function submitLicense() {
   var parsed = parseLicenseKey(key);
   if (!parsed) { msg.innerText = 'Chave inválida. Verifique se digitou corretamente.'; msg.style.color = '#f87171'; return; }
   if (parsed.expired) { msg.innerText = 'Esta chave expirou em ' + parsed.expiryDate.toLocaleDateString('pt-BR') + '.'; msg.style.color = '#f87171'; return; }
-  if (activateLicense(key)) {
-    msg.innerText = '✓ Licença ativada para "' + parsed.client + '". Recarregando...';
-    msg.style.color = '#34d399';
-    setTimeout(function () { location.reload(); }, 1000);
-  } else { msg.innerText = 'Chave inválida.'; msg.style.color = '#f87171'; }
+  if (activateLicense(key)) { msg.innerText = '✓ Licença ativada para "' + parsed.client + '". Recarregando...'; msg.style.color = '#34d399'; setTimeout(function () { location.reload(); }, 1000); }
+  else { msg.innerText = 'Chave inválida.'; msg.style.color = '#f87171'; }
 }
+
 /* ============================================================
    RESET PROTEGIDO — requer chave-mestra secreta
-   Uso: ?reset=CHAVE_MESTRA
-   Ex: ?reset=APAVAN-MASTER-9F3B7D2E
+   Uso: ?reset=APAVAN-MASTER-9F3B7D2E
    ============================================================ */
 var MASTER_RESET_KEY = 'APAVAN-MASTER-9F3B7D2E';
 (function () {
@@ -739,29 +707,21 @@ var MASTER_RESET_KEY = 'APAVAN-MASTER-9F3B7D2E';
   if (provided === MASTER_RESET_KEY) {
     SafeStorage.removeItem(LICENSE.KEY_FIRST_RUN);
     SafeStorage.removeItem(LICENSE.KEY_LICENSE);
-    console.log('[LICENSE] Trial resetado pelo master.');
     setTimeout(function () {
       alert('✓ Trial resetado para 15 dias.');
       location.href = location.pathname;
     }, 300);
-  } else {
-    console.warn('[LICENSE] Tentativa de reset com chave inválida.');
   }
-})();function showLicenseModal() {
+})();
+
+function showLicenseModal() {
   var st = getLicenseState();
   var ov = document.getElementById('licenseOverlay');
   var title = document.getElementById('licTitle');
   var subtitle = document.getElementById('licSubtitle');
-  if (st.licensed) {
-    title.innerText = 'Licença Ativa';
-    subtitle.innerText = 'Cliente: ' + st.info.client + '\nValidade: ' + (st.info.permanent ? 'Permanente' : st.info.expiryDate.toLocaleDateString('pt-BR'));
-  } else if (st.expired) {
-    title.innerText = 'Licença Expirada';
-    subtitle.innerText = 'Cliente: ' + st.info.client + '\nExpirou em: ' + st.info.expiryDate.toLocaleDateString('pt-BR');
-  } else {
-    title.innerText = 'Ativar Licença';
-    subtitle.innerText = 'Trial: ' + st.daysLeft + ' dia(s) restante(s).\nInsira uma chave APAVAN.';
-  }
+  if (st.licensed) { title.innerText = 'Licença Ativa'; subtitle.innerText = 'Cliente: ' + st.info.client + '\nValidade: ' + (st.info.permanent ? 'Permanente' : st.info.expiryDate.toLocaleDateString('pt-BR')); }
+  else if (st.expired) { title.innerText = 'Licença Expirada'; subtitle.innerText = 'Cliente: ' + st.info.client + '\nExpirou em: ' + st.info.expiryDate.toLocaleDateString('pt-BR'); }
+  else { title.innerText = 'Ativar Licença'; subtitle.innerText = 'Trial: ' + st.daysLeft + ' dia(s) restante(s).\nInsira uma chave APAVAN.'; }
   ov.classList.add('show');
 }
 function applyLicenseGate() {
@@ -770,37 +730,21 @@ function applyLicenseGate() {
   var badge = document.getElementById('licenseBadge');
   var title = document.getElementById('licTitle');
   var subtitle = document.getElementById('licSubtitle');
-
   if (st.licensed) {
     ov.classList.remove('show');
-    if (badge) {
-      badge.style.display = 'inline';
-      badge.style.background = 'rgba(16,185,129,.15)';
-      badge.style.color = '#34d399';
-      badge.innerHTML = '<i class="fa-solid fa-certificate"></i> ' + st.info.client + (st.info.permanent ? '' : ' • até ' + st.info.expiryDate.toLocaleDateString('pt-BR'));
-    }
+    if (badge) { badge.style.display = 'inline'; badge.style.background = 'rgba(16,185,129,.15)'; badge.style.color = '#34d399'; badge.innerHTML = '<i class="fa-solid fa-certificate"></i> ' + st.info.client + (st.info.permanent ? '' : ' • até ' + st.info.expiryDate.toLocaleDateString('pt-BR')); }
     return true;
   }
   if (st.expired) {
     if (title) title.innerText = 'Licença Expirada';
     if (subtitle) subtitle.innerText = 'Sua licença para "' + st.info.client + '" expirou em ' + st.info.expiryDate.toLocaleDateString('pt-BR') + '.\nInsira uma nova chave APAVAN.';
     ov.classList.add('show');
-    if (badge) {
-      badge.style.display = 'inline';
-      badge.style.background = 'rgba(239,68,68,.15)';
-      badge.style.color = '#f87171';
-      badge.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> Licença expirada';
-    }
+    if (badge) { badge.style.display = 'inline'; badge.style.background = 'rgba(239,68,68,.15)'; badge.style.color = '#f87171'; badge.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> Licença expirada'; }
     return false;
   }
   if (st.valid) {
     ov.classList.remove('show');
-    if (badge) {
-      badge.style.display = 'inline';
-      badge.style.background = 'rgba(245,158,11,.15)';
-      badge.style.color = '#fbbf24';
-      badge.innerHTML = '<i class="fa-solid fa-hourglass-half"></i> Trial: ' + st.daysLeft + 'd';
-    }
+    if (badge) { badge.style.display = 'inline'; badge.style.background = 'rgba(245,158,11,.15)'; badge.style.color = '#fbbf24'; badge.innerHTML = '<i class="fa-solid fa-hourglass-half"></i> Trial: ' + st.daysLeft + 'd'; }
     return true;
   }
   if (title) title.innerText = 'Período de Teste Expirado';
@@ -811,7 +755,7 @@ function applyLicenseGate() {
 }
 
 /* ============================================================
-   ESTADO
+   ESTADO GLOBAL
    ============================================================ */
 var isMobile = function () { return window.matchMedia('(max-width: 900px)').matches; };
 var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
@@ -828,12 +772,15 @@ var state = {
     { id: 4, discA: 'HIDRAULICO', discB: 'ARQUITETURA', type: 'PROXIMITY', tolerance: 50, active: true },
     { id: 5, discA: 'INCENDIO', discB: 'ESTRUTURA', type: 'HARD', tolerance: 0, active: true }
   ],
-  selectedElement: null, selectedClash: null, wireframe: false
+  selectedElement: null, selectedClash: null, wireframe: false, showClashPins: true
 };
 
 var scene, camera, renderer, controls, modelGroup, clashMarkersGroup, raycaster, mouse;
 var chartDiscInstance = null, chartFloorInstance = null;
 var pointerDownPos = null, ifcApiInstance = null;
+var clashMarkersContainer = null;
+var _pulseTimer = null;
+var _highlightA = null, _highlightB = null;
 
 /* ============================================================
    SEÇÃO
@@ -970,121 +917,17 @@ function applyTransform() {
   g.position.set(t.pos.x, t.pos.y, t.pos.z);
   if (sectionState.X && sectionState.X.plane) applySectionPlanes();
 }
-function onRotSlider(ax) {
-  var id = currentTransformModel(); if (!id) return;
-  var v = parseFloat(document.getElementById('rot' + ax).value);
-  state.modelTransforms[id].rot[ax.toLowerCase()] = v;
-  document.getElementById('rot' + ax + 'Num').value = v;
-  document.getElementById('rot' + ax + 'Val').innerText = v.toFixed(1) + '°';
-  applyTransform();
-}
-function onRotNum(ax) {
-  var id = currentTransformModel(); if (!id) return;
-  var v = parseFloat(document.getElementById('rot' + ax + 'Num').value) || 0;
-  v = Math.max(-180, Math.min(180, v));
-  state.modelTransforms[id].rot[ax.toLowerCase()] = v;
-  document.getElementById('rot' + ax).value = v;
-  document.getElementById('rot' + ax + 'Val').innerText = v.toFixed(1) + '°';
-  applyTransform();
-}
-function quickRotate(ax, deg) {
-  var id = currentTransformModel();
-  if (!id) { alert('Selecione um modelo primeiro.'); return; }
-  state.modelTransforms[id].rot[ax.toLowerCase()] = deg;
-  document.getElementById('rot' + ax).value = deg;
-  document.getElementById('rot' + ax + 'Num').value = deg;
-  document.getElementById('rot' + ax + 'Val').innerText = deg.toFixed(1) + '°';
-  applyTransform();
-  showViewportStatus('Rotação ' + ax + ' → ' + deg + '°.');
-}
-function onPosSlider(ax) {
-  var id = currentTransformModel(); if (!id) return;
-  var v = parseFloat(document.getElementById('pos' + ax).value);
-  state.modelTransforms[id].pos[ax.toLowerCase()] = v;
-  document.getElementById('pos' + ax + 'Num').value = v.toFixed(2);
-  document.getElementById('pos' + ax + 'Val').innerText = v.toFixed(2) + ' m';
-  applyTransform();
-}
-function onPosNum(ax) {
-  var id = currentTransformModel(); if (!id) return;
-  var v = parseFloat(document.getElementById('pos' + ax + 'Num').value) || 0;
-  state.modelTransforms[id].pos[ax.toLowerCase()] = v;
-  document.getElementById('pos' + ax).value = v;
-  document.getElementById('pos' + ax + 'Val').innerText = v.toFixed(2) + ' m';
-  applyTransform();
-}
-function resetRotation() {
-  var id = currentTransformModel(); if (!id) return;
-  state.modelTransforms[id].rot = { x: 0, y: 0, z: 0 };
-  ['X', 'Y', 'Z'].forEach(function (ax) {
-    document.getElementById('rot' + ax).value = 0;
-    document.getElementById('rot' + ax + 'Num').value = 0;
-    document.getElementById('rot' + ax + 'Val').innerText = '0.0°';
-  });
-  applyTransform();
-}
-function resetPosition() {
-  var id = currentTransformModel(); if (!id) return;
-  state.modelTransforms[id].pos = { x: 0, y: 0, z: 0 };
-  ['X', 'Y', 'Z'].forEach(function (ax) {
-    document.getElementById('pos' + ax).value = 0;
-    document.getElementById('pos' + ax + 'Num').value = 0;
-    document.getElementById('pos' + ax + 'Val').innerText = '0.00 m';
-  });
-  applyTransform();
-}
-function resetTransform() {
-  var id = currentTransformModel(); if (!id) return;
-  if (!confirm('Resetar rotação e posição deste modelo?')) return;
-  state.modelTransforms[id] = { rot: { x: 0, y: 0, z: 0 }, pos: { x: 0, y: 0, z: 0 } };
-  selectTransformModel(id);
-  applyTransform();
-}
-function alignBaseToGrid() {
-  var id = currentTransformModel(); if (!id) return;
-  var g = state.modelGroups[id]; if (!g) return;
-  state.modelTransforms[id].pos.z = 0;
-  applyTransform();
-  g.updateMatrixWorld(true);
-  var box = new THREE.Box3().setFromObject(g);
-  if (box.isEmpty()) return;
-  var dz = -box.min.z;
-  state.modelTransforms[id].pos.z = dz;
-  document.getElementById('posZ').value = dz;
-  document.getElementById('posZNum').value = dz.toFixed(2);
-  document.getElementById('posZVal').innerText = dz.toFixed(2) + ' m';
-  applyTransform();
-  showViewportStatus('Base alinhada ao solo.');
-}
-function centerOnGrid() {
-  var id = currentTransformModel(); if (!id) return;
-  var g = state.modelGroups[id]; if (!g) return;
-  state.modelTransforms[id].pos.x = 0;
-  state.modelTransforms[id].pos.y = 0;
-  applyTransform();
-  g.updateMatrixWorld(true);
-  var box = new THREE.Box3().setFromObject(g);
-  if (box.isEmpty()) return;
-  var c = new THREE.Vector3(); box.getCenter(c);
-  var nx = -c.x, ny = -c.y;
-  state.modelTransforms[id].pos.x = nx;
-  state.modelTransforms[id].pos.y = ny;
-  document.getElementById('posX').value = nx;
-  document.getElementById('posXNum').value = nx.toFixed(2);
-  document.getElementById('posXVal').innerText = nx.toFixed(2) + ' m';
-  document.getElementById('posY').value = ny;
-  document.getElementById('posYNum').value = ny.toFixed(2);
-  document.getElementById('posYVal').innerText = ny.toFixed(2) + ' m';
-  applyTransform();
-}
-function refreshTransformModelSelect() {
-  var sel = document.getElementById('transformModelSelect');
-  if (!sel) return;
-  var current = sel.value;
-  sel.innerHTML = '<option value="">— Selecione um modelo —</option>';
-  state.models.forEach(function (m) { var o = document.createElement('option'); o.value = m.id; o.textContent = m.name; sel.appendChild(o); });
-  if (current && state.models.some(function (m) { return m.id === current; })) sel.value = current;
-}
+function onRotSlider(ax) { var id = currentTransformModel(); if (!id) return; var v = parseFloat(document.getElementById('rot' + ax).value); state.modelTransforms[id].rot[ax.toLowerCase()] = v; document.getElementById('rot' + ax + 'Num').value = v; document.getElementById('rot' + ax + 'Val').innerText = v.toFixed(1) + '°'; applyTransform(); }
+function onRotNum(ax) { var id = currentTransformModel(); if (!id) return; var v = parseFloat(document.getElementById('rot' + ax + 'Num').value) || 0; v = Math.max(-180, Math.min(180, v)); state.modelTransforms[id].rot[ax.toLowerCase()] = v; document.getElementById('rot' + ax).value = v; document.getElementById('rot' + ax + 'Val').innerText = v.toFixed(1) + '°'; applyTransform(); }
+function quickRotate(ax, deg) { var id = currentTransformModel(); if (!id) { alert('Selecione um modelo primeiro.'); return; } state.modelTransforms[id].rot[ax.toLowerCase()] = deg; document.getElementById('rot' + ax).value = deg; document.getElementById('rot' + ax + 'Num').value = deg; document.getElementById('rot' + ax + 'Val').innerText = deg.toFixed(1) + '°'; applyTransform(); showViewportStatus('Rotação ' + ax + ' → ' + deg + '°.'); }
+function onPosSlider(ax) { var id = currentTransformModel(); if (!id) return; var v = parseFloat(document.getElementById('pos' + ax).value); state.modelTransforms[id].pos[ax.toLowerCase()] = v; document.getElementById('pos' + ax + 'Num').value = v.toFixed(2); document.getElementById('pos' + ax + 'Val').innerText = v.toFixed(2) + ' m'; applyTransform(); }
+function onPosNum(ax) { var id = currentTransformModel(); if (!id) return; var v = parseFloat(document.getElementById('pos' + ax + 'Num').value) || 0; state.modelTransforms[id].pos[ax.toLowerCase()] = v; document.getElementById('pos' + ax).value = v; document.getElementById('pos' + ax + 'Val').innerText = v.toFixed(2) + ' m'; applyTransform(); }
+function resetRotation() { var id = currentTransformModel(); if (!id) return; state.modelTransforms[id].rot = { x: 0, y: 0, z: 0 }; ['X', 'Y', 'Z'].forEach(function (ax) { document.getElementById('rot' + ax).value = 0; document.getElementById('rot' + ax + 'Num').value = 0; document.getElementById('rot' + ax + 'Val').innerText = '0.0°'; }); applyTransform(); }
+function resetPosition() { var id = currentTransformModel(); if (!id) return; state.modelTransforms[id].pos = { x: 0, y: 0, z: 0 }; ['X', 'Y', 'Z'].forEach(function (ax) { document.getElementById('pos' + ax).value = 0; document.getElementById('pos' + ax + 'Num').value = 0; document.getElementById('pos' + ax + 'Val').innerText = '0.00 m'; }); applyTransform(); }
+function resetTransform() { var id = currentTransformModel(); if (!id) return; if (!confirm('Resetar rotação e posição deste modelo?')) return; state.modelTransforms[id] = { rot: { x: 0, y: 0, z: 0 }, pos: { x: 0, y: 0, z: 0 } }; selectTransformModel(id); applyTransform(); }
+function alignBaseToGrid() { var id = currentTransformModel(); if (!id) return; var g = state.modelGroups[id]; if (!g) return; state.modelTransforms[id].pos.z = 0; applyTransform(); g.updateMatrixWorld(true); var box = new THREE.Box3().setFromObject(g); if (box.isEmpty()) return; var dz = -box.min.z; state.modelTransforms[id].pos.z = dz; document.getElementById('posZ').value = dz; document.getElementById('posZNum').value = dz.toFixed(2); document.getElementById('posZVal').innerText = dz.toFixed(2) + ' m'; applyTransform(); showViewportStatus('Base alinhada ao solo.'); }
+function centerOnGrid() { var id = currentTransformModel(); if (!id) return; var g = state.modelGroups[id]; if (!g) return; state.modelTransforms[id].pos.x = 0; state.modelTransforms[id].pos.y = 0; applyTransform(); g.updateMatrixWorld(true); var box = new THREE.Box3().setFromObject(g); if (box.isEmpty()) return; var c = new THREE.Vector3(); box.getCenter(c); var nx = -c.x, ny = -c.y; state.modelTransforms[id].pos.x = nx; state.modelTransforms[id].pos.y = ny; document.getElementById('posX').value = nx; document.getElementById('posXNum').value = nx.toFixed(2); document.getElementById('posXVal').innerText = nx.toFixed(2) + ' m'; document.getElementById('posY').value = ny; document.getElementById('posYNum').value = ny.toFixed(2); document.getElementById('posYVal').innerText = ny.toFixed(2) + ' m'; applyTransform(); }
+function refreshTransformModelSelect() { var sel = document.getElementById('transformModelSelect'); if (!sel) return; var current = sel.value; sel.innerHTML = '<option value="">— Selecione um modelo —</option>'; state.models.forEach(function (m) { var o = document.createElement('option'); o.value = m.id; o.textContent = m.name; sel.appendChild(o); }); if (current && state.models.some(function (m) { return m.id === current; })) sel.value = current; }
 
 /* ============================================================
    TEXTURAS
@@ -1099,20 +942,10 @@ function handleTextureUpload(event) {
     reader.onload = function (e) {
       var dataUrl = e.target.result;
       var texId = 'TEX_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6);
-      var texture = textureLoader.load(dataUrl, function () {
-        texture.wrapS = THREE.RepeatWrapping;
-        texture.wrapT = THREE.RepeatWrapping;
-        texture.repeat.set(1, 1);
-        texture.anisotropy = 4;
-        texture.needsUpdate = true;
-      });
+      var texture = textureLoader.load(dataUrl, function () { texture.wrapS = THREE.RepeatWrapping; texture.wrapT = THREE.RepeatWrapping; texture.repeat.set(1, 1); texture.anisotropy = 4; texture.needsUpdate = true; });
       state.textures.push({ id: texId, name: file.name.replace(/\.[^.]+$/, ''), dataUrl: dataUrl, texture: texture, size: file.size });
       loaded++;
-      if (loaded === files.length) {
-        renderTextureGrid();
-        if (!state.selectedTextureId) selectTexture(texId);
-        showViewportStatus(files.length + ' textura(s) importada(s).');
-      }
+      if (loaded === files.length) { renderTextureGrid(); if (!state.selectedTextureId) selectTexture(texId); showViewportStatus(files.length + ' textura(s) importada(s).'); }
     };
     reader.readAsDataURL(file);
   });
@@ -1125,9 +958,7 @@ function renderTextureGrid() {
   var controls = document.getElementById('textureControls');
   badge.innerText = state.textures.length;
   if (!state.textures.length) { empty.style.display = 'block'; grid.innerHTML = ''; controls.style.display = 'none'; return; }
-  empty.style.display = 'none';
-  controls.style.display = 'block';
-  grid.innerHTML = '';
+  empty.style.display = 'none'; controls.style.display = 'block'; grid.innerHTML = '';
   state.textures.forEach(function (t) {
     var item = document.createElement('div');
     item.className = 'texture-item' + (t.id === state.selectedTextureId ? ' selected' : '');
@@ -1142,26 +973,9 @@ function renderTextureGrid() {
   });
 }
 function selectTexture(texId) { state.selectedTextureId = texId; renderTextureGrid(); }
-function removeTextureFromLibrary(texId) {
-  var idx = -1;
-  for (var i = 0; i < state.textures.length; i++) if (state.textures[i].id === texId) { idx = i; break; }
-  if (idx < 0) return;
-  var tex = state.textures[idx];
-  if (tex.texture) try { tex.texture.dispose(); } catch (e) {}
-  state.textures.splice(idx, 1);
-  if (state.selectedTextureId === texId) state.selectedTextureId = state.textures.length ? state.textures[0].id : null;
-  renderTextureGrid();
-}
-function updateTextureLabels() {
-  document.getElementById('texRepeatUVal').innerText = parseFloat(document.getElementById('texRepeatU').value).toFixed(1);
-  document.getElementById('texRepeatVVal').innerText = parseFloat(document.getElementById('texRepeatV').value).toFixed(1);
-  document.getElementById('texRotationVal').innerText = document.getElementById('texRotation').value + '°';
-}
-function getSelectedTexture() {
-  if (!state.selectedTextureId) return null;
-  for (var i = 0; i < state.textures.length; i++) if (state.textures[i].id === state.selectedTextureId) return state.textures[i];
-  return null;
-}
+function removeTextureFromLibrary(texId) { var idx = -1; for (var i = 0; i < state.textures.length; i++) if (state.textures[i].id === texId) { idx = i; break; } if (idx < 0) return; var tex = state.textures[idx]; if (tex.texture) try { tex.texture.dispose(); } catch (e) {} state.textures.splice(idx, 1); if (state.selectedTextureId === texId) state.selectedTextureId = state.textures.length ? state.textures[0].id : null; renderTextureGrid(); }
+function updateTextureLabels() { document.getElementById('texRepeatUVal').innerText = parseFloat(document.getElementById('texRepeatU').value).toFixed(1); document.getElementById('texRepeatVVal').innerText = parseFloat(document.getElementById('texRepeatV').value).toFixed(1); document.getElementById('texRotationVal').innerText = document.getElementById('texRotation').value + '°'; }
+function getSelectedTexture() { if (!state.selectedTextureId) return null; for (var i = 0; i < state.textures.length; i++) if (state.textures[i].id === state.selectedTextureId) return state.textures[i]; return null; }
 function applyTextureFromUI() {
   var tex = getSelectedTexture();
   if (!tex) { alert('Importe ou selecione uma textura primeiro.'); return; }
@@ -1175,21 +989,13 @@ function applyTextureFromUI() {
     if (!el.mesh.material) return;
     if (!el.mesh.userData._matCloned) { el.mesh.material = el.mesh.material.clone(); el.mesh.userData._matCloned = true; }
     var clonedTex = tex.texture.clone();
-    clonedTex.needsUpdate = true;
-    clonedTex.wrapS = THREE.RepeatWrapping;
-    clonedTex.wrapT = THREE.RepeatWrapping;
-    clonedTex.repeat.set(repeatU, repeatV);
-    clonedTex.center.set(0.5, 0.5);
-    clonedTex.rotation = THREE.MathUtils.degToRad(rotation);
-    clonedTex.anisotropy = 4;
-    el.mesh.material.map = clonedTex;
-    el.mesh.material.color.setHex(0xffffff);
-    el.mesh.material.opacity = opacity;
-    el.mesh.material.transparent = opacity < 1;
-    el.mesh.material.roughness = 0.85;
-    el.mesh.material.metalness = 0.05;
-    el.mesh.material.needsUpdate = true;
-    el.mesh.userData._hasTexture = true;
+    clonedTex.needsUpdate = true; clonedTex.wrapS = THREE.RepeatWrapping; clonedTex.wrapT = THREE.RepeatWrapping;
+    clonedTex.repeat.set(repeatU, repeatV); clonedTex.center.set(0.5, 0.5);
+    clonedTex.rotation = THREE.MathUtils.degToRad(rotation); clonedTex.anisotropy = 4;
+    el.mesh.material.map = clonedTex; el.mesh.material.color.setHex(0xffffff);
+    el.mesh.material.opacity = opacity; el.mesh.material.transparent = opacity < 1;
+    el.mesh.material.roughness = 0.85; el.mesh.material.metalness = 0.05;
+    el.mesh.material.needsUpdate = true; el.mesh.userData._hasTexture = true;
   });
   if (sectionState.X && sectionState.X.plane) applySectionPlanes();
   showViewportStatus('Textura aplicada em ' + targets.length + ' elemento(s).');
@@ -1201,14 +1007,7 @@ function removeTextureFromUI() {
   targets.forEach(function (el) {
     if (!el.mesh.material) return;
     if (!el.mesh.userData._matCloned) { el.mesh.material = el.mesh.material.clone(); el.mesh.userData._matCloned = true; }
-    if (el.mesh.material.map) {
-      try { el.mesh.material.map.dispose(); } catch (e) {}
-      el.mesh.material.map = null;
-      el.mesh.material.color.setHex(getDisciplineColorHex(el.discipline));
-      el.mesh.material.needsUpdate = true;
-      el.mesh.userData._hasTexture = false;
-      removed++;
-    }
+    if (el.mesh.material.map) { try { el.mesh.material.map.dispose(); } catch (e) {} el.mesh.material.map = null; el.mesh.material.color.setHex(getDisciplineColorHex(el.discipline)); el.mesh.material.needsUpdate = true; el.mesh.userData._hasTexture = false; removed++; }
   });
   showViewportStatus(removed + ' textura(s) removida(s).');
 }
@@ -1216,88 +1015,22 @@ function removeTextureFromUI() {
 /* ============================================================
    IFC — EXTRAÇÃO
    ============================================================ */
-function refToId(ref) {
-  if (ref === null || ref === undefined) return null;
-  if (typeof ref === 'number') return ref;
-  if (typeof ref === 'object') {
-    if (ref.value !== undefined) return ref.value;
-    if (ref.expressID !== undefined) return ref.expressID;
-  }
-  return null;
-}
-function toArray(collection) {
-  if (!collection) return [];
-  if (Array.isArray(collection)) return collection;
-  if (typeof collection.size === 'function') {
-    var out = [];
-    for (var i = 0; i < collection.size(); i++) out.push(collection.get(i));
-    return out;
-  }
-  if (typeof collection.length === 'number') return Array.prototype.slice.call(collection);
-  return [];
-}
-function getIFCName(api, mid, id) {
-  try {
-    var l = api.GetLine(mid, id, false);
-    if (!l) return null;
-    if (l.Name) { var n = l.Name; if (typeof n === 'object' && n.value) return n.value; if (typeof n === 'string') return n; }
-    if (l.ObjectType) { var ot = l.ObjectType; if (typeof ot === 'object' && ot.value) return ot.value; if (typeof ot === 'string') return ot; }
-    if (l.LongName) { var ln = l.LongName; if (typeof ln === 'object' && ln.value) return ln.value; if (typeof ln === 'string') return ln; }
-  } catch (e) {}
-  return null;
-}
-function getIFCGuid(api, mid, id) {
-  try {
-    var l = api.GetLine(mid, id, false);
-    if (!l) return null;
-    if (l.GlobalId) { var g = l.GlobalId; if (typeof g === 'object' && g.value) return g.value; if (typeof g === 'string') return g; }
-  } catch (e) {}
-  return null;
-}
+function refToId(ref) { if (ref === null || ref === undefined) return null; if (typeof ref === 'number') return ref; if (typeof ref === 'object') { if (ref.value !== undefined) return ref.value; if (ref.expressID !== undefined) return ref.expressID; } return null; }
+function toArray(collection) { if (!collection) return []; if (Array.isArray(collection)) return collection; if (typeof collection.size === 'function') { var out = []; for (var i = 0; i < collection.size(); i++) out.push(collection.get(i)); return out; } if (typeof collection.length === 'number') return Array.prototype.slice.call(collection); return []; }
+function getIFCName(api, mid, id) { try { var l = api.GetLine(mid, id, false); if (!l) return null; if (l.Name) { var n = l.Name; if (typeof n === 'object' && n.value) return n.value; if (typeof n === 'string') return n; } if (l.ObjectType) { var ot = l.ObjectType; if (typeof ot === 'object' && ot.value) return ot.value; if (typeof ot === 'string') return ot; } if (l.LongName) { var ln = l.LongName; if (typeof ln === 'object' && ln.value) return ln.value; if (typeof ln === 'string') return ln; } } catch (e) {} return null; }
+function getIFCGuid(api, mid, id) { try { var l = api.GetLine(mid, id, false); if (!l) return null; if (l.GlobalId) { var g = l.GlobalId; if (typeof g === 'object' && g.value) return g.value; if (typeof g === 'string') return g; } } catch (e) {} return null; }
 function getIFCTypeName(api, mid, id) {
-  try {
-    if (typeof api.GetLineType === 'function' && typeof api.GetNameFromTypeCode === 'function') {
-      var typeCode = api.GetLineType(mid, id);
-      if (typeCode && typeCode > 0) {
-        var name = api.GetNameFromTypeCode(typeCode);
-        if (name && typeof name === 'string' && name.length > 2 && name !== 'IFCENTITY') return name.toUpperCase();
-      }
-    }
-  } catch (e) {}
-  try {
-    if (typeof api.GetIfcEntityName === 'function') {
-      var n2 = api.GetIfcEntityName(id);
-      if (n2 && typeof n2 === 'string' && n2 !== 'IFCENTITY') return n2.toUpperCase();
-    }
-  } catch (e) {}
+  try { if (typeof api.GetLineType === 'function' && typeof api.GetNameFromTypeCode === 'function') { var typeCode = api.GetLineType(mid, id); if (typeCode && typeCode > 0) { var name = api.GetNameFromTypeCode(typeCode); if (name && typeof name === 'string' && name.length > 2 && name !== 'IFCENTITY') return name.toUpperCase(); } } } catch (e) {}
+  try { if (typeof api.GetIfcEntityName === 'function') { var n2 = api.GetIfcEntityName(id); if (n2 && typeof n2 === 'string' && n2 !== 'IFCENTITY') return n2.toUpperCase(); } } catch (e) {}
   return 'IFCENTITY';
 }
 function getIFCStorey(api, mid, id) {
   try {
-    var line = api.GetLine(mid, id, false);
-    if (!line) return null;
+    var line = api.GetLine(mid, id, false); if (!line) return null;
     var contained = toArray(line.ContainedInStructure);
-    for (var i = 0; i < contained.length; i++) {
-      var relId = refToId(contained[i]);
-      if (!relId) continue;
-      var rel = api.GetLine(mid, relId, false);
-      if (!rel || !rel.RelatingStructure) continue;
-      var stId = refToId(rel.RelatingStructure);
-      if (!stId) continue;
-      var st = api.GetLine(mid, stId, false);
-      if (st && st.Name) { var nm = st.Name; if (typeof nm === 'object' && nm.value) return nm.value; if (typeof nm === 'string') return nm; }
-    }
+    for (var i = 0; i < contained.length; i++) { var relId = refToId(contained[i]); if (!relId) continue; var rel = api.GetLine(mid, relId, false); if (!rel || !rel.RelatingStructure) continue; var stId = refToId(rel.RelatingStructure); if (!stId) continue; var st = api.GetLine(mid, stId, false); if (st && st.Name) { var nm = st.Name; if (typeof nm === 'object' && nm.value) return nm.value; if (typeof nm === 'string') return nm; } }
     var decomp = toArray(line.Decomposes);
-    for (var j = 0; j < decomp.length; j++) {
-      var dId = refToId(decomp[j]);
-      if (!dId) continue;
-      var d = api.GetLine(mid, dId, false);
-      if (!d || !d.RelatingObject) continue;
-      var roId = refToId(d.RelatingObject);
-      if (!roId) continue;
-      var ro = api.GetLine(mid, roId, false);
-      if (ro && ro.Name) { var nm2 = ro.Name; if (typeof nm2 === 'object' && nm2.value) return nm2.value; if (typeof nm2 === 'string') return nm2; }
-    }
+    for (var j = 0; j < decomp.length; j++) { var dId = refToId(decomp[j]); if (!dId) continue; var d = api.GetLine(mid, dId, false); if (!d || !d.RelatingObject) continue; var roId = refToId(d.RelatingObject); if (!roId) continue; var ro = api.GetLine(mid, roId, false); if (ro && ro.Name) { var nm2 = ro.Name; if (typeof nm2 === 'object' && nm2.value) return nm2.value; if (typeof nm2 === 'string') return nm2; } }
   } catch (e) {}
   return null;
 }
@@ -1324,45 +1057,16 @@ window.addEventListener('load', function () {
   renderTextureGrid(); updateTextureLabels();
   window.addEventListener('resize', onWindowResize);
   window.addEventListener('orientationchange', function () { setTimeout(onWindowResize, 300); });
-  if (window.visualViewport) {
-    window.visualViewport.addEventListener('resize', onWindowResize);
-    window.visualViewport.addEventListener('scroll', onWindowResize);
-  }
+  if (window.visualViewport) { window.visualViewport.addEventListener('resize', onWindowResize); window.visualViewport.addEventListener('scroll', onWindowResize); }
   setInterval(applyLicenseGate, 60000);
 });
 
 /* MOBILE */
-function openActionsSheet() {
-  var bd = document.getElementById('actionsBackdrop');
-  if (bd) { bd.style.display = 'block'; setTimeout(function () { bd.classList.add('open'); }, 10); }
-  document.getElementById('actionsSheet').classList.add('open');
-}
-function closeActionsSheet() {
-  var sheet = document.getElementById('actionsSheet'), bd = document.getElementById('actionsBackdrop');
-  if (sheet) sheet.classList.remove('open');
-  if (bd) { bd.classList.remove('open'); setTimeout(function () { if (!bd.classList.contains('open')) bd.style.display = 'none'; }, 220); }
-}
-function toggleLeftSidebar() {
-  var sb = document.getElementById('leftSidebar'), other = document.getElementById('rightSidebar'), bd = document.getElementById('sidebarBackdrop');
-  if (!sb) return;
-  other.classList.remove('open');
-  var willOpen = !sb.classList.contains('open');
-  sb.classList.toggle('open', willOpen);
-  if (bd) bd.classList.toggle('open', willOpen);
-}
-function toggleRightSidebar() {
-  var sb = document.getElementById('rightSidebar'), other = document.getElementById('leftSidebar'), bd = document.getElementById('sidebarBackdrop');
-  if (!sb) return;
-  other.classList.remove('open');
-  var willOpen = !sb.classList.contains('open');
-  sb.classList.toggle('open', willOpen);
-  if (bd) bd.classList.toggle('open', willOpen);
-}
-function closeAllSidebars() {
-  document.getElementById('leftSidebar').classList.remove('open');
-  document.getElementById('rightSidebar').classList.remove('open');
-  var bd = document.getElementById('sidebarBackdrop'); if (bd) bd.classList.remove('open');
-}
+function openActionsSheet() { var bd = document.getElementById('actionsBackdrop'); if (bd) { bd.style.display = 'block'; setTimeout(function () { bd.classList.add('open'); }, 10); } document.getElementById('actionsSheet').classList.add('open'); }
+function closeActionsSheet() { var sheet = document.getElementById('actionsSheet'), bd = document.getElementById('actionsBackdrop'); if (sheet) sheet.classList.remove('open'); if (bd) { bd.classList.remove('open'); setTimeout(function () { if (!bd.classList.contains('open')) bd.style.display = 'none'; }, 220); } }
+function toggleLeftSidebar() { var sb = document.getElementById('leftSidebar'), other = document.getElementById('rightSidebar'), bd = document.getElementById('sidebarBackdrop'); if (!sb) return; other.classList.remove('open'); var willOpen = !sb.classList.contains('open'); sb.classList.toggle('open', willOpen); if (bd) bd.classList.toggle('open', willOpen); }
+function toggleRightSidebar() { var sb = document.getElementById('rightSidebar'), other = document.getElementById('leftSidebar'), bd = document.getElementById('sidebarBackdrop'); if (!sb) return; other.classList.remove('open'); var willOpen = !sb.classList.contains('open'); sb.classList.toggle('open', willOpen); if (bd) bd.classList.toggle('open', willOpen); }
+function closeAllSidebars() { document.getElementById('leftSidebar').classList.remove('open'); document.getElementById('rightSidebar').classList.remove('open'); var bd = document.getElementById('sidebarBackdrop'); if (bd) bd.classList.remove('open'); }
 function triggerIfcImport() { closeActionsSheet(); setTimeout(function () { document.getElementById('ifcFileInput').click(); }, 250); }
 
 /* 3D SCENE */
@@ -1393,6 +1097,7 @@ function init3DScene() {
   modelGroup = new THREE.Group(); scene.add(modelGroup);
   clashMarkersGroup = new THREE.Group(); scene.add(clashMarkersGroup);
   raycaster = new THREE.Raycaster(); mouse = new THREE.Vector2();
+  clashMarkersContainer = document.getElementById('clashMarkersContainer');
   var cv = renderer.domElement;
   cv.addEventListener('pointerdown', onPointerDown);
   cv.addEventListener('pointerup', onPointerUp);
@@ -1407,86 +1112,30 @@ function animate() {
   if (renderer && scene && camera) {
     try { renderer.render(scene, camera); } catch (e) {}
     updateAxisCompass();
+    if (state.clashes.length && state.showClashPins) updateClashMarkersPosition();
   }
 }
-function onWindowResize() {
-  if (!renderer || !camera) return;
-  var c = document.getElementById('canvasWrapper');
-  var w = c.clientWidth, h = c.clientHeight;
-  if (w === 0 || h === 0) return;
-  camera.aspect = w / h;
-  camera.updateProjectionMatrix();
-  renderer.setSize(w, h, false);
-}
-function buildAxisCompass() {
-  var el = document.getElementById('axisCompass');
-  el.innerHTML = '<svg viewBox="0 0 100 100" width="100%" height="100%"><circle cx="50" cy="50" r="45" fill="rgba(15,23,42,0.6)" stroke="rgba(255,255,255,0.1)"/><line id="axX" x1="50" y1="50" x2="50" y2="50" stroke="#ef4444" stroke-width="2.5" stroke-linecap="round"/><line id="axY" x1="50" y1="50" x2="50" y2="50" stroke="#10b981" stroke-width="2.5" stroke-linecap="round"/><line id="axZ" x1="50" y1="50" x2="50" y2="50" stroke="#3b82f6" stroke-width="2.5" stroke-linecap="round"/><text id="lblX" x="50" y="50" fill="#ef4444" font-size="10" font-weight="700" text-anchor="middle">X</text><text id="lblY" x="50" y="50" fill="#10b981" font-size="10" font-weight="700" text-anchor="middle">Y</text><text id="lblZ" x="50" y="50" fill="#3b82f6" font-size="10" font-weight="700" text-anchor="middle">Z</text></svg>';
-}
-function updateAxisCompass() {
-  if (!camera) return;
-  var axes = [
-    { v: new THREE.Vector3(1, 0, 0), line: 'axX', lbl: 'lblX' },
-    { v: new THREE.Vector3(0, 1, 0), line: 'axY', lbl: 'lblY' },
-    { v: new THREE.Vector3(0, 0, 1), line: 'axZ', lbl: 'lblZ' }
-  ];
-  var m = camera.matrixWorldInverse;
-  for (var i = 0; i < axes.length; i++) {
-    var a = axes[i], v = a.v.clone().transformDirection(m);
-    var x2 = 50 + v.x * 35, y2 = 50 - v.y * 35;
-    var ln = document.getElementById(a.line), lb = document.getElementById(a.lbl);
-    if (ln) { ln.setAttribute('x2', x2); ln.setAttribute('y2', y2); }
-    if (lb) { lb.setAttribute('x', 50 + v.x * 42); lb.setAttribute('y', 50 - v.y * 42 + 3); }
-  }
-}
-function resetCameraView(view) {
-  var box = new THREE.Box3();
-  if (state.elements.length) { state.elements.forEach(function (e) { if (e.mesh.visible) box.expandByObject(e.mesh); }); }
-  else { box.setFromCenterAndSize(new THREE.Vector3(0, 0, 0), new THREE.Vector3(20, 20, 20)); }
-  if (box.isEmpty()) return;
-  var c = new THREE.Vector3(); box.getCenter(c);
-  var s = new THREE.Vector3(); box.getSize(s);
-  var d = Math.max(s.x, s.y, s.z) * 1.6 + 6;
-  controls.target.copy(c); camera.up.set(0, 0, 1);
-  if (view === 'top') camera.position.set(c.x, c.y, c.z + d);
-  else if (view === 'front') camera.position.set(c.x, c.y - d, c.z + d * 0.05);
-  else if (view === 'side') camera.position.set(c.x + d, c.y, c.z + d * 0.05);
-  else camera.position.set(c.x + d * 0.75, c.y - d * 0.75, c.z + d * 0.55);
-  camera.far = Math.max(2000, d * 12); camera.updateProjectionMatrix(); controls.update();
-}
-function fitAllModels() {
-  if (!state.elements.length) { showViewportStatus('Nenhum modelo carregado.'); return; }
-  var box = new THREE.Box3();
-  state.elements.forEach(function (e) { if (e.mesh.visible) box.expandByObject(e.mesh); });
-  if (box.isEmpty()) return;
-  var c = new THREE.Vector3(); box.getCenter(c);
-  var s = new THREE.Vector3(); box.getSize(s);
-  var d = Math.max(s.x, s.y, s.z) * 1.5 + 6;
-  camera.up.set(0, 0, 1);
-  camera.position.set(c.x + d * 0.75, c.y - d * 0.75, c.z + d * 0.55);
-  controls.target.copy(c);
-  camera.far = Math.max(2000, d * 12); camera.updateProjectionMatrix(); controls.update();
-  showViewportStatus('Enquadrado.');
-}
-function toggleWireframe() {
-  state.wireframe = !state.wireframe;
-  state.elements.forEach(function (e) { if (e.mesh.material) e.mesh.material.wireframe = state.wireframe; });
-  showViewportStatus(state.wireframe ? 'Wireframe ON' : 'Wireframe OFF');
+function onWindowResize() { if (!renderer || !camera) return; var c = document.getElementById('canvasWrapper'); var w = c.clientWidth, h = c.clientHeight; if (w === 0 || h === 0) return; camera.aspect = w / h; camera.updateProjectionMatrix(); renderer.setSize(w, h, false); }
+function buildAxisCompass() { var el = document.getElementById('axisCompass'); el.innerHTML = '<svg viewBox="0 0 100 100" width="100%" height="100%"><circle cx="50" cy="50" r="45" fill="rgba(15,23,42,0.6)" stroke="rgba(255,255,255,0.1)"/><line id="axX" x1="50" y1="50" x2="50" y2="50" stroke="#ef4444" stroke-width="2.5" stroke-linecap="round"/><line id="axY" x1="50" y1="50" x2="50" y2="50" stroke="#10b981" stroke-width="2.5" stroke-linecap="round"/><line id="axZ" x1="50" y1="50" x2="50" y2="50" stroke="#3b82f6" stroke-width="2.5" stroke-linecap="round"/><text id="lblX" x="50" y="50" fill="#ef4444" font-size="10" font-weight="700" text-anchor="middle">X</text><text id="lblY" x="50" y="50" fill="#10b981" font-size="10" font-weight="700" text-anchor="middle">Y</text><text id="lblZ" x="50" y="50" fill="#3b82f6" font-size="10" font-weight="700" text-anchor="middle">Z</text></svg>'; }
+function updateAxisCompass() { if (!camera) return; var axes = [{ v: new THREE.Vector3(1, 0, 0), line: 'axX', lbl: 'lblX' },{ v: new THREE.Vector3(0, 1, 0), line: 'axY', lbl: 'lblY' },{ v: new THREE.Vector3(0, 0, 1), line: 'axZ', lbl: 'lblZ' }]; var m = camera.matrixWorldInverse; for (var i = 0; i < axes.length; i++) { var a = axes[i], v = a.v.clone().transformDirection(m); var x2 = 50 + v.x * 35, y2 = 50 - v.y * 35; var ln = document.getElementById(a.line), lb = document.getElementById(a.lbl); if (ln) { ln.setAttribute('x2', x2); ln.setAttribute('y2', y2); } if (lb) { lb.setAttribute('x', 50 + v.x * 42); lb.setAttribute('y', 50 - v.y * 42 + 3); } } }
+function resetCameraView(view) { var box = new THREE.Box3(); if (state.elements.length) { state.elements.forEach(function (e) { if (e.mesh.visible) box.expandByObject(e.mesh); }); } else { box.setFromCenterAndSize(new THREE.Vector3(0, 0, 0), new THREE.Vector3(20, 20, 20)); } if (box.isEmpty()) return; var c = new THREE.Vector3(); box.getCenter(c); var s = new THREE.Vector3(); box.getSize(s); var d = Math.max(s.x, s.y, s.z) * 1.6 + 6; controls.target.copy(c); camera.up.set(0, 0, 1); if (view === 'top') camera.position.set(c.x, c.y, c.z + d); else if (view === 'front') camera.position.set(c.x, c.y - d, c.z + d * 0.05); else if (view === 'side') camera.position.set(c.x + d, c.y, c.z + d * 0.05); else camera.position.set(c.x + d * 0.75, c.y - d * 0.75, c.z + d * 0.55); camera.far = Math.max(2000, d * 12); camera.updateProjectionMatrix(); controls.update(); }
+function fitAllModels() { if (!state.elements.length) { showViewportStatus('Nenhum modelo carregado.'); return; } var box = new THREE.Box3(); state.elements.forEach(function (e) { if (e.mesh.visible) box.expandByObject(e.mesh); }); if (box.isEmpty()) return; var c = new THREE.Vector3(); box.getCenter(c); var s = new THREE.Vector3(); box.getSize(s); var d = Math.max(s.x, s.y, s.z) * 1.5 + 6; camera.up.set(0, 0, 1); camera.position.set(c.x + d * 0.75, c.y - d * 0.75, c.z + d * 0.55); controls.target.copy(c); camera.far = Math.max(2000, d * 12); camera.updateProjectionMatrix(); controls.update(); showViewportStatus('Enquadrado.'); }
+function toggleWireframe() { state.wireframe = !state.wireframe; state.elements.forEach(function (e) { if (e.mesh.material) e.mesh.material.wireframe = state.wireframe; }); showViewportStatus(state.wireframe ? 'Wireframe ON' : 'Wireframe OFF'); }
+function toggleClashPins() {
+  state.showClashPins = !state.showClashPins;
+  var btn = document.getElementById('btnClashPins');
+  if (btn) btn.style.background = state.showClashPins ? '#334155' : '#475569';
+  if (clashMarkersContainer) clashMarkersContainer.style.display = state.showClashPins ? 'block' : 'none';
+  if (clashMarkersGroup) clashMarkersGroup.visible = state.showClashPins;
+  showViewportStatus(state.showClashPins ? 'Pins de conflito visíveis.' : 'Pins de conflito ocultos.');
 }
 function onPointerDown(e) { pointerDownPos = { x: e.clientX, y: e.clientY, t: Date.now() }; }
-function onPointerUp(e) {
-  if (!pointerDownPos) return;
-  var dx = Math.abs(e.clientX - pointerDownPos.x), dy = Math.abs(e.clientY - pointerDownPos.y), dt = Date.now() - pointerDownPos.t;
-  pointerDownPos = null;
-  if (dx > 6 || dy > 6 || dt > 500) return;
-  pickElementAt(e.clientX, e.clientY);
-}
+function onPointerUp(e) { if (!pointerDownPos) return; var dx = Math.abs(e.clientX - pointerDownPos.x), dy = Math.abs(e.clientY - pointerDownPos.y), dt = Date.now() - pointerDownPos.t; pointerDownPos = null; if (dx > 6 || dy > 6 || dt > 500) return; pickElementAt(e.clientX, e.clientY); }
 function pickElementAt(cx, cy) {
   var rect = renderer.domElement.getBoundingClientRect();
-  mouse.x = ((cx - rect.left) / rect.width) * 2 - 1;
-  mouse.y = -((cy - rect.top) / rect.height) * 2 + 1;
+  mouse.x = ((cx - rect.left) / rect.width) * 2 - 1; mouse.y = -((cy - rect.top) / rect.height) * 2 + 1;
   raycaster.setFromCamera(mouse, camera);
-  var meshes = [];
-  state.elements.forEach(function (el) { if (el.mesh.visible) meshes.push(el.mesh); });
+  var meshes = []; state.elements.forEach(function (el) { if (el.mesh.visible) meshes.push(el.mesh); });
   var hits = raycaster.intersectObjects(meshes, false);
   if (!hits.length) { clearSelection(); return; }
   var mesh = hits[0].object;
@@ -1494,86 +1143,44 @@ function pickElementAt(cx, cy) {
 }
 function selectElement(el) {
   state.selectedElement = el;
-  state.elements.forEach(function (e) { if (e.mesh.material && e.mesh.material.emissive) e.mesh.material.emissive.setHex(0); });
+  state.elements.forEach(function (e) { if (e.mesh.material && e.mesh.material.emissive && !e.mesh.userData._clashHighlight) e.mesh.material.emissive.setHex(0); });
   if (el.mesh.material && el.mesh.material.emissive) el.mesh.material.emissive.setHex(0x1e3a8a);
   showSelectedElementBar(el); updateDimensionsUI();
 }
 function clearSelection() {
+  clearClashHighlight();
   state.selectedElement = null;
-  state.elements.forEach(function (e) { if (e.mesh.material && e.mesh.material.emissive) e.mesh.material.emissive.setHex(0); });
+  state.elements.forEach(function (e) { if (e.mesh.material && e.mesh.material.emissive && !e.mesh.userData._clashHighlight) e.mesh.material.emissive.setHex(0); });
   hideSelectedElementBar(); updateDimensionsUI();
 }
-function showSelectedElementBar(el) {
-  document.getElementById('selElemName').innerText = el.name || '—';
-  document.getElementById('selElemDisc').innerText = el.discipline || '—';
-  document.getElementById('selElemGUID').innerText = 'GUID: ' + (el.guid || '-');
-  document.getElementById('selectedElementBar').classList.add('show');
-}
+function showSelectedElementBar(el) { document.getElementById('selElemName').innerText = el.name || '—'; document.getElementById('selElemDisc').innerText = el.discipline || '—'; document.getElementById('selElemGUID').innerText = 'GUID: ' + (el.guid || '-'); document.getElementById('selectedElementBar').classList.add('show'); }
 function hideSelectedElementBar() { document.getElementById('selectedElementBar').classList.remove('show'); }
-function isolateSelectedElement() {
-  if (!state.selectedElement) return;
-  state.elements.forEach(function (e) { e.mesh.visible = (e === state.selectedElement); });
-  buildSpatialTreeUI();
-}
-function hideSelectedElement() {
-  if (!state.selectedElement) return;
-  state.selectedElement.mesh.visible = false;
-  clearSelection(); buildSpatialTreeUI();
-}
-function showAllElements() {
-  state.elements.forEach(function (e) { e.mesh.visible = true; });
-  buildSpatialTreeUI();
-  showViewportStatus('Todos visíveis.');
-}
-function showLoading(show, text) {
-  var el = document.getElementById('loadingOverlay');
-  if (text) document.getElementById('loadingText').innerText = text;
-  el.classList.toggle('hidden', !show);
-}
+function isolateSelectedElement() { if (!state.selectedElement) return; state.elements.forEach(function (e) { e.mesh.visible = (e === state.selectedElement); }); buildSpatialTreeUI(); }
+function hideSelectedElement() { if (!state.selectedElement) return; state.selectedElement.mesh.visible = false; clearSelection(); buildSpatialTreeUI(); }
+function showAllElements() { state.elements.forEach(function (e) { e.mesh.visible = true; }); buildSpatialTreeUI(); showViewportStatus('Todos visíveis.'); }
+function showLoading(show, text) { var el = document.getElementById('loadingOverlay'); if (text) document.getElementById('loadingText').innerText = text; el.classList.toggle('hidden', !show); }
 var statusTimer = null;
-function showViewportStatus(msg) {
-  var el = document.getElementById('viewportStatusText');
-  if (!el) return;
-  el.innerText = msg;
-  if (statusTimer) clearTimeout(statusTimer);
-  statusTimer = setTimeout(function () { el.innerText = 'Motor 3D Ativo'; }, 3500);
-}
+function showViewportStatus(msg) { var el = document.getElementById('viewportStatusText'); if (!el) return; el.innerText = msg; if (statusTimer) clearTimeout(statusTimer); statusTimer = setTimeout(function () { el.innerText = 'Motor 3D Ativo'; }, 3500); }
 
 /* IFC LOAD */
 function handleIFCUpload(event) {
   var files = Array.prototype.slice.call(event.target.files || []);
   if (!files.length) return;
   showLoading(true, 'Inicializando motor IFC...');
-  if (typeof WebIFC === 'undefined') {
-    alert('Biblioteca WebIFC não carregada.\n\nBaixe web-ifc-api-iife.js e web-ifc.wasm em:\nhttps://thatopen.github.io/engine_web-ifc/build.zip\n\nColoque os dois na mesma pasta e rode via servidor local.');
-    showLoading(false); event.target.value = ''; return;
-  }
+  if (typeof WebIFC === 'undefined') { alert('Biblioteca WebIFC não carregada.\n\nBaixe web-ifc-api-iife.js e web-ifc.wasm em:\nhttps://thatopen.github.io/engine_web-ifc/build.zip\n\nColoque os dois na mesma pasta e rode via servidor local.'); showLoading(false); event.target.value = ''; return; }
   if (!ifcApiInstance) {
     ifcApiInstance = new WebIFC.IfcAPI();
     if (ifcApiInstance.SetWasmPath) ifcApiInstance.SetWasmPath('./');
-    ifcApiInstance.Init().then(function () { processIFCFiles(files); }).catch(function (err) {
-      console.error('[IFC INIT]', err);
-      alert('Erro ao inicializar WebIFC: ' + err.message);
-      showLoading(false);
-    });
+    ifcApiInstance.Init().then(function () { processIFCFiles(files); }).catch(function (err) { console.error('[IFC INIT]', err); alert('Erro ao inicializar WebIFC: ' + err.message); showLoading(false); });
   } else { processIFCFiles(files); }
 }
 function processIFCFiles(files) {
   var i = 0;
   function next() {
-    if (i >= files.length) {
-      fitAllModels(); updateModelsListUI(); buildSpatialTreeUI();
-      updateScopeUI(); updateFloorFilterOptions(); refreshTransformModelSelect();
-      showLoading(false); showViewportStatus(files.length + ' IFC importado(s).');
-      return;
-    }
+    if (i >= files.length) { fitAllModels(); updateModelsListUI(); buildSpatialTreeUI(); updateScopeUI(); updateFloorFilterOptions(); refreshTransformModelSelect(); showLoading(false); showViewportStatus(files.length + ' IFC importado(s).'); return; }
     var file = files[i++];
     showLoading(true, 'Processando ' + file.name + '...');
-    loadIFCFile(ifcApiInstance, file).then(next).catch(function (err) {
-      console.error('[IFC]', err);
-      alert('Erro ao processar IFC: ' + (err.message || err));
-      next();
-    });
+    loadIFCFile(ifcApiInstance, file).then(next).catch(function (err) { console.error('[IFC]', err); alert('Erro ao processar IFC: ' + (err.message || err)); next(); });
   }
   next();
 }
@@ -1583,13 +1190,9 @@ function loadIFCFile(api, file) {
     var modelID = api.OpenModel(buf, { COORDINATE_TO_ORIGIN: true });
     var modelId = 'M' + modelID + '_' + Date.now();
     var group = new THREE.Group();
-    group.userData.isModelRoot = true;
-    group.rotation.x = -Math.PI / 2;
-    group.name = file.name;
-    modelGroup.add(group);
-    state.modelGroups[modelId] = group;
+    group.userData.isModelRoot = true; group.rotation.x = -Math.PI / 2; group.name = file.name;
+    modelGroup.add(group); state.modelGroups[modelId] = group;
     state.modelTransforms[modelId] = { rot: { x: 0, y: 0, z: 0 }, pos: { x: 0, y: 0, z: 0 } };
-
     var count = 0;
     var MAX_IOS = isIOS ? 3000 : 999999;
     var flatMeshes = api.LoadAllGeometry(modelID);
@@ -1600,8 +1203,7 @@ function loadIFCFile(api, file) {
       var gs = flat.geometries;
       for (var j = 0; j < gs.size(); j++) {
         var pg = gs.get(j);
-        var geo;
-        try { geo = api.GetGeometry(modelID, pg.geometryExpressID); } catch (e) { continue; }
+        var geo; try { geo = api.GetGeometry(modelID, pg.geometryExpressID); } catch (e) { continue; }
         var verts = api.GetVertexArray(geo.GetVertexData(), geo.GetVertexDataSize());
         var idx = api.GetIndexArray(geo.GetIndexData(), geo.GetIndexDataSize());
         if (!verts.length || !idx.length) { try { geo.delete(); } catch (e) {} continue; }
@@ -1611,8 +1213,7 @@ function loadIFCFile(api, file) {
         for (var k = 0, p = 0, n = 0, u = 0; k < verts.length; k += 6) {
           positions[p++] = verts[k]; positions[p++] = verts[k + 1]; positions[p++] = verts[k + 2];
           normals[n++] = verts[k + 3]; normals[n++] = verts[k + 4]; normals[n++] = verts[k + 5];
-          uvs[u++] = verts[k] * 0.5;
-          uvs[u++] = verts[k + 1] * 0.5;
+          uvs[u++] = verts[k] * 0.5; uvs[u++] = verts[k + 1] * 0.5;
         }
         var geometry = new THREE.BufferGeometry();
         geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
@@ -1620,7 +1221,6 @@ function loadIFCFile(api, file) {
         geometry.setAttribute('uv', new THREE.BufferAttribute(uvs, 2));
         geometry.setIndex(new THREE.BufferAttribute(new Uint32Array(idx), 1));
         geometry.computeBoundingBox();
-
         var mat4 = new THREE.Matrix4().fromArray(pg.flatTransformation);
         var col = pg.color;
         var color = (col && col.x !== undefined) ? new THREE.Color(col.x, col.y, col.z) : new THREE.Color(0x94a3b8);
@@ -1628,12 +1228,10 @@ function loadIFCFile(api, file) {
         var material = new THREE.MeshStandardMaterial({ color: color, roughness: 0.7, metalness: 0.1, transparent: opacity < 1, opacity: opacity, side: THREE.DoubleSide });
         var mesh = new THREE.Mesh(geometry, material);
         mesh.applyMatrix4(mat4);
-
         var nm = getIFCName(api, modelID, flat.expressID) || ifcType;
         var disc = classifyDiscipline(ifcType, nm);
         var storey = getIFCStorey(api, modelID, flat.expressID) || 'Não classificado';
         var guid = getIFCGuid(api, modelID, flat.expressID) || ('ID' + flat.expressID);
-
         mesh.userData = { modelId: modelId, ifcClass: ifcType, name: nm, discipline: disc, storey: storey, guid: guid };
         group.add(mesh);
         state.elements.push({ mesh: mesh, modelId: modelId, expressID: flat.expressID, ifcClass: ifcType, name: nm, discipline: disc, storey: storey, guid: guid });
@@ -1653,17 +1251,13 @@ function loadDemoProject() {
   setTimeout(function () {
     try {
       var modelId = 'DEMO_' + Date.now();
-      var group = new THREE.Group();
-      group.userData.isModelRoot = true;
-      group.name = 'Demo APAVAN';
-      modelGroup.add(group);
-      state.modelGroups[modelId] = group;
+      var group = new THREE.Group(); group.userData.isModelRoot = true; group.name = 'Demo APAVAN';
+      modelGroup.add(group); state.modelGroups[modelId] = group;
       state.modelTransforms[modelId] = { rot: { x: 0, y: 0, z: 0 }, pos: { x: 0, y: 0, z: 0 } };
       function mk(w, h, d, x, y, z, col, cls, nm, disc, st) {
         var g = new THREE.BoxGeometry(w, h, d);
         var m = new THREE.MeshStandardMaterial({ color: col, roughness: 0.7, metalness: 0.12, transparent: true, opacity: 0.94, side: THREE.DoubleSide });
-        var me = new THREE.Mesh(g, m);
-        me.position.set(x, y, z);
+        var me = new THREE.Mesh(g, m); me.position.set(x, y, z);
         var guid = 'DEMO-' + Math.random().toString(36).slice(2, 10).toUpperCase();
         me.userData = { modelId: modelId, ifcClass: cls, name: nm, discipline: disc, storey: st, guid: guid };
         group.add(me);
@@ -1697,15 +1291,10 @@ function updateModelsListUI() {
   var list = document.getElementById('loadedModelsList');
   document.getElementById('modelCountBadge').innerText = state.models.length;
   list.innerHTML = '';
-  if (!state.models.length) {
-    list.innerHTML = '<div style="text-align:center;padding:1.5rem;color:#64748b;font-size:.75rem;border:1px dashed #1e293b;border-radius:.5rem">Nenhum modelo importado.</div>';
-    return;
-  }
+  if (!state.models.length) { list.innerHTML = '<div style="text-align:center;padding:1.5rem;color:#64748b;font-size:.75rem;border:1px dashed #1e293b;border-radius:.5rem">Nenhum modelo importado.</div>'; return; }
   state.models.forEach(function (m) {
-    var item = document.createElement('div');
-    item.className = 'model-item';
-    var info = document.createElement('div');
-    info.className = 'info';
+    var item = document.createElement('div'); item.className = 'model-item';
+    var info = document.createElement('div'); info.className = 'info';
     info.innerHTML = '<div class="name" title="' + m.name + '">' + m.name + '</div><div class="count">' + m.count + ' elementos</div>';
     var zoomBtn = document.createElement('button'); zoomBtn.className = 'icon-btn'; zoomBtn.innerHTML = '<i class="fa-solid fa-crosshairs" style="color:#60a5fa"></i>'; zoomBtn.onclick = function () { zoomToModel(m.id); };
     var delBtn = document.createElement('button'); delBtn.className = 'icon-btn'; delBtn.innerHTML = '<i class="fa-solid fa-trash" style="color:#f87171"></i>'; delBtn.onclick = function () { removeModel(m.id); };
@@ -1714,18 +1303,14 @@ function updateModelsListUI() {
   });
 }
 function removeModel(modelId) {
-  if (!modelId) return;
-  if (!confirm('Excluir este modelo?')) return;
+  if (!modelId) return; if (!confirm('Excluir este modelo?')) return;
   state.elements.filter(function (e) { return e.modelId === modelId; }).forEach(function (e) {
     try { if (e.mesh.geometry) e.mesh.geometry.dispose(); if (e.mesh.material) e.mesh.material.dispose(); if (e.mesh.parent) e.mesh.parent.remove(e.mesh); } catch (err) {}
-    var i = state.elements.indexOf(e);
-    if (i >= 0) state.elements.splice(i, 1);
+    var i = state.elements.indexOf(e); if (i >= 0) state.elements.splice(i, 1);
   });
-  var g = state.modelGroups[modelId];
-  if (g && g.parent) g.parent.remove(g);
+  var g = state.modelGroups[modelId]; if (g && g.parent) g.parent.remove(g);
   delete state.modelGroups[modelId]; delete state.modelTransforms[modelId];
-  var mi = -1;
-  for (var i = 0; i < state.models.length; i++) if (state.models[i].id === modelId) { mi = i; break; }
+  var mi = -1; for (var i = 0; i < state.models.length; i++) if (state.models[i].id === modelId) { mi = i; break; }
   if (mi >= 0) state.models.splice(mi, 1);
   state.clashes = state.clashes.filter(function (c) { return c.elemA.modelId !== modelId && c.elemB.modelId !== modelId; });
   updateModelsListUI(); buildSpatialTreeUI(); updateClashListUI(); updateDashboardUI(); updateScopeUI(); updateFloorFilterOptions(); refreshTransformModelSelect();
@@ -1745,8 +1330,7 @@ function clearAllModels() {
 function zoomToModel(modelId) {
   var group = state.modelGroups[modelId]; if (!group) return;
   group.updateMatrixWorld(true);
-  var box = new THREE.Box3().setFromObject(group);
-  if (box.isEmpty()) return;
+  var box = new THREE.Box3().setFromObject(group); if (box.isEmpty()) return;
   var c = new THREE.Vector3(); box.getCenter(c);
   var s = new THREE.Vector3(); box.getSize(s);
   var d = Math.max(s.x, s.y, s.z) * 1.2 + 5;
@@ -1757,16 +1341,10 @@ function zoomToModel(modelId) {
 
 /* ÁRVORE */
 function buildSpatialTreeUI() {
-  var root = document.getElementById('ifcSpatialTree');
-  root.innerHTML = '';
+  var root = document.getElementById('ifcSpatialTree'); root.innerHTML = '';
   if (!state.elements.length) { root.innerHTML = '<div style="color:#64748b;text-align:center;padding:1rem;font-size:.75rem">Nenhum elemento.</div>'; return; }
   var tree = {};
-  state.elements.forEach(function (e) {
-    tree[e.discipline] = tree[e.discipline] || {};
-    tree[e.discipline][e.storey] = tree[e.discipline][e.storey] || {};
-    tree[e.discipline][e.storey][e.ifcClass] = tree[e.discipline][e.storey][e.ifcClass] || [];
-    tree[e.discipline][e.storey][e.ifcClass].push(e);
-  });
+  state.elements.forEach(function (e) { tree[e.discipline] = tree[e.discipline] || {}; tree[e.discipline][e.storey] = tree[e.discipline][e.storey] || {}; tree[e.discipline][e.storey][e.ifcClass] = tree[e.discipline][e.storey][e.ifcClass] || []; tree[e.discipline][e.storey][e.ifcClass].push(e); });
   Object.keys(tree).sort().forEach(function (disc) {
     var discNode = makeFolder(disc, getDisciplineColorCSS(disc), countAll(tree[disc]));
     Object.keys(tree[disc]).sort().forEach(function (storey) {
@@ -1782,39 +1360,23 @@ function buildSpatialTreeUI() {
 function countAll(obj) { var c = 0; Object.keys(obj).forEach(function (k) { var v = obj[k]; if (Array.isArray(v)) c += v.length; else c += countAll(v); }); return c; }
 function makeFolder(label, color, count, parent) {
   var node = document.createElement('div');
-  var row = document.createElement('div');
-  row.className = 'tree-row';
+  var row = document.createElement('div'); row.className = 'tree-row';
   row.innerHTML = '<span class="tree-toggle"><i class="fa-solid fa-caret-down"></i></span><input type="checkbox" checked><span style="color:' + color + '"><i class="fa-solid fa-folder"></i></span><span style="flex:1;overflow:hidden;text-overflow:ellipsis">' + label + '</span><span class="count-badge">' + count + '</span>';
   node.appendChild(row);
-  var children = document.createElement('div');
-  children.className = 'tree-children';
-  node.appendChild(children);
+  var children = document.createElement('div'); children.className = 'tree-children'; node.appendChild(children);
   if (parent) parent.appendChild(node);
   var toggle = row.querySelector('.tree-toggle');
-  toggle.onclick = function (e) {
-    e.stopPropagation();
-    children.classList.toggle('collapsed');
-    toggle.innerHTML = children.classList.contains('collapsed') ? '<i class="fa-solid fa-caret-right"></i>' : '<i class="fa-solid fa-caret-down"></i>';
-  };
+  toggle.onclick = function (e) { e.stopPropagation(); children.classList.toggle('collapsed'); toggle.innerHTML = children.classList.contains('collapsed') ? '<i class="fa-solid fa-caret-right"></i>' : '<i class="fa-solid fa-caret-down"></i>'; };
   var cb = row.querySelector('input[type="checkbox"]');
-  cb.onclick = function (e) {
-    e.stopPropagation();
-    var all = children.querySelectorAll('input[type="checkbox"]');
-    for (var i = 0; i < all.length; i++) all[i].checked = cb.checked;
-    var leaves = children.querySelectorAll('.tree-leaf');
-    for (var j = 0; j < leaves.length; j++) { var el = findElementByGuid(leaves[j].dataset.guid); if (el) el.mesh.visible = cb.checked; }
-  };
+  cb.onclick = function (e) { e.stopPropagation(); var all = children.querySelectorAll('input[type="checkbox"]'); for (var i = 0; i < all.length; i++) all[i].checked = cb.checked; var leaves = children.querySelectorAll('.tree-leaf'); for (var j = 0; j < leaves.length; j++) { var el = findElementByGuid(leaves[j].dataset.guid); if (el) el.mesh.visible = cb.checked; } };
   return { node: node, children: children };
 }
 function makeLeaf(elem) {
-  var leaf = document.createElement('div');
-  leaf.className = 'tree-leaf';
-  leaf.dataset.guid = elem.guid;
-  var row = document.createElement('div');
-  row.className = 'tree-row';
+  var leaf = document.createElement('div'); leaf.className = 'tree-leaf'; leaf.dataset.guid = elem.guid;
+  var row = document.createElement('div'); row.className = 'tree-row';
   var displayName = elem.name || elem.guid;
   var guidShort = (elem.guid || '').substring(0, 8);
-  row.innerHTML = '<span class="tree-toggle"></span><input type="checkbox" checked><span style="color:#64748b">' + elem.ifcClass + '</span><span style="flex:1;color:#cbd5e1;overflow:hidden;text-overflow:ellipsis" title="' + (elem.guid || '') + '">' + displayName + '</span><span style="color:#475569;font-size:.55rem;font-family:monospace" title="GUID: ' + (elem.guid || '') + '">' + guidShort + '</span>';
+  row.innerHTML = '<span class="tree-toggle"></span><input type="checkbox" checked><span style="color:#64748b">' + elem.ifcClass + '</span><span style="flex:1;color:#cbd5e1;overflow:hidden;text-overflow:ellipsis" title="' + (elem.guid || '') + '">' + displayName + '</span><span style="color:#475569;font-size:.55rem;font-family:monospace">' + guidShort + '</span>';
   leaf.appendChild(row);
   var cb = row.querySelector('input[type="checkbox"]');
   cb.onclick = function (e) { e.stopPropagation(); elem.mesh.visible = cb.checked; };
@@ -1822,58 +1384,19 @@ function makeLeaf(elem) {
   return leaf;
 }
 function findElementByGuid(guid) { for (var i = 0; i < state.elements.length; i++) if (state.elements[i].guid === guid) return state.elements[i]; return null; }
-function filterTree() {
-  var q = (document.getElementById('treeSearch').value || '').toLowerCase().trim();
-  var leaves = document.querySelectorAll('#ifcSpatialTree .tree-leaf');
-  for (var i = 0; i < leaves.length; i++) {
-    var leaf = leaves[i];
-    var el = findElementByGuid(leaf.dataset.guid);
-    if (!el) continue;
-    var hit = !q || (el.name || '').toLowerCase().indexOf(q) >= 0 || (el.ifcClass || '').toLowerCase().indexOf(q) >= 0 || (el.guid || '').toLowerCase().indexOf(q) >= 0;
-    leaf.style.display = hit ? '' : 'none';
-  }
-}
+function filterTree() { var q = (document.getElementById('treeSearch').value || '').toLowerCase().trim(); var leaves = document.querySelectorAll('#ifcSpatialTree .tree-leaf'); for (var i = 0; i < leaves.length; i++) { var leaf = leaves[i]; var el = findElementByGuid(leaf.dataset.guid); if (!el) continue; var hit = !q || (el.name || '').toLowerCase().indexOf(q) >= 0 || (el.ifcClass || '').toLowerCase().indexOf(q) >= 0 || (el.guid || '').toLowerCase().indexOf(q) >= 0; leaf.style.display = hit ? '' : 'none'; } }
 function expandTreeAll() { var all = document.querySelectorAll('#ifcSpatialTree .tree-children'); for (var i = 0; i < all.length; i++) all[i].classList.remove('collapsed'); }
 function collapseTreeAll() { var all = document.querySelectorAll('#ifcSpatialTree .tree-children'); for (var i = 0; i < all.length; i++) all[i].classList.add('collapsed'); }
 
 /* CORES */
-function initColorSwatches() {
-  var grid = document.getElementById('colorSwatches'); if (!grid) return;
-  grid.innerHTML = '';
-  COLOR_SWATCHES.forEach(function (c) {
-    var sw = document.createElement('div');
-    sw.style.cssText = 'background:' + c + ';aspect-ratio:1;border-radius:4px;cursor:pointer;border:1px solid rgba(255,255,255,0.15)';
-    sw.onclick = function () { document.getElementById('colorPicker').value = c; document.getElementById('colorHex').value = c.toUpperCase(); };
-    grid.appendChild(sw);
-  });
-}
+function initColorSwatches() { var grid = document.getElementById('colorSwatches'); if (!grid) return; grid.innerHTML = ''; COLOR_SWATCHES.forEach(function (c) { var sw = document.createElement('div'); sw.style.cssText = 'background:' + c + ';aspect-ratio:1;border-radius:4px;cursor:pointer;border:1px solid rgba(255,255,255,0.15)'; sw.onclick = function () { document.getElementById('colorPicker').value = c; document.getElementById('colorHex').value = c.toUpperCase(); }; grid.appendChild(sw); }); }
 function syncColorHex() { document.getElementById('colorHex').value = document.getElementById('colorPicker').value.toUpperCase(); }
 function syncColorPicker() { var v = document.getElementById('colorHex').value.trim(); if (v.charAt(0) !== '#') v = '#' + v; if (/^#[0-9a-fA-F]{6}$/.test(v)) document.getElementById('colorPicker').value = v; }
 function updateOpacityLabel() { document.getElementById('opacityVal').innerText = document.getElementById('opacityRange').value + '%'; }
 function applyRandomColor() { var c = '#' + Math.floor(Math.random() * 16777215).toString(16).padStart(6, '0'); document.getElementById('colorPicker').value = c; document.getElementById('colorHex').value = c.toUpperCase(); }
-function updateScopeUI() {
-  var scope = document.getElementById('applyScope').value;
-  var extra = document.getElementById('scopeExtra'), sel = document.getElementById('scopeValue');
-  if (scope === 'selected') { extra.style.display = 'none'; return; }
-  extra.style.display = 'block';
-  sel.innerHTML = '<option value="">— Todos —</option>';
-  var values = [];
-  if (scope === 'model') values = uniqueValues(state.elements.map(function (e) { return e.modelId; }));
-  else if (scope === 'discipline') values = uniqueValues(state.elements.map(function (e) { return e.discipline; }));
-  else if (scope === 'storey') values = uniqueValues(state.elements.map(function (e) { return e.storey; }));
-  else if (scope === 'type') values = uniqueValues(state.elements.map(function (e) { return e.ifcClass; })).sort();
-  values.forEach(function (v) { var o = document.createElement('option'); o.value = v; o.textContent = v; sel.appendChild(o); });
-}
+function updateScopeUI() { var scope = document.getElementById('applyScope').value; var extra = document.getElementById('scopeExtra'), sel = document.getElementById('scopeValue'); if (scope === 'selected') { extra.style.display = 'none'; return; } extra.style.display = 'block'; sel.innerHTML = '<option value="">— Todos —</option>'; var values = []; if (scope === 'model') values = uniqueValues(state.elements.map(function (e) { return e.modelId; })); else if (scope === 'discipline') values = uniqueValues(state.elements.map(function (e) { return e.discipline; })); else if (scope === 'storey') values = uniqueValues(state.elements.map(function (e) { return e.storey; })); else if (scope === 'type') values = uniqueValues(state.elements.map(function (e) { return e.ifcClass; })).sort(); values.forEach(function (v) { var o = document.createElement('option'); o.value = v; o.textContent = v; sel.appendChild(o); }); }
 function uniqueValues(arr) { var seen = {}, out = []; arr.forEach(function (v) { if (!seen[v]) { seen[v] = true; out.push(v); } }); return out; }
-function getTargetElements() {
-  var scope = document.getElementById('applyScope').value, val = document.getElementById('scopeValue').value;
-  if (scope === 'selected') return state.selectedElement ? [state.selectedElement] : [];
-  if (scope === 'model') return state.elements.filter(function (e) { return !val || e.modelId === val; });
-  if (scope === 'discipline') return state.elements.filter(function (e) { return !val || e.discipline === val; });
-  if (scope === 'storey') return state.elements.filter(function (e) { return !val || e.storey === val; });
-  if (scope === 'type') return state.elements.filter(function (e) { return !val || e.ifcClass === val; });
-  return [];
-}
+function getTargetElements() { var scope = document.getElementById('applyScope').value, val = document.getElementById('scopeValue').value; if (scope === 'selected') return state.selectedElement ? [state.selectedElement] : []; if (scope === 'model') return state.elements.filter(function (e) { return !val || e.modelId === val; }); if (scope === 'discipline') return state.elements.filter(function (e) { return !val || e.discipline === val; }); if (scope === 'storey') return state.elements.filter(function (e) { return !val || e.storey === val; }); if (scope === 'type') return state.elements.filter(function (e) { return !val || e.ifcClass === val; }); return []; }
 function applyColorFromUI() {
   var hex = document.getElementById('colorPicker').value;
   var opacity = parseInt(document.getElementById('opacityRange').value) / 100;
@@ -1883,9 +1406,7 @@ function applyColorFromUI() {
   targets.forEach(function (el) {
     if (!el.mesh.material) return;
     if (!el.mesh.userData._matCloned) { el.mesh.material = el.mesh.material.clone(); el.mesh.userData._matCloned = true; }
-    el.mesh.material.color.setHex(colorInt);
-    el.mesh.material.opacity = opacity;
-    el.mesh.material.transparent = opacity < 1;
+    el.mesh.material.color.setHex(colorInt); el.mesh.material.opacity = opacity; el.mesh.material.transparent = opacity < 1;
     if (el.mesh.material.map) { try { el.mesh.material.map.dispose(); } catch (e) {} el.mesh.material.map = null; el.mesh.userData._hasTexture = false; }
     el.mesh.material.needsUpdate = true;
   });
@@ -1897,10 +1418,8 @@ function resetColors() {
     if (!el.mesh.material) return;
     if (!el.mesh.userData._matCloned) { el.mesh.material = el.mesh.material.clone(); el.mesh.userData._matCloned = true; }
     if (el.mesh.material.map) { try { el.mesh.material.map.dispose(); } catch (e) {} el.mesh.material.map = null; }
-    el.mesh.material.color.setHex(getDisciplineColorHex(el.discipline));
-    el.mesh.material.roughness = 0.5; el.mesh.material.metalness = 0.15;
-    el.mesh.material.opacity = 0.92; el.mesh.material.transparent = true;
-    el.mesh.material.needsUpdate = true;
+    el.mesh.material.color.setHex(getDisciplineColorHex(el.discipline)); el.mesh.material.roughness = 0.5; el.mesh.material.metalness = 0.15;
+    el.mesh.material.opacity = 0.92; el.mesh.material.transparent = true; el.mesh.material.needsUpdate = true;
     el.mesh.userData._hasTexture = false;
   });
   showViewportStatus('Cores e texturas restauradas.');
@@ -1918,21 +1437,8 @@ function computeElementMetrics(elem) {
     var pos = geo.attributes.position, idx = geo.index;
     var a = new THREE.Vector3(), b = new THREE.Vector3(), c = new THREE.Vector3();
     var ab = new THREE.Vector3(), ac = new THREE.Vector3(), cross = new THREE.Vector3();
-    if (idx && idx.count >= 3) {
-      for (var i = 0; i < idx.count; i += 3) {
-        a.fromBufferAttribute(pos, idx.getX(i)); b.fromBufferAttribute(pos, idx.getX(i + 1)); c.fromBufferAttribute(pos, idx.getX(i + 2));
-        ab.subVectors(b, a); ac.subVectors(c, a); cross.crossVectors(ab, ac);
-        meshArea += cross.length() * 0.5;
-        meshVolume += Math.abs(a.dot(b.clone().cross(c)) / 6);
-      }
-    } else {
-      for (var j = 0; j + 2 < pos.count; j += 3) {
-        a.fromBufferAttribute(pos, j); b.fromBufferAttribute(pos, j + 1); c.fromBufferAttribute(pos, j + 2);
-        ab.subVectors(b, a); ac.subVectors(c, a); cross.crossVectors(ab, ac);
-        meshArea += cross.length() * 0.5;
-        meshVolume += Math.abs(a.dot(b.clone().cross(c)) / 6);
-      }
-    }
+    if (idx && idx.count >= 3) { for (var i = 0; i < idx.count; i += 3) { a.fromBufferAttribute(pos, idx.getX(i)); b.fromBufferAttribute(pos, idx.getX(i + 1)); c.fromBufferAttribute(pos, idx.getX(i + 2)); ab.subVectors(b, a); ac.subVectors(c, a); cross.crossVectors(ab, ac); meshArea += cross.length() * 0.5; meshVolume += Math.abs(a.dot(b.clone().cross(c)) / 6); } }
+    else { for (var j = 0; j + 2 < pos.count; j += 3) { a.fromBufferAttribute(pos, j); b.fromBufferAttribute(pos, j + 1); c.fromBufferAttribute(pos, j + 2); ab.subVectors(b, a); ac.subVectors(c, a); cross.crossVectors(ab, ac); meshArea += cross.length() * 0.5; meshVolume += Math.abs(a.dot(b.clone().cross(c)) / 6); } }
   }
   return { x: size.x, y: size.y, z: size.z, perimeter: 2 * (size.x + size.y), areaBase: size.x * size.y, areaMesh: meshArea, volumeMesh: meshVolume, center: center };
 }
@@ -1943,24 +1449,14 @@ function updateDimensionsUI() {
   empty.style.display = 'none'; content.style.display = 'block';
   nameEl.innerText = (el.name || '—').substring(0, 30);
   var m = computeElementMetrics(el);
-  document.getElementById('dimX').innerText = fmt(m.x);
-  document.getElementById('dimY').innerText = fmt(m.y);
-  document.getElementById('dimZ').innerText = fmt(m.z);
-  document.getElementById('dimPerimeter').innerText = fmt(m.perimeter);
-  document.getElementById('dimAreaMesh').innerText = fmt(m.areaMesh);
-  document.getElementById('dimVolume').innerText = fmt(m.volumeMesh);
+  document.getElementById('dimX').innerText = fmt(m.x); document.getElementById('dimY').innerText = fmt(m.y); document.getElementById('dimZ').innerText = fmt(m.z);
+  document.getElementById('dimPerimeter').innerText = fmt(m.perimeter); document.getElementById('dimAreaMesh').innerText = fmt(m.areaMesh); document.getElementById('dimVolume').innerText = fmt(m.volumeMesh);
 }
 function measureWholeModel() {
   if (!state.elements.length) { alert('Nenhum modelo carregado.'); return; }
   var totalArea = 0, totalVolume = 0, byDisc = {};
-  state.elements.forEach(function (el) {
-    var m = computeElementMetrics(el);
-    totalArea += m.areaMesh; totalVolume += m.volumeMesh;
-    if (!byDisc[el.discipline]) byDisc[el.discipline] = { count: 0, area: 0, volume: 0 };
-    byDisc[el.discipline].count++; byDisc[el.discipline].area += m.areaMesh; byDisc[el.discipline].volume += m.volumeMesh;
-  });
-  document.getElementById('totalArea').innerText = fmt(totalArea);
-  document.getElementById('totalVolume').innerText = fmt(totalVolume);
+  state.elements.forEach(function (el) { var m = computeElementMetrics(el); totalArea += m.areaMesh; totalVolume += m.volumeMesh; if (!byDisc[el.discipline]) byDisc[el.discipline] = { count: 0, area: 0, volume: 0 }; byDisc[el.discipline].count++; byDisc[el.discipline].area += m.areaMesh; byDisc[el.discipline].volume += m.volumeMesh; });
+  document.getElementById('totalArea').innerText = fmt(totalArea); document.getElementById('totalVolume').innerText = fmt(totalVolume);
   var d = document.getElementById('dimByDiscipline'); d.innerHTML = '';
   Object.keys(byDisc).sort().forEach(function (k) {
     var info = byDisc[k], color = getDisciplineColorCSS(k);
@@ -1984,6 +1480,7 @@ function exportDimensionsCSV() {
 
 /* CLASH */
 function severityColor(s) { return s === 'CRITICAL' ? '#ef4444' : s === 'HIGH' ? '#f97316' : s === 'MEDIUM' ? '#eab308' : '#3b82f6'; }
+
 function runClashDetection() {
   if (state.elements.length < 2) { alert('Carregue pelo menos dois elementos.'); return; }
   showLoading(true, 'Analisando conflitos...');
@@ -2026,6 +1523,10 @@ function runClashDetection() {
         });
       });
       state.clashes = state.clashes.slice(0, 500);
+      clashMarkersGroup.clear();
+      if (clashMarkersContainer) clashMarkersContainer.innerHTML = '';
+      clearClashHighlight();
+      state.clashes.forEach(function (c) { create3DClashMarker(c); });
       updateClashListUI(); updateDashboardUI();
       showViewportStatus(state.clashes.length + ' conflito(s) detectado(s).');
       if (state.clashes.length && isMobile()) toggleRightSidebar();
@@ -2033,38 +1534,120 @@ function runClashDetection() {
     finally { showLoading(false); }
   }, 40);
 }
-function updateClashListUI() {
-  var list = document.getElementById('clashesList');
-  document.getElementById('clashCountBadge').innerText = state.clashes.length;
-  var fs = document.getElementById('clashSevFilter').value, fst = document.getElementById('clashStatusFilter').value;
-  var filtered = state.clashes.filter(function (c) {
-    if (fs !== 'ALL' && c.severity !== fs) return false;
-    if (fst !== 'ALL' && c.status !== fst) return false;
-    return true;
-  });
-  list.innerHTML = '';
-  if (!filtered.length) {
-    list.innerHTML = '<div style="text-align:center;padding:2rem 1rem;color:#64748b;font-size:.75rem;border:1px dashed #1e293b;border-radius:.5rem">' + (state.clashes.length ? 'Nenhum conflito com filtros.' : 'Nenhum teste executado.') + '</div>';
-    return;
-  }
-  filtered.forEach(function (c) {
-    var item = document.createElement('div');
-    item.className = 'clash-item';
-    var col = severityColor(c.severity);
-    item.innerHTML = '<div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.25rem"><span style="width:8px;height:8px;border-radius:50%;background:' + col + '"></span><span class="clash-id">' + c.id + '</span><span class="clash-sev" style="background:' + col + '22;color:' + col + ';margin-left:auto">' + c.severity + '</span></div><div class="clash-elem">A: <b>' + c.elemA.disc + '</b> — ' + c.elemA.name + '</div><div class="clash-elem">B: <b>' + c.elemB.disc + '</b> — ' + c.elemB.name + '</div><div style="font-size:.6rem;color:#64748b;margin-top:.25rem">' + c.floor + ' • ' + c.overlap + '</div>';
-    item.onclick = function () { focusClash(c.id); };
-    list.appendChild(item);
+
+function create3DClashMarker(clash) {
+  if (!clash.center) return;
+  if (!clashMarkersContainer) clashMarkersContainer = document.getElementById('clashMarkersContainer');
+  var col = severityColor(clash.severity);
+  // Esfera 3D
+  var geo = new THREE.SphereGeometry(0.15, 12, 12);
+  var mat = new THREE.MeshBasicMaterial({ color: col, transparent: true, opacity: 0.9, depthTest: false });
+  var sphere = new THREE.Mesh(geo, mat);
+  sphere.position.copy(clash.center);
+  sphere.renderOrder = 999;
+  sphere.userData.clashId = clash.id;
+  clashMarkersGroup.add(sphere);
+  // Pin HTML
+  var pin = document.createElement('div');
+  pin.className = 'clash-pin-3d sev-' + clash.severity;
+  pin.dataset.clashId = clash.id;
+  pin.title = 'Conflito ' + clash.id + ' — ' + clash.severity + '\nA: ' + clash.elemA.name + '\nB: ' + clash.elemB.name + '\nInterseção: ' + clash.overlap;
+  pin.innerHTML = '<div class="pin-bubble"><span style="font-size:9px">⚠</span> ' + clash.id + '</div>';
+  pin.onclick = function (ev) { ev.stopPropagation(); focusClash(clash.id); };
+  clashMarkersContainer.appendChild(pin);
+  clash._htmlMarker = pin;
+  // Anel pulsante
+  var ring = document.createElement('div');
+  ring.className = 'clash-pulse-ring sev-' + clash.severity;
+  ring.dataset.clashId = clash.id;
+  clashMarkersContainer.appendChild(ring);
+  clash._htmlRing = ring;
+}
+
+function updateClashMarkersPosition() {
+  if (!renderer || !camera || !clashMarkersContainer) return;
+  var rect = renderer.domElement.getBoundingClientRect();
+  state.clashes.forEach(function (c) {
+    if (!c.center) return;
+    var v = c.center.clone().project(camera);
+    var x = (v.x * 0.5 + 0.5) * rect.width;
+    var y = (-v.y * 0.5 + 0.5) * rect.height;
+    var visible = v.z < 1 && v.z > -1;
+    if (c._htmlMarker) { c._htmlMarker.style.left = x + 'px'; c._htmlMarker.style.top = (y - 8) + 'px'; c._htmlMarker.style.display = visible ? 'block' : 'none'; }
+    if (c._htmlRing) { c._htmlRing.style.left = x + 'px'; c._htmlRing.style.top = y + 'px'; c._htmlRing.style.display = visible ? 'block' : 'none'; }
   });
 }
+
 function focusClash(id) {
   var c = null;
   for (var i = 0; i < state.clashes.length; i++) if (state.clashes[i].id === id) { c = state.clashes[i]; break; }
   if (!c || !c.center) return;
   controls.target.copy(c.center);
-  camera.position.set(c.center.x + 6, c.center.y - 6, c.center.z + 4);
+  var dist = 4;
+  camera.position.set(c.center.x + dist, c.center.y - dist, c.center.z + dist * 0.7);
   controls.update();
+  document.querySelectorAll('.clash-pin-3d').forEach(function (p) { p.classList.toggle('selected', p.dataset.clashId === id); });
+  document.querySelectorAll('.clash-item').forEach(function (it) { it.classList.toggle('selected', it.dataset.clashId === id); });
+  highlightClashElements(c);
   state.selectedClash = c;
-  showViewportStatus('Conflito ' + id + ' — ' + c.severity);
+  showViewportStatus('Conflito ' + id + ' — ' + c.severity + ' (' + c.overlap + ')');
+}
+
+function highlightClashElements(clash) {
+  clearClashHighlight();
+  var elemA = findElementByGuid(clash.elemA.guid);
+  var elemB = findElementByGuid(clash.elemB.guid);
+  _highlightA = elemA; _highlightB = elemB;
+  [elemA, elemB].forEach(function (el, idx) {
+    if (!el || !el.mesh || !el.mesh.material) return;
+    if (!el.mesh.userData._matCloned) { el.mesh.material = el.mesh.material.clone(); el.mesh.userData._matCloned = true; }
+    if (el.mesh.material.emissive) el.mesh.material.emissive.setHex(idx === 0 ? 0x0891b2 : 0xd946ef);
+    el.mesh.material.transparent = true;
+    el.mesh.material.opacity = 0.85;
+    el.mesh.material.needsUpdate = true;
+    el.mesh.userData._clashHighlight = true;
+  });
+  if (_pulseTimer) clearInterval(_pulseTimer);
+  var toggle = false;
+  _pulseTimer = setInterval(function () {
+    toggle = !toggle;
+    [_highlightA, _highlightB].forEach(function (el) {
+      if (!el || !el.mesh || !el.mesh.material) return;
+      if (el.mesh.userData._clashHighlight) { el.mesh.material.opacity = toggle ? 0.4 : 0.95; el.mesh.material.needsUpdate = true; }
+    });
+  }, 400);
+}
+
+function clearClashHighlight() {
+  if (_pulseTimer) { clearInterval(_pulseTimer); _pulseTimer = null; }
+  state.elements.forEach(function (el) {
+    if (!el.mesh || !el.mesh.material) return;
+    if (el.mesh.userData._clashHighlight) {
+      if (el.mesh.material.emissive) el.mesh.material.emissive.setHex(0);
+      el.mesh.material.opacity = 0.92;
+      el.mesh.material.needsUpdate = true;
+      el.mesh.userData._clashHighlight = false;
+    }
+  });
+  _highlightA = null; _highlightB = null;
+}
+
+function updateClashListUI() {
+  var list = document.getElementById('clashesList');
+  document.getElementById('clashCountBadge').innerText = state.clashes.length;
+  var fs = document.getElementById('clashSevFilter').value, fst = document.getElementById('clashStatusFilter').value;
+  var filtered = state.clashes.filter(function (c) { if (fs !== 'ALL' && c.severity !== fs) return false; if (fst !== 'ALL' && c.status !== fst) return false; return true; });
+  list.innerHTML = '';
+  if (!filtered.length) { list.innerHTML = '<div style="text-align:center;padding:2rem 1rem;color:#64748b;font-size:.75rem;border:1px dashed #1e293b;border-radius:.5rem">' + (state.clashes.length ? 'Nenhum conflito com filtros.' : 'Nenhum teste executado.') + '</div>'; return; }
+  filtered.forEach(function (c) {
+    var item = document.createElement('div');
+    item.className = 'clash-item';
+    item.dataset.clashId = c.id;
+    var col = severityColor(c.severity);
+    item.innerHTML = '<div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.25rem"><span style="width:8px;height:8px;border-radius:50%;background:' + col + '"></span><span class="clash-id">' + c.id + '</span><span class="clash-sev" style="background:' + col + '22;color:' + col + ';margin-left:auto">' + c.severity + '</span></div><div class="clash-elem">A: <b>' + c.elemA.disc + '</b> — ' + c.elemA.name + '</div><div class="clash-elem">B: <b>' + c.elemB.disc + '</b> — ' + c.elemB.name + '</div><div style="font-size:.6rem;color:#64748b;margin-top:.25rem">' + c.floor + ' • ' + c.overlap + '</div>';
+    item.onclick = function () { focusClash(c.id); };
+    list.appendChild(item);
+  });
 }
 
 /* DASHBOARD */
@@ -2074,61 +1657,30 @@ function initCharts() {
   if (c2 && window.Chart) chartFloorInstance = new Chart(c2, { type: 'bar', data: { labels: [], datasets: [{ data: [], backgroundColor: '#3b82f6' }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { ticks: { color: '#94a3b8', font: { size: 9 } } }, y: { ticks: { color: '#94a3b8' } } } } });
 }
 function updateDashboardUI() {
-  var total = state.clashes.length;
-  var crit = state.clashes.filter(function (c) { return c.severity === 'CRITICAL'; }).length;
-  var resolved = state.clashes.filter(function (c) { return c.status === 'Resolvido'; }).length;
-  document.getElementById('dashTotal').innerText = total;
-  document.getElementById('dashCritical').innerText = crit;
-  document.getElementById('dashResolved').innerText = resolved;
-  document.getElementById('dashPending').innerText = total - resolved;
-  if (chartDiscInstance) {
-    var byDisc = {}; state.clashes.forEach(function (c) { byDisc[c.elemA.disc] = (byDisc[c.elemA.disc] || 0) + 1; });
-    var labels = Object.keys(byDisc);
-    chartDiscInstance.data.labels = labels;
-    chartDiscInstance.data.datasets[0].data = labels.map(function (l) { return byDisc[l]; });
-    chartDiscInstance.data.datasets[0].backgroundColor = labels.map(function (l) { return getDisciplineColorCSS(l); });
-    chartDiscInstance.update();
-  }
-  if (chartFloorInstance) {
-    var byFloor = {}; state.clashes.forEach(function (c) { byFloor[c.floor] = (byFloor[c.floor] || 0) + 1; });
-    var labels2 = Object.keys(byFloor);
-    chartFloorInstance.data.labels = labels2;
-    chartFloorInstance.data.datasets[0].data = labels2.map(function (l) { return byFloor[l]; });
-    chartFloorInstance.update();
-  }
+  var total = state.clashes.length, crit = state.clashes.filter(function (c) { return c.severity === 'CRITICAL'; }).length, resolved = state.clashes.filter(function (c) { return c.status === 'Resolvido'; }).length;
+  document.getElementById('dashTotal').innerText = total; document.getElementById('dashCritical').innerText = crit;
+  document.getElementById('dashResolved').innerText = resolved; document.getElementById('dashPending').innerText = total - resolved;
+  if (chartDiscInstance) { var byDisc = {}; state.clashes.forEach(function (c) { byDisc[c.elemA.disc] = (byDisc[c.elemA.disc] || 0) + 1; }); var labels = Object.keys(byDisc); chartDiscInstance.data.labels = labels; chartDiscInstance.data.datasets[0].data = labels.map(function (l) { return byDisc[l]; }); chartDiscInstance.data.datasets[0].backgroundColor = labels.map(function (l) { return getDisciplineColorCSS(l); }); chartDiscInstance.update(); }
+  if (chartFloorInstance) { var byFloor = {}; state.clashes.forEach(function (c) { byFloor[c.floor] = (byFloor[c.floor] || 0) + 1; }); var labels2 = Object.keys(byFloor); chartFloorInstance.data.labels = labels2; chartFloorInstance.data.datasets[0].data = labels2.map(function (l) { return byFloor[l]; }); chartFloorInstance.update(); }
 }
 function initRulesUI() {
-  var c = document.getElementById('rulesContainer');
-  c.innerHTML = '';
+  var c = document.getElementById('rulesContainer'); c.innerHTML = '';
   state.rules.forEach(function (r) {
     var d = document.createElement('div');
     d.style.cssText = 'background:#020617;border:1px solid #1e293b;border-radius:.375rem;padding:.5rem;margin-bottom:.375rem;font-size:.7rem';
     d.innerHTML = '<div style="display:flex;align-items:center;gap:.5rem"><input type="checkbox" ' + (r.active ? 'checked' : '') + ' style="width:14px;height:14px;padding:0"><span style="color:#cbd5e1;font-weight:600;flex:1">' + r.discA + ' × ' + r.discB + '</span><span style="color:#64748b;font-size:.55rem;text-transform:uppercase">' + r.type + '</span></div><div style="color:#64748b;font-size:.6rem;margin-top:.25rem">Tolerância: ' + r.tolerance + ' mm</div>';
-    var cb = d.querySelector('input');
-    cb.onchange = function () { r.active = cb.checked; };
+    var cb = d.querySelector('input'); cb.onchange = function () { r.active = cb.checked; };
     c.appendChild(d);
   });
 }
-function applyFloorFilter() {
-  var val = document.getElementById('floorFilter').value;
-  state.elements.forEach(function (e) { e.mesh.visible = (val === 'ALL') || (e.storey === val); });
-  buildSpatialTreeUI();
-  showViewportStatus(val === 'ALL' ? 'Todos os pavimentos.' : 'Filtrando: ' + val);
-}
-function updateFloorFilterOptions() {
-  var sel = document.getElementById('floorFilter');
-  var floors = uniqueValues(state.elements.map(function (e) { return e.storey; })).sort();
-  sel.innerHTML = '<option value="ALL">Todos os Pavimentos</option>';
-  floors.forEach(function (f) { var o = document.createElement('option'); o.value = f; o.textContent = f; sel.appendChild(o); });
-}
+function applyFloorFilter() { var val = document.getElementById('floorFilter').value; state.elements.forEach(function (e) { e.mesh.visible = (val === 'ALL') || (e.storey === val); }); buildSpatialTreeUI(); showViewportStatus(val === 'ALL' ? 'Todos os pavimentos.' : 'Filtrando: ' + val); }
+function updateFloorFilterOptions() { var sel = document.getElementById('floorFilter'); var floors = uniqueValues(state.elements.map(function (e) { return e.storey; })).sort(); sel.innerHTML = '<option value="ALL">Todos os Pavimentos</option>'; floors.forEach(function (f) { var o = document.createElement('option'); o.value = f; o.textContent = f; sel.appendChild(o); }); }
 
 /* ABAS */
 function switchLeftTab(tab) {
   ['models', 'transform', 'tree', 'appearance', 'dimension', 'rules'].forEach(function (t) {
-    var content = document.getElementById('tab-content-' + t);
-    if (content) content.classList.toggle('active', t === tab);
-    var btn = document.getElementById('tab-btn-' + t);
-    if (btn) btn.classList.toggle('active', t === tab);
+    var content = document.getElementById('tab-content-' + t); if (content) content.classList.toggle('active', t === tab);
+    var btn = document.getElementById('tab-btn-' + t); if (btn) btn.classList.toggle('active', t === tab);
   });
   if (tab === 'dimension') updateDimensionsUI();
   if (tab === 'transform') refreshTransformModelSelect();
@@ -2136,10 +1688,8 @@ function switchLeftTab(tab) {
 }
 function switchRightTab(tab) {
   ['clashes', 'dash'].forEach(function (t) {
-    var content = document.getElementById('tab-content-' + t);
-    if (content) content.classList.toggle('active', t === tab);
-    var btn = document.getElementById('tab-btn-' + t);
-    if (btn) btn.classList.toggle('active', t === tab);
+    var content = document.getElementById('tab-content-' + t); if (content) content.classList.toggle('active', t === tab);
+    var btn = document.getElementById('tab-btn-' + t); if (btn) btn.classList.toggle('active', t === tab);
   });
   if (tab === 'dash') updateDashboardUI();
   if (isMobile()) closeAllSidebars();
@@ -2147,136 +1697,46 @@ function switchRightTab(tab) {
 
 /* EXPORTAÇÃO */
 function escapeXml(s) { return String(s).replace(/[<>&"']/g, function (c) { return { '<': '&lt;', '>': '&gt;', '&': '&amp;', '"': '&quot;', "'": '&apos;' }[c]; }); }
-function downloadFile(content, name, mime) {
-  var blob = content instanceof Blob ? content : new Blob([content], { type: mime || 'text/plain' });
-  var url = URL.createObjectURL(blob);
-  var a = document.createElement('a');
-  a.href = url; a.download = name; a.click();
-  setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
-}
-function exportPDFReport() {
-  // Abre (ou reutiliza) uma janela dedicada para o relatório
-  var win = window.open('', 'APBIM_Report');
-  if (!win) {
-    alert('Bloqueador de pop-up ativo.\n\nPermita pop-ups para este site e tente novamente.');
-    return;
-  }
+function downloadFile(content, name, mime) { var blob = content instanceof Blob ? content : new Blob([content], { type: mime || 'text/plain' }); var url = URL.createObjectURL(blob); var a = document.createElement('a'); a.href = url; a.download = name; a.click(); setTimeout(function () { URL.revokeObjectURL(url); }, 1000); }
 
+function exportPDFReport() {
+  var win = window.open('', 'APBIM_Report');
+  if (!win) { alert('Bloqueador de pop-up ativo.\n\nPermita pop-ups para este site e tente novamente.'); return; }
   var total = state.clashes.length;
   var crit = state.clashes.filter(function (c) { return c.severity === 'CRITICAL'; }).length;
   var resolved = state.clashes.filter(function (c) { return c.status === 'Resolvido'; }).length;
-
   var rows = state.clashes.map(function (c) {
-    return '<tr>' +
-      '<td><b>' + c.id + '</b></td>' +
-      '<td style="color:' + severityColor(c.severity) + '"><b>' + c.severity + '</b></td>' +
-      '<td>' + c.status + '</td>' +
-      '<td>' + c.floor + '</td>' +
-      '<td>' + escapeXml(c.elemA.disc) + ' — ' + escapeXml(c.elemA.name) + '</td>' +
-      '<td>' + escapeXml(c.elemB.disc) + ' — ' + escapeXml(c.elemB.name) + '</td>' +
-      '<td>' + c.overlap + '</td>' +
-    '</tr>';
+    return '<tr><td><b>' + c.id + '</b></td><td style="color:' + severityColor(c.severity) + '"><b>' + c.severity + '</b></td><td>' + c.status + '</td><td>' + c.floor + '</td><td>' + escapeXml(c.elemA.disc) + ' — ' + escapeXml(c.elemA.name) + '</td><td>' + escapeXml(c.elemB.disc) + ' — ' + escapeXml(c.elemB.name) + '</td><td>' + c.overlap + '</td></tr>';
   }).join('');
-
+  var appUrl = location.origin + location.pathname;
   var html =
-    '<!DOCTYPE html>' +
-    '<html lang="pt-BR"><head><meta charset="utf-8">' +
-    '<title>Relatório AP BIM — ' + new Date().toLocaleDateString('pt-BR') + '</title>' +
-    '<style>' +
-      '*{box-sizing:border-box}' +
-      'body{font-family:Arial,sans-serif;padding:24px;color:#0f172a;margin:0;background:#f8fafc}' +
-      'h1{color:#1e3a8a;margin:0 0 4px}' +
-      '.sub{color:#64748b;font-size:12px;margin-bottom:20px}' +
-      '.kpi{display:flex;gap:12px;margin-bottom:20px}' +
-      '.kpi div{flex:1;border:1px solid #cbd5e1;border-radius:8px;padding:10px;text-align:center;background:#fff}' +
-      '.kpi b{display:block;font-size:22px;color:#1e3a8a}' +
-      '.kpi span{font-size:11px;color:#64748b;text-transform:uppercase;font-weight:700}' +
-      'table{width:100%;border-collapse:collapse;font-size:11px;background:#fff}' +
-      'th,td{border:1px solid #cbd5e1;padding:6px;text-align:left;vertical-align:top}' +
-      'th{background:#1e3a8a;color:#fff}' +
-      'footer{margin-top:20px;font-size:10px;color:#64748b;text-align:center}' +
-      /* Barra de ações fixa no topo (não aparece na impressão) */
-      '.toolbar{position:sticky;top:0;left:0;right:0;background:#0f172a;color:#fff;padding:10px 16px;' +
-        'display:flex;gap:10px;align-items:center;justify-content:space-between;' +
-        'box-shadow:0 4px 12px rgba(0,0,0,.15);z-index:100;margin:-24px -24px 20px}' +
-      '.toolbar h2{margin:0;font-size:14px;font-weight:700;display:flex;align-items:center;gap:8px}' +
-      '.toolbar .btns{display:flex;gap:8px}' +
-      '.btn{padding:9px 16px;border:none;border-radius:6px;font-size:13px;font-weight:700;cursor:pointer;' +
-        'font-family:inherit;display:inline-flex;align-items:center;gap:6px;transition:filter .15s}' +
-      '.btn:hover{filter:brightness(1.15)}' +
-      '.btn-print{background:linear-gradient(135deg,#2563eb,#1d4ed8);color:#fff}' +
-      '.btn-back{background:#334155;color:#e2e8f0}' +
-      '.btn-back:hover{background:#475569}' +
-      /* Impressão: esconde a toolbar */
-      '@media print{' +
-        'body{padding:0;background:#fff}' +
-        '.toolbar{display:none!important}' +
-        'h1{margin-top:0}' +
-        '@page{margin:15mm}' +
-      '}' +
+    '<!DOCTYPE html><html lang="pt-BR"><head><meta charset="utf-8"><title>Relatório AP BIM — ' + new Date().toLocaleDateString('pt-BR') + '</title><style>' +
+    '*{box-sizing:border-box}body{font-family:Arial,sans-serif;padding:24px;color:#0f172a;margin:0;background:#f8fafc}' +
+    'h1{color:#1e3a8a;margin:0 0 4px}.sub{color:#64748b;font-size:12px;margin-bottom:20px}' +
+    '.kpi{display:flex;gap:12px;margin-bottom:20px}.kpi div{flex:1;border:1px solid #cbd5e1;border-radius:8px;padding:10px;text-align:center;background:#fff}.kpi b{display:block;font-size:22px;color:#1e3a8a}.kpi span{font-size:11px;color:#64748b;text-transform:uppercase;font-weight:700}' +
+    'table{width:100%;border-collapse:collapse;font-size:11px;background:#fff}th,td{border:1px solid #cbd5e1;padding:6px;text-align:left;vertical-align:top}th{background:#1e3a8a;color:#fff}footer{margin-top:20px;font-size:10px;color:#64748b;text-align:center}' +
+    '.toolbar{position:sticky;top:0;left:0;right:0;background:#0f172a;color:#fff;padding:10px 16px;display:flex;gap:10px;align-items:center;justify-content:space-between;box-shadow:0 4px 12px rgba(0,0,0,.15);z-index:100;margin:-24px -24px 20px}' +
+    '.toolbar h2{margin:0;font-size:14px;font-weight:700;display:flex;align-items:center;gap:8px}.toolbar .btns{display:flex;gap:8px}' +
+    '.btn{padding:9px 16px;border:none;border-radius:6px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;display:inline-flex;align-items:center;gap:6px}' +
+    '.btn:hover{filter:brightness(1.15)}.btn-print{background:linear-gradient(135deg,#2563eb,#1d4ed8);color:#fff}.btn-back{background:#334155;color:#e2e8f0}.btn-back:hover{background:#475569}' +
+    '@media print{body{padding:0;background:#fff}.toolbar{display:none!important}h1{margin-top:0}@page{margin:15mm}}' +
     '</style></head><body>' +
-
-    /* Barra de ações */
-    '<div class="toolbar">' +
-      '<h2>📄 Relatório de Conflitos — AP BIM</h2>' +
-      '<div class="btns">' +
-        '<button class="btn btn-print" onclick="window.print()">🖨️ Imprimir / Salvar PDF</button>' +
-        '<button class="btn btn-back" onclick="voltarAoApp()">✕ Voltar ao AP BIM</button>' +
-      '</div>' +
-    '</div>' +
-
-    /* Conteúdo do relatório */
+    '<div class="toolbar"><h2>📄 Relatório de Conflitos — AP BIM</h2><div class="btns">' +
+    '<button class="btn btn-print" onclick="window.print()">🖨️ Imprimir / Salvar PDF</button>' +
+    '<button class="btn btn-back" onclick="voltarAoApp()">✕ Voltar ao AP BIM</button></div></div>' +
     '<h1>AP BIM — Relatório de Conflitos</h1>' +
     '<div class="sub">APAVAN ENGENHARIA E CONSULTORIA • ' + new Date().toLocaleString('pt-BR') + '</div>' +
-
-    '<div class="kpi">' +
-      '<div><b>' + total + '</b><span>Total</span></div>' +
-      '<div><b style="color:#dc2626">' + crit + '</b><span style="color:#dc2626">Críticos</span></div>' +
-      '<div><b style="color:#059669">' + resolved + '</b><span style="color:#059669">Resolvidos</span></div>' +
-      '<div><b>' + state.elements.length + '</b><span>Elementos IFC</span></div>' +
-    '</div>' +
-
-    '<table>' +
-      '<thead><tr>' +
-        '<th>ID</th><th>Sev.</th><th>Status</th><th>Pavimento</th>' +
-        '<th>Elemento A</th><th>Elemento B</th><th>Interseção</th>' +
-      '</tr></thead>' +
-      '<tbody>' +
-        (rows || '<tr><td colspan="7" style="text-align:center;padding:20px;color:#64748b">Nenhum conflito detectado. Execute a análise primeiro.</td></tr>') +
-      '</tbody>' +
-    '</table>' +
-
-    '<footer>Documento gerado automaticamente pelo AP BIM v6.0 — ' + new Date().toLocaleString('pt-BR') + '</footer>' +
-
-    /* Script auxiliar: voltar ao app */
-    '<script>' +
-      'function voltarAoApp(){' +
-        // 1) Tenta fechar a janela (funciona quando aberta por window.open)
-        'try{window.close();}catch(e){}' +
-        // 2) Se não fechar, volta o foco para a aba original
-        'if(!window.closed){' +
-          'if(window.opener && !window.opener.closed){' +
-            'window.opener.focus();' +
-            'window.close();' +
-          '}else{' +
-            // 3) Último recurso: redireciona para o app
-            'window.location.href="' + (location.origin + location.pathname) + '";' +
-          '}' +
-        '}' +
-      '}' +
-      // Fecha a janela com ESC
-      'document.addEventListener("keydown",function(e){' +
-        'if(e.key==="Escape"){voltarAoApp();}' +
-      '});' +
-      // Ctrl+P ou Cmd+P já abre a impressão nativamente
-    '<\/script>' +
-
+    '<div class="kpi"><div><b>' + total + '</b><span>Total</span></div><div><b style="color:#dc2626">' + crit + '</b><span style="color:#dc2626">Críticos</span></div><div><b style="color:#059669">' + resolved + '</b><span style="color:#059669">Resolvidos</span></div><div><b>' + state.elements.length + '</b><span>Elementos IFC</span></div></div>' +
+    '<table><thead><tr><th>ID</th><th>Sev.</th><th>Status</th><th>Pavimento</th><th>Elemento A</th><th>Elemento B</th><th>Interseção</th></tr></thead><tbody>' +
+    (rows || '<tr><td colspan="7" style="text-align:center;padding:20px;color:#64748b">Nenhum conflito detectado.</td></tr>') +
+    '</tbody></table><footer>Documento gerado automaticamente pelo AP BIM v6.0 — ' + new Date().toLocaleString('pt-BR') + '</footer>' +
+    '<script>function voltarAoApp(){try{window.close();}catch(e){}if(!window.closed){if(window.opener&&!window.opener.closed){window.opener.focus();window.close();}else{window.location.href="' + appUrl + '";}}}document.addEventListener("keydown",function(e){if(e.key==="Escape"){voltarAoApp();}});<\/script>' +
     '</body></html>';
-
   win.document.open();
   win.document.write(html);
   win.document.close();
   win.focus();
-}</script>
+}
+</script>
 </body>
 </html>

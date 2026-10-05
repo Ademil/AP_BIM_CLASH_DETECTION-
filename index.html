@@ -621,7 +621,16 @@ var isIOS=/iPad|iPhone|iPod/.test(navigator.userAgent)||(navigator.platform==='M
 var COLOR_SWATCHES=['#ef4444','#f97316','#eab308','#22c55e','#10b981','#14b8a6','#06b6d4','#3b82f6','#6366f1','#8b5cf6','#a855f7','#ec4899','#f43f5e','#64748b','#94a3b8','#f8fafc'];
 var DISCIPLINE_COLORS={ARQUITETURA:'#60a5fa',ESTRUTURA:'#94a3b8',HIDRAULICO:'#22d3ee',ELETRICO:'#fbbf24',HVAC:'#a855f7',INCENDIO:'#ef4444',OUTROS:'#64748b'};
 var state={models:[],elements:[],clashes:[],modelGroups:{},modelTransforms:{},textures:[],selectedTextureId:null,clashDisplayMode:'all',
-  rules:[{id:1,discA:'HIDRAULICO',discB:'ESTRUTURA',type:'HARD',tolerance:0,active:true},{id:2,discA:'ELETRICO',discB:'ESTRUTURA',type:'HARD',tolerance:0,active:true},{id:3,discA:'HVAC',discB:'ESTRUTURA',type:'HARD',tolerance:0,active:true},{id:4,discA:'HIDRAULICO',discB:'ARQUITETURA',type:'PROXIMITY',tolerance:50,active:true},{id:5,discA:'INCENDIO',discB:'ESTRUTURA',type:'HARD',tolerance:0,active:true}],
+  rules: [
+    { id: 1, discA: 'HIDRAULICO', discB: 'ESTRUTURA',   type: 'HARD', tolerance: 0,  active: true },
+    { id: 2, discA: 'ELETRICO',   discB: 'ESTRUTURA',   type: 'HARD', tolerance: 0,  active: true },
+    { id: 3, discA: 'HVAC',       discB: 'ESTRUTURA',   type: 'HARD', tolerance: 0,  active: true },
+    { id: 4, discA: 'INCENDIO',   discB: 'ESTRUTURA',   type: 'HARD', tolerance: 0,  active: true },
+    { id: 5, discA: 'ESTRUTURA',  discB: 'OUTROS',      type: 'HARD', tolerance: 0,  active: true },   // ← NOVA: Estrutura × BIM/IFC
+    { id: 6, discA: 'ARQUITETURA', discB: 'ESTRUTURA',  type: 'HARD', tolerance: 0,  active: true },   // ← NOVA
+    { id: 7, discA: 'HIDRAULICO', discB: 'ARQUITETURA', type: 'PROXIMITY', tolerance: 50, active: true },
+    { id: 8, discA: 'ELETRICO',   discB: 'ARQUITETURA', type: 'PROXIMITY', tolerance: 50, active: true } // ← NOVA
+  ],
   selectedElement:null,selectedClash:null,wireframe:false,showClashPins:true};
 var scene,camera,renderer,controls,modelGroup,clashMarkersGroup,raycaster,mouse;
 var chartDiscInstance=null,chartFloorInstance=null;
